@@ -11,8 +11,8 @@ const config = {
   "*.{js,jsx,mjs}": ["eslint --fix", "prettier --write"],
   "*.{css,scss}": ["stylelint --fix", "prettier --write"],
   "*.{json,yaml,yml,toml}": ["prettier --write"],
-  "*.md": ["prettier --write", "markdownlint --fix"],
-  "*.{png,jpg,jpeg,gif,svg}": ["imagemin-lint-staged"]
+  "*.md": ["prettier --write", "markdownlint --fix"]
+  // "*.{png,jpg,jpeg,gif,svg}": ["imagemin-lint-staged"]
 };
 
 export default config;
