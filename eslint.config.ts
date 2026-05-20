@@ -12,5 +12,6 @@ export default defineConfig([
     languageOptions: { globals: globals.browser }
   },
   tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended
+  pluginReact.configs.flat.recommended,
+  pluginReact.configs.flat["jsx-runtime"]
 ]);
