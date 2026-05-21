@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useMemo } from "react";
 import type { TileLayer } from "leaflet";
-import { useLeafletMap } from "@/hooks/useLeafletMap";
+import { useLeafletMap } from "@/hooks";
 import type { LeafletTileLayerProps } from "@/types/components";
 
 // Default subdomains - defined outside component to maintain referential stability
@@ -13,15 +13,6 @@ const DEFAULT_SUBDOMAINS = ["a", "b", "c"];
  *
  * This component adds a tile layer to the Leaflet map. It handles
  * tile layer updates when the URL changes and cleanup on unmount.
- *
- * Features:
- * - Adds tile layer to map on mount
- * - Updates tile layer when URL changes
- * - Removes tile layer on unmount
- * - Supports custom attribution and zoom levels
- * - Handles subdomains for load balancing
- * - Prevents infinite loops from array prop changes
- * - Uses AbortController pattern for safe async cleanup
  *
  * @example
  * ```tsx
@@ -36,7 +27,7 @@ export function LeafletTileLayer({
   url,
   attribution = "",
   maxZoom = 19,
-  subdomains = DEFAULT_SUBDOMAINS,
+  subdomains = DEFAULT_SUBDOMAINS
 }: LeafletTileLayerProps) {
   const map = useLeafletMap();
   const tileLayerRef = useRef<TileLayer | null>(null);
@@ -84,7 +75,7 @@ export function LeafletTileLayer({
         const tileLayer = L.tileLayer(url, {
           attribution,
           maxZoom,
-          subdomains: subdomainsList,
+          subdomains: subdomainsList
         });
 
         // Add error handling for tile loading

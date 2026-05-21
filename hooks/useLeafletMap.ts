@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useContext } from "react";
 import type { Map as LeafletMap } from "leaflet";
@@ -6,21 +6,21 @@ import { MapContext } from "@/contexts";
 
 /**
  * Hook to access Leaflet map instance from MapContext
- * 
+ *
  * @returns Leaflet map instance or null if not initialized
  * @throws Error if used outside MapProvider
- * 
+ *
  * @example
  * ```tsx
  * function MapControl() {
  *   const map = useLeafletMap();
- *   
+ *
  *   const handleZoomIn = () => {
  *     if (map) {
  *       map.zoomIn();
  *     }
  *   };
- *   
+ *
  *   return (
  *     <button onClick={handleZoomIn} disabled={!map}>
  *       Zoom In
@@ -33,7 +33,7 @@ export function useLeafletMap(): LeafletMap | null {
   const context = useContext(MapContext);
 
   if (context === undefined) {
-    throw new Error('useLeafletMap must be used within a MapProvider');
+    throw new Error("useLeafletMap must be used within a MapProvider");
   }
 
   return context.map;

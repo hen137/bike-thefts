@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Ruler, X, Undo, Check, MapPin } from "lucide-react";
 import { MeasurementMode } from "@/types/hooks";
 import { MapMeasurementPanelProps } from "@/types/components";
@@ -10,7 +11,7 @@ import { useMeasurement } from "@/hooks";
  */
 export function MapMeasurementPanel({
   isOpen,
-  onClose,
+  onClose
 }: MapMeasurementPanelProps) {
   const {
     mode,
@@ -20,7 +21,7 @@ export function MapMeasurementPanel({
     startMeasurement,
     clearMeasurement,
     undoLastPoint,
-    finishMeasurement,
+    finishMeasurement
   } = useMeasurement();
 
   const [lastMeasurement, setLastMeasurement] = useState<{

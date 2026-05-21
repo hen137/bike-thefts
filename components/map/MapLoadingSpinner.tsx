@@ -9,13 +9,6 @@ import { MapContext } from "@/contexts";
  * This component displays a loading spinner while the map is initializing.
  * It automatically fades out when the map is ready.
  *
- * Features:
- * - Centered loading spinner with backdrop
- * - Smooth fade-out transition when ready
- * - Modern animated ring design
- * - Gradient colors matching theme
- * - Informative loading text
- *
  * @example
  * ```tsx
  * <div className="relative w-full h-screen">

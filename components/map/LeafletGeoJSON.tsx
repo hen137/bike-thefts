@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo } from "react";
-import { useLeafletMap } from "@/hooks/useLeafletMap";
+import { useLeafletMap } from "@/hooks";
 import type { GeoJSON as GeoJSONType } from "leaflet";
 import { LeafletGeoJSONProps } from "@/types/components";
 import { GeoJSONStyle } from "@/types/map";
@@ -11,18 +11,11 @@ const DEFAULT_STYLE: Required<GeoJSONStyle> = {
   fillColor: "#3b82f6",
   fillOpacity: 0.2,
   color: "#2563eb",
-  weight: 2,
+  weight: 2
 };
 
 /**
  * LeafletGeoJSON component - Renders GeoJSON features on the map
- *
- * Features:
- * - Renders GeoJSON polygons/multipolygons
- * - Customizable styling with memoized style object
- * - Automatic cleanup on unmount
- * - Fits bounds to feature
- * - Safe async pattern with mount check
  */
 export function LeafletGeoJSON({ data, style }: LeafletGeoJSONProps) {
   const map = useLeafletMap();
@@ -35,7 +28,7 @@ export function LeafletGeoJSON({ data, style }: LeafletGeoJSONProps) {
       fillColor: style?.fillColor ?? DEFAULT_STYLE.fillColor,
       fillOpacity: style?.fillOpacity ?? DEFAULT_STYLE.fillOpacity,
       color: style?.color ?? DEFAULT_STYLE.color,
-      weight: style?.weight ?? DEFAULT_STYLE.weight,
+      weight: style?.weight ?? DEFAULT_STYLE.weight
     }),
     [style?.fillColor, style?.fillOpacity, style?.color, style?.weight]
   );
@@ -69,7 +62,7 @@ export function LeafletGeoJSON({ data, style }: LeafletGeoJSONProps) {
 
         // Create GeoJSON layer with memoized style
         const geoJSONLayer = L.geoJSON(data, {
-          style: memoizedStyle,
+          style: memoizedStyle
         });
 
         // Add to map
@@ -82,7 +75,7 @@ export function LeafletGeoJSON({ data, style }: LeafletGeoJSONProps) {
           map.flyToBounds(bounds, {
             padding: [50, 50],
             duration: 1.5,
-            easeLinearity: 0.25,
+            easeLinearity: 0.25
           });
         }
       } catch (error) {

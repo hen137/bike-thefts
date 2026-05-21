@@ -13,7 +13,7 @@ const MenuItem = memo(function MenuItem({
   label,
   sublabel,
   onClick,
-  showCopied,
+  showCopied
 }: MenuItemProps) {
   return (
     <button
@@ -52,7 +52,7 @@ export const MapContextMenu = memo(function MapContextMenu({
   isOpen,
   position,
   onClose,
-  onStartMeasurement,
+  onStartMeasurement
 }: MapContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   // Track which position was copied (null means not copied)
@@ -154,7 +154,7 @@ export const MapContextMenu = memo(function MapContextMenu({
    */
   const handleShareMap = useCallback(() => {
     // TODO
-  });
+  }, []);
 
   /**
    * Handle add to POI
@@ -198,7 +198,7 @@ export const MapContextMenu = memo(function MapContextMenu({
       className="absolute z-[1100] min-w-[200px] bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1.5 px-1.5 animate-in fade-in-0 zoom-in-95 duration-150"
       style={{
         left: displayPosition.x,
-        top: displayPosition.y,
+        top: displayPosition.y
       }}
       role="menu"
       aria-label="Map context menu"

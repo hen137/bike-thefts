@@ -3,9 +3,8 @@ import type { TileProvider } from "@/types/map";
 import { useTheme } from "@/hooks";
 import {
   getTileProviderById,
-  getDefaultTileProvider,
+  getDefaultTileProvider
 } from "@/constants/tile-providers";
-import type { TileProvider } from "@/types/map";
 
 /**
  * Custom hook to manage map tile provider with theme-aware auto-switching
@@ -47,6 +46,6 @@ export function useMapTileProvider() {
   return {
     tileProvider,
     currentProviderId,
-    setProviderId,
+    setProviderId
   };
 }

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
+import { createContext, useState, useCallback, useMemo } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { MapProviderProps } from "@/types/contexts";
 import { MapContextValue } from "@/types/map";
@@ -18,14 +12,6 @@ export const MapContext = createContext<MapContextValue | undefined>(undefined);
 
 /**
  * MapProvider component that manages map instance state
- *
- * Features:
- * - Manages Leaflet map instance state
- * - Provides setMap function for registering map instance
- * - Tracks map initialization status with isReady flag
- * - Tracks initialization and error states
- * - Shares map instance across all child components
- * - Memoized context value to prevent unnecessary re-renders
  *
  * @example
  * ```tsx
@@ -73,7 +59,7 @@ export function MapProvider({ children }: MapProviderProps) {
       error,
       isInitializing,
       setMapError,
-      startInitializing,
+      startInitializing
     }),
     [
       map,
@@ -82,7 +68,7 @@ export function MapProvider({ children }: MapProviderProps) {
       error,
       isInitializing,
       setMapError,
-      startInitializing,
+      startInitializing
     ]
   );
 

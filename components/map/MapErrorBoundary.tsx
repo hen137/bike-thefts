@@ -10,20 +10,6 @@ import { Component } from "react";
  * This component catches JavaScript errors anywhere in the map component tree
  * and displays a fallback UI instead of crashing the entire application.
  *
- * Features:
- * - Catches and handles errors in map components
- * - Displays user-friendly error messages
- * - Provides reset functionality
- * - Logs errors for debugging
- * - Prevents app crashes from map failures
- *
- * Common Error Scenarios:
- * - Missing Leaflet library
- * - Invalid map configuration
- * - Tile loading failures
- * - Marker rendering errors
- * - Network connectivity issues
- *
  * @example
  * ```tsx
  * <MapErrorBoundary>
@@ -43,7 +29,7 @@ export class MapErrorBoundary extends Component<
     super(props);
     this.state = {
       hasError: false,
-      error: null,
+      error: null
     };
   }
 
@@ -51,7 +37,7 @@ export class MapErrorBoundary extends Component<
     // Update state so the next render will show the fallback UI
     return {
       hasError: true,
-      error,
+      error
     };
   }
 
@@ -66,7 +52,7 @@ export class MapErrorBoundary extends Component<
   handleReset = () => {
     this.setState({
       hasError: false,
-      error: null,
+      error: null
     });
   };
 

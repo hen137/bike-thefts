@@ -37,7 +37,7 @@ export function useMapControls() {
       // Reset to default view
       map.setView(
         DEFAULT_MAP_CONFIG.defaultCenter,
-        DEFAULT_MAP_CONFIG.defaultZoom,
+        DEFAULT_MAP_CONFIG.defaultZoom
       );
     }
   }, [map]);
@@ -47,6 +47,6 @@ export function useMapControls() {
     zoomOut,
     toggleFullscreen,
     resetView,
-    map,
+    map
   };
 }

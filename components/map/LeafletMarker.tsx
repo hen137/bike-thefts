@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useMemo } from "react";
 import type { Marker, DragEndEvent } from "leaflet";
-import { useLeafletMap } from "@/hooks/useLeafletMap";
+import { useLeafletMap } from "@/hooks";
 import type { LeafletMarkerProps } from "@/types/components";
 
 /**
@@ -10,16 +10,6 @@ import type { LeafletMarkerProps } from "@/types/components";
  *
  * This component creates and manages a Leaflet marker at a specified position.
  * It supports optional popups, custom icons, and draggable markers with events.
- *
- * Features:
- * - Creates marker at specified position
- * - Supports optional popup content (string or React node)
- * - Handles custom icons
- * - Supports draggable markers with drag end events
- * - Removes marker on unmount
- * - Updates marker position when props change
- * - Safe async pattern with mount check
- * - Memoized position to prevent unnecessary updates
  *
  * @example
  * ```tsx
@@ -36,7 +26,7 @@ export function LeafletMarker({
   icon,
   popup,
   draggable = false,
-  onDragEnd,
+  onDragEnd
 }: LeafletMarkerProps) {
   const map = useLeafletMap();
   const markerRef = useRef<Marker | null>(null);
@@ -84,7 +74,7 @@ export function LeafletMarker({
 
         // Create marker options
         const markerOptions: L.MarkerOptions = {
-          draggable,
+          draggable
         };
 
         // Add custom icon if provided

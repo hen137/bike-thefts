@@ -5,21 +5,12 @@ import type { Map as LeafletMapInstance, LeafletMouseEvent } from "leaflet";
 import type { LeafletMapProps } from "@/types/components";
 import { MapContext } from "@/contexts/MapContext";
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
-import type { LeafletMapProps } from "@/types/components";
 
 /**
  * LeafletMap component - Core map wrapper that initializes Leaflet
  *
  * This component creates a map container and initializes a Leaflet map instance.
  * It registers the map with MapContext so other components can access it.
- *
- * Features:
- * - Initializes Leaflet map ONCE with configurable options
- * - Separates initialization from view updates to prevent unnecessary re-creation
- * - Registers map instance with MapContext
- * - Handles cleanup on unmount to prevent memory leaks
- * - Uses AbortController pattern for safe async cleanup
- * - Supports custom center, zoom, and zoom bounds
  *
  * @example
  * ```tsx
@@ -39,7 +30,7 @@ export function LeafletMap({
   children,
   onClick,
   onMouseMove,
-  cursorStyle = "grab",
+  cursorStyle = "grab"
 }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMapInstance | null>(null);
@@ -49,13 +40,13 @@ export function LeafletMap({
   const initialCenterRef = useRef(center);
   const initialZoomRef = useRef(zoom);
 
-  const context = useContext(MapContext);
+  const mapContext = useContext(MapContext);
 
-  if (context === undefined) {
+  if (mapContext === undefined) {
     throw new Error("LeafletMap must be used within a MapProvider");
   }
 
-  const { setMap } = context;
+  const { setMap } = mapContext;
 
   // Memoized cleanup function
   const cleanupMap = useCallback(() => {
@@ -106,13 +97,13 @@ export function LeafletMap({
           minZoom,
           maxZoom,
           zoomControl: DEFAULT_MAP_CONFIG.zoomControl,
-          attributionControl: DEFAULT_MAP_CONFIG.attributionControl,
+          attributionControl: DEFAULT_MAP_CONFIG.attributionControl
         });
 
         // Mark as initialized before storing reference
         isInitializedRef.current = true;
         mapRef.current = map;
-        
+
         // Register map with context
         setMap(map);
 
