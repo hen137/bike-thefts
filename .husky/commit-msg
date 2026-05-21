@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+pnx --silent -- commitlint --edit "$1"
