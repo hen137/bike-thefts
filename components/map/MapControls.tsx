@@ -17,7 +17,7 @@ import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
  * Memoized to prevent unnecessary re-renders
  */
 export const MapControls = memo(function MapControls({
-  onSliderChange,
+  onSliderChange
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
@@ -37,22 +37,21 @@ export const MapControls = memo(function MapControls({
     };
   }, []);
 
+  // draw heatmap
   useEffect(() => {
     // get date range
     // query ranged subset
-    
     // calc values
     // draw heatmap
-
-    const values: HeatLatLngTuple[] = [
-      [
-        DEFAULT_MAP_CONFIG.defaultCenter[0],
-        DEFAULT_MAP_CONFIG.defaultCenter[1],
-        sliderValues[0] / 1000,
-      ],
-    ];
-    if (map) onSliderChange(map, values);
-  }, [onSliderChange, sliderValues, map]);
+    // const values: HeatLatLngTuple[] = [
+    //   [
+    //     DEFAULT_MAP_CONFIG.defaultCenter[0],
+    //     DEFAULT_MAP_CONFIG.defaultCenter[1],
+    //     sliderValues[0] / 1000
+    //   ]
+    // ];
+    // if (map) onSliderChange(map, values);
+  }, [sliderValues, map]);
 
   // Oct, 2025 - Jan, 2014
   const min = new Date(2014, 0).getTime();
@@ -71,9 +70,8 @@ export const MapControls = memo(function MapControls({
 
     return {
       startDate: `${start.getMonth()}-${start.getFullYear()}`,
-      endDate: `${end.getMonth()}-${end.getFullYear()}`,
+      endDate: `${end.getMonth()}-${end.getFullYear()}`
     };
-    // return `s:${start.getMonth()}-${start.getFullYear()}, e:${end.getMonth()}-${end.getFullYear()}`;
   };
 
   return (
@@ -85,7 +83,7 @@ export const MapControls = memo(function MapControls({
           sliderDates={calcDates(sliderValues)}
         />
       </div>
-      <div className="absolute -left-200 w-100">
+      <div id="debug" className="absolute -left-200 w-100">
         <p>Raw: {sliderValues.join(",")}</p>
         <p>
           Date: s:{calcDates(sliderValues).startDate}, e:
