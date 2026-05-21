@@ -5,8 +5,8 @@ import type {
   Icon as LeafletIcon,
   Map as LeafletMap
 } from "leaflet";
-import { ContextMenuPosition } from "@/hooks/useMapContextMenu";
-import { GeoJSONStyle } from "./map";
+import { GeoJSONStyle } from "@/types/map";
+import { ContextMenuPosition } from "@/types/hooks";
 
 /**
  * MapErrorBoundry component props
