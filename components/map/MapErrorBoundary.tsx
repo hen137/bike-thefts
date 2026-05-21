@@ -1,15 +1,8 @@
 "use client";
 
-import { Component, ReactNode } from "react";
-
-interface MapErrorBoundaryProps {
-  children: ReactNode;
-}
-
-interface MapErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-}
+import { MapErrorBoundaryProps } from "@/types/components";
+import { MapErrorBoundaryState } from "@/types/map";
+import { Component } from "react";
 
 /**
  * MapErrorBoundary component - Error boundary for map-related errors

@@ -2,6 +2,7 @@
 
 import { User, Settings, LogOut, Heart, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/hooks";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "@/hooks/useTheme";
 
 /**
  * MapUser - User profile dropdown menu

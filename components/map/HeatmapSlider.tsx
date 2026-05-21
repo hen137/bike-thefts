@@ -1,12 +1,17 @@
 "use client";
 
-import { Slider, SliderTrack, SliderRange, SliderThumb } from "../ui/slider";
-import { Tooltip } from "./Tooltip";
-
-interface HeatmapSliderProps {
-  updateValues: (values: number[]) => void;
-  sliderDates: {startDate: string, endDate: string}
-}
+import { HeatmapSliderProps } from "@/types/components";
+import {
+  Slider,
+  SliderTrack,
+  SliderRange,
+  SliderThumb,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipArrow
+} from "@/components/ui";
 
 const MAX_RANGE = 1000;
 

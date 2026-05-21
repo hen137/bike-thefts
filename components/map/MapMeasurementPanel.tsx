@@ -1,14 +1,9 @@
 "use client";
 
 import { Ruler, X, Undo, Check, MapPin } from "lucide-react";
-import { useMeasurement } from "@/hooks/useMeasurement";
-import type { MeasurementMode } from "@/hooks/useMeasurement";
-import { useState } from "react";
-
-interface MapMeasurementPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { MeasurementMode } from "@/types/hooks";
+import { MapMeasurementPanelProps } from "@/types/components";
+import { useMeasurement } from "@/hooks";
 
 /**
  * MapMeasurementPanel - Measurement panel UI

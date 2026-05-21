@@ -4,6 +4,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useLeafletMap } from './useLeafletMap';
 import type { Circle, Marker, LocationEvent, ErrorEvent } from 'leaflet';
+import { toast } from 'sonner';
+import { useLeafletMap } from '@/hooks';
 
 /**
  * Custom hook for geolocation functionality

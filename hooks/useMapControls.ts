@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useLeafletMap } from "./useLeafletMap";
+import { useLeafletMap } from "@/hooks";
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
 
 /**

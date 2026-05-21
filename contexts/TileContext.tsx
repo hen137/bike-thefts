@@ -1,7 +1,9 @@
 "use client";
 
-import { createContext, ReactNode, useMemo } from "react";
+import { createContext, useMemo } from "react";
+import { TileProviderProps } from "@/types/contexts";
 import { TileContextValue } from "@/types/map";
+import { useMapTileProvider } from "@/hooks";
 
 /**
  * Map context for managing Leaflet map instance

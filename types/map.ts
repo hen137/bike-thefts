@@ -2,7 +2,7 @@
  * Map-related TypeScript type definitions
  */
 
-import type { Map as LeafletMap } from 'leaflet';
+import type { Map as LeafletMap } from "leaflet";
 
 /**
  * Map configuration options
@@ -17,6 +17,14 @@ export interface MapConfig {
 }
 
 /**
+ * MapErrorBoundryState
+ */
+export interface MapErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+/**
  * Tile provider configuration
  */
 export interface TileProvider {
@@ -25,7 +33,17 @@ export interface TileProvider {
   url: string;
   attribution: string;
   maxZoom: number;
-  category: 'default' | 'satellite' | 'dark:default' | 'fun';
+  category: "default" | "satellite" | "dark:default" | "fun";
+}
+
+/**
+ * GeoJSON styles
+ */
+export interface GeoJSONStyle {
+  fillColor?: string;
+  fillOpacity?: number;
+  color?: string;
+  weight?: number;
 }
 
 /**
@@ -42,8 +60,9 @@ export interface MapContextValue {
 }
 
 export interface TileContextValue {
-  selectedProviderId: string;
-  onProviderChange: (id: string | null) => void;
+  tileProvider: TileProvider;
+  currentProviderId: string;
+  setProviderId: (id: string | null) => void;
 }
 
 /**

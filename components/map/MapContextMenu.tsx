@@ -3,22 +3,7 @@
 import { memo, useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { Copy, Ruler, Check, Share } from "lucide-react";
 import { formatDecimalDegrees } from "@/lib/utils/coordinates";
-import type { ContextMenuPosition } from "@/hooks/useMapContextMenu";
-
-interface MapContextMenuProps {
-  isOpen: boolean;
-  position: ContextMenuPosition | null;
-  onClose: () => void;
-  onStartMeasurement: () => void;
-}
-
-interface MenuItemProps {
-  icon: React.ReactNode;
-  label: string;
-  sublabel?: string;
-  onClick: () => void;
-  showCopied?: boolean;
-}
+import { MapContextMenuProps, MenuItemProps } from "@/types/components";
 
 /**
  * Individual menu item component

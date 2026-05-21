@@ -1,9 +1,19 @@
-/**
- * Component prop type definitions
- */
+import type { ReactNode } from "react";
+import type {
+  HeatLatLngTuple,
+  LatLng,
+  Icon as LeafletIcon,
+  Map as LeafletMap
+} from "leaflet";
+import { ContextMenuPosition } from "@/hooks/useMapContextMenu";
+import { GeoJSONStyle } from "./map";
 
-import type { ReactNode } from 'react';
-import type { Icon as LeafletIcon } from 'leaflet';
+/**
+ * MapErrorBoundry component props
+ */
+export interface MapErrorBoundaryProps {
+  children: ReactNode;
+}
 
 /**
  * LeafletMap component props
@@ -42,41 +52,56 @@ export interface LeafletMarkerProps {
 }
 
 /**
- * DockContainer component props
+ * LeafletGeoJSON component props
  */
-export interface DockContainerProps {
-  children: ReactNode;
-  position?: 'bottom' | 'top';
-  className?: string;
+export interface LeafletGeoJSONProps {
+  data: GeoJSON.Feature | null;
+  style?: GeoJSONStyle;
 }
 
 /**
- * DockButton component props
+ * MapControls component props
  */
-export interface DockButtonProps {
-  icon: ReactNode;
+export interface MapControlsProps {
+  onSliderChange: (
+    map: LeafletMap,
+    values: (LatLng | HeatLatLngTuple)[]
+  ) => Promise<void>;
+}
+
+/**
+ * MapContextMenu component props
+ */
+export interface MapContextMenuProps {
+  isOpen: boolean;
+  position: ContextMenuPosition | null;
+  onClose: () => void;
+  onStartMeasurement: () => void;
+}
+
+/**
+ * MapMeasurementPanel component props
+ */
+export interface MapMeasurementPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+/**
+ * MenuItem component props
+ */
+export interface MenuItemProps {
+  icon: React.ReactNode;
   label: string;
+  sublabel?: string;
   onClick: () => void;
-  disabled?: boolean;
-  active?: boolean;
+  showCopied?: boolean;
 }
 
 /**
- * Base map option for chooser
+ * HeatmapSlider component props
  */
-export interface BaseMapOption {
-  id: string;
-  name: string;
-  url: string;
-  attribution: string;
-  preview?: string;
-}
-
-/**
- * BaseMapChooser component props
- */
-export interface BaseMapChooserProps {
-  options: BaseMapOption[];
-  activeId: string;
-  onChange: (id: string) => void;
+export interface HeatmapSliderProps {
+  updateValues: (values: number[]) => void;
+  sliderDates: { startDate: string; endDate: string };
 }

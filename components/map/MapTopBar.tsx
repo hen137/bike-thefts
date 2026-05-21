@@ -1,8 +1,11 @@
 "use client";
 
 import { memo } from "react";
-import { MapThemeSwitcher } from "./MapThemeSwitcher";
-import { MapTileSwitcher } from "./MapTileSwitcher";
+import {
+  MapSearchBar,
+  MapThemeSwitcher,
+  MapTileSwitcher
+} from "@/components/map";
 
 /**
  * MapTopBar - Top navigation bar with category pills and user menu

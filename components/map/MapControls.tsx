@@ -2,18 +2,12 @@
 
 import { memo, useState, useEffect } from "react";
 import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
-import { useMapControls } from "@/hooks/useMapControls";
-import { useGeolocation } from "@/hooks/useGeolocation";
-import { HeatmapSlider } from "./HeatmapSlider";
-import { HeatLatLngTuple, LatLng, Map } from "leaflet";
+import { HeatLatLngTuple } from "leaflet";
+import { MapControlsProps } from "@/types/components";
+import { useMapControls } from "@/hooks";
+import { useGeolocation } from "@/hooks";
+import { HeatmapSlider } from "@/components/map";
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
-
-interface MapControlsProps {
-  onSliderChange: (
-    map: Map,
-    values: (LatLng | HeatLatLngTuple)[],
-  ) => Promise<void>;
-}
 
 /**
  * MapControls - Map control buttons at bottom right

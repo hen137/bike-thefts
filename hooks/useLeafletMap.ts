@@ -1,8 +1,8 @@
 'use client';
 
-import { useContext } from 'react';
-import { MapContext } from '@/contexts/MapContext';
-import type { Map as LeafletMap } from 'leaflet';
+import { useContext } from "react";
+import type { Map as LeafletMap } from "leaflet";
+import { MapContext } from "@/contexts";
 
 /**
  * Hook to access Leaflet map instance from MapContext

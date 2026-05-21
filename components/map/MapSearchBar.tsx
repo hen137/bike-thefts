@@ -11,23 +11,13 @@ import {
   PencilRuler,
 } from "lucide-react";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { MapInfo } from "./MapInfo";
+import { MapInfo } from "@/components/map";
 
-interface Country {
-  id: string;
-  name: string;
-  nameLong: string;
-}
-
-interface MapSearchBarProps {
-  onCountrySelect: (countryId: string) => void;
-  selectedCountry?: GeoJSON.Feature | null;
-  onClearSelection?: () => void;
-  onMeasurementClick?: () => void;
-  onPOIClick?: () => void;
-  isPOIPanelOpen?: boolean;
-  onClosePOIPanel?: () => void;
-}
+// interface Country {
+//   id: string;
+//   name: string;
+//   nameLong: string;
+// }
 
 /**
  * MapSearchBar - Google Maps-style expandable search bar with keyboard navigation

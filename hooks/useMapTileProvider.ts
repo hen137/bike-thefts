@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { useTheme } from "@/hooks/useTheme";
+import type { TileProvider } from "@/types/map";
+import { useTheme } from "@/hooks";
 import {
   getTileProviderById,
   getDefaultTileProvider,

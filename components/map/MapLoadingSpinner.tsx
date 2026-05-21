@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { MapContext } from "@/contexts/MapContext";
+import { MapContext } from "@/contexts";
 
 /**
  * MapLoadingSpinner component - Loading overlay during map initialization

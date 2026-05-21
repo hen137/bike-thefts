@@ -3,18 +3,8 @@
 import { useEffect, useRef, useMemo } from "react";
 import { useLeafletMap } from "@/hooks/useLeafletMap";
 import type { GeoJSON as GeoJSONType } from "leaflet";
-
-interface GeoJSONStyle {
-  fillColor?: string;
-  fillOpacity?: number;
-  color?: string;
-  weight?: number;
-}
-
-interface LeafletGeoJSONProps {
-  data: GeoJSON.Feature | null;
-  style?: GeoJSONStyle;
-}
+import { LeafletGeoJSONProps } from "@/types/components";
+import { GeoJSONStyle } from "@/types/map";
 
 // Default style values
 const DEFAULT_STYLE: Required<GeoJSONStyle> = {

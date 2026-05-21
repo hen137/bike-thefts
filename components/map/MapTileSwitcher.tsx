@@ -3,9 +3,9 @@
 import { useContext, useState } from "react";
 import Image from "next/image";
 import { SwatchBook } from "lucide-react";
+import { useTheme } from "@/hooks";
+import { TileContext } from "@/contexts";
 import { TILE_PROVIDERS } from "@/constants/tile-providers";
-import { TileContext } from "@/contexts/TileContext";
-import { useTheme } from "@/hooks/useTheme";
 
 /**
  * MapTileSwitcher - Tile layer switcher UI

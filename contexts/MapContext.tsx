@@ -8,16 +8,13 @@ import {
   useMemo,
 } from "react";
 import type { Map as LeafletMap } from "leaflet";
+import { MapProviderProps } from "@/types/contexts";
 import { MapContextValue } from "@/types/map";
 
 /**
  * Map context for managing Leaflet map instance
  */
 export const MapContext = createContext<MapContextValue | undefined>(undefined);
-
-interface MapProviderProps {
-  children: ReactNode;
-}
 
 /**
  * MapProvider component that manages map instance state

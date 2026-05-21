@@ -1,23 +1,9 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useLeafletMap } from './useLeafletMap';
-import type { LeafletMouseEvent } from 'leaflet';
-
-export interface ContextMenuPosition {
-  x: number;
-  y: number;
-  latlng: {
-    lat: number;
-    lng: number;
-  };
-}
-
-export interface UseMapContextMenuReturn {
-  isOpen: boolean;
-  position: ContextMenuPosition | null;
-  close: () => void;
-}
+import { useState, useCallback, useRef, useEffect } from "react";
+import type { LeafletMouseEvent } from "leaflet";
+import { ContextMenuPosition, UseMapContextMenuReturn } from "@/types/hooks";
+import { useLeafletMap } from "@/hooks";
 
 /**
  * Hook for managing map context menu (right-click menu)

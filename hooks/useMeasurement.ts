@@ -1,18 +1,10 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useLeafletMap } from './useLeafletMap';
-import { calculateDistance as calculateDistanceUtil } from '@/lib/utils/coordinates';
-import type { LatLng, LeafletMouseEvent } from 'leaflet';
-
-export type MeasurementMode = 'distance' | 'area' | null;
-
-interface MeasurementPoint {
-  latlng: LatLng;
-  marker?: L.CircleMarker;
-}
-
-type L = typeof import('leaflet');
+import { useState, useCallback, useRef, useEffect } from "react";
+import type { LatLng, LeafletMouseEvent } from "leaflet";
+import { MeasurementMode, MeasurementPoint } from "@/types/hooks";
+import { useLeafletMap } from "@/hooks";
+import { calculateDistance as calculateDistanceUtil } from "@/lib/utils/coordinates";
 
 /**
  * Hook for map measurement functionality
