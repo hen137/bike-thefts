@@ -1,9 +1,9 @@
 "use client";
 
+import { useContext } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { TileContext } from "@/contexts/TileContext";
-import { useContext } from "react";
 
 /**
  * MapThemeSwitcher - Toggle between light and dark themes
@@ -12,15 +12,17 @@ import { useContext } from "react";
 export function MapThemeSwitcher() {
   const { theme, toggleTheme, mounted } = useTheme();
 
-  const tileProps = useContext(TileContext);
+  const tileContext = useContext(TileContext);
 
-  if (!tileProps) return;
+  if (tileContext === undefined) {
+    throw new Error("MapThemeSwitcher must be used within a TileProvider");
+  }
 
-  const { selectedProviderId, onProviderChange } = tileProps;
+  const { currentProviderId, setProviderId } = tileContext;
 
   const handleToggleTheme = () => {
-    if (selectedProviderId === "osm" || selectedProviderId === "dark")
-      onProviderChange(theme === "light" ? "dark" : "osm");
+    if (currentProviderId === "osm" || currentProviderId === "dark")
+      setProviderId(theme === "light" ? "dark" : "osm");
     toggleTheme();
   };
 

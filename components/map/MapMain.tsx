@@ -1,29 +1,18 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
-import { LeafletMap } from "./LeafletMap";
-import { LeafletTileLayer } from "./LeafletTileLayer";
-import { LeafletGeoJSON } from "./LeafletGeoJSON";
-import { MapSearchBar } from "./MapSearchBar";
-import { MapTopBar } from "./MapTopBar";
-import { MapControls } from "./MapControls";
-import { MapDetailsPanel } from "./MapDetailsPanel";
-import { MapMeasurementPanel } from "./MapMeasurementPanel";
-import { MapContextMenu } from "./MapContextMenu";
-import { useMapTileProvider } from "@/hooks/useMapTileProvider";
-import { useMapContextMenu } from "@/hooks/useMapContextMenu";
-import { TileProvider } from "@/contexts/TileContext";
-import { MapInfo } from "./MapInfo";
+import { useState, useCallback, useMemo, useContext } from "react";
 import { HeatLatLngTuple, LatLng, Map } from "leaflet";
-import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
-
-// Memoized style object to prevent unnecessary re-renders
-const GEOJSON_STYLE = {
-  fillColor: "#3b82f6",
-  fillOpacity: 0.2,
-  color: "#2563eb",
-  weight: 2,
-} as const;
+import { useMapContextMenu } from "@/hooks/useMapContextMenu";
+import { TileContext } from "@/contexts/TileContext";
+import {
+  LeafletMap,
+  LeafletTileLayer,
+  MapContextMenu,
+  MapControls,
+  MapInfo,
+  MapMeasurementPanel,
+  MapTopBar
+} from "@/components/map";
 
 /**
  * MapMain - Main map component with theme-aware tile provider
@@ -34,42 +23,26 @@ const GEOJSON_STYLE = {
  * - Stable function references
  */
 export function MapMain() {
-  const [selectedCountry, setSelectedCountry] =
-    useState<GeoJSON.Feature | null>(null);
+  // const [selectedCountry, setSelectedCountry] =
+  //   useState<GeoJSON.Feature | null>(null);
   const [isMeasurementOpen, setIsMeasurementOpen] = useState(false);
 
-  // Use custom hook for theme-aware tile provider management
-  const { tileProvider, currentProviderId, setProviderId } =
-    useMapTileProvider();
+  const tileContext = useContext(TileContext);
+
+  if (tileContext === undefined) {
+    throw new Error("MapMain must be used within a TileProvider");
+  }
+
+  const { tileProvider } = tileContext;
 
   // Context menu hook
   const {
     isOpen: isContextMenuOpen,
     position: contextMenuPosition,
-    close: closeContextMenu,
+    close: closeContextMenu
   } = useMapContextMenu();
 
   // Memoized callbacks to prevent unnecessary re-renders
-  const handleCountrySelect = useCallback(async (countryId: string) => {
-    try {
-      const response = await fetch(
-        `/api/countries/${encodeURIComponent(countryId)}`,
-      );
-      const feature = await response.json();
-      setSelectedCountry(feature);
-    } catch (error) {
-      console.error("Error loading country GeoJSON:", error);
-    }
-  }, []);
-
-  const handleClearSelection = useCallback(() => {
-    setSelectedCountry(null);
-  }, []);
-
-  const handleMeasurementOpen = useCallback(() => {
-    setIsMeasurementOpen(true);
-  }, []);
-
   const handleMeasurementClose = useCallback(() => {
     setIsMeasurementOpen(false);
   }, []);
@@ -79,14 +52,14 @@ export function MapMain() {
   }, []);
 
   // Handle map click
-  const handleMapClick = useCallback((lat: number, lng: number) => {
-    // do something
-  }, []);
+  // const handleMapClick = useCallback((lat: number, lng: number) => {
+  // do something
+  // }, []);
 
   // Handle map mouse move for cursor tracking
-  const handleMapMouseMove = useCallback((lat: number, lng: number) => {
-    // do something
-  }, []);
+  // const handleMapMouseMove = useCallback((lat: number, lng: number) => {
+  // do something
+  // }, []);
 
   const handleDrawHeatmap = useCallback(
     async (map: Map, values: (LatLng | HeatLatLngTuple)[]) => {
@@ -95,9 +68,10 @@ export function MapMain() {
       (window as Window & { L?: typeof L }).L = L;
       await import("leaflet.heat");
 
-      const heatmap = L.heatLayer(values, { radius: 25 }).addTo(map);
+      // const heatmap =
+      L.heatLayer(values, { radius: 25 }).addTo(map);
     },
-    [],
+    []
   );
 
   // Memoize tile layer props to prevent unnecessary updates
@@ -105,9 +79,9 @@ export function MapMain() {
     () => ({
       url: tileProvider.url,
       attribution: tileProvider.attribution,
-      maxZoom: tileProvider.maxZoom,
+      maxZoom: tileProvider.maxZoom
     }),
-    [tileProvider.url, tileProvider.attribution, tileProvider.maxZoom],
+    [tileProvider.url, tileProvider.attribution, tileProvider.maxZoom]
   );
 
   return (
@@ -115,8 +89,8 @@ export function MapMain() {
       {/* Map */}
       <LeafletMap
         className="w-full h-full"
-        onClick={handleMapClick}
-        onMouseMove={handleMapMouseMove}
+        // onClick={handleMapClick}
+        // onMouseMove={handleMapMouseMove}
         // cursorStyle={isSelectingPOILocation ? "crosshair" : "grab"}
       >
         <LeafletTileLayer
@@ -124,34 +98,14 @@ export function MapMain() {
           attribution={tileLayerProps.attribution}
           maxZoom={tileLayerProps.maxZoom}
         />
-        <LeafletGeoJSON data={selectedCountry} style={GEOJSON_STYLE} />
+        {/* <LeafletGeoJSON data={selectedCountry} style={GEOJSON_STYLE} /> */}
       </LeafletMap>
 
-      {/* Search Bar */}
-      <MapSearchBar
-        onCountrySelect={handleCountrySelect}
-        selectedCountry={selectedCountry}
-        onClearSelection={handleClearSelection}
-        onMeasurementClick={handleMeasurementOpen}
-      />
-
       {/* Top Bar */}
-      <TileProvider
-        selectedProviderId={currentProviderId}
-        onProviderChange={setProviderId}
-      >
-        {/* <MapTopBar onCategoryClick={handleCategoryClick} /> */}
-        <MapTopBar />
-      </TileProvider>
+      <MapTopBar />
 
       {/* Map Controls */}
       <MapControls onSliderChange={handleDrawHeatmap} />
-
-      {/* Country Details Panel */}
-      <MapDetailsPanel
-        country={selectedCountry}
-        onClose={handleClearSelection}
-      />
 
       {/* Measurement Panel */}
       <MapMeasurementPanel

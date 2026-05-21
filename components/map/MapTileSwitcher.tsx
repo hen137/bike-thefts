@@ -15,11 +15,13 @@ export function MapTileSwitcher() {
 
   const { theme } = useTheme();
 
-  const tileProps = useContext(TileContext);
+  const tileContext = useContext(TileContext);
 
-  if (!tileProps) return;
+  if (tileContext === undefined) {
+    throw new Error("MapTileSwitcher must be used within a TileProvider");
+  }
 
-  const { selectedProviderId, onProviderChange } = tileProps;
+  const { currentProviderId, setProviderId } = tileContext;
 
   // Map tile providers to display options with PNG previews
   const layerOptions = [
@@ -28,15 +30,15 @@ export function MapTileSwitcher() {
       label: "Default",
       image: theme === "light" ? "/map-basic.png" : "/map-dark.png",
       provider: TILE_PROVIDERS.find(
-        (p) => p.id === (theme === "light" ? "osm" : "dark"),
-      ),
+        (p) => p.id === (theme === "light" ? "osm" : "dark")
+      )
     },
     {
       id: "satellite",
       label: "Satellite",
-      image: "/map-satellite.png",
-      provider: TILE_PROVIDERS.find((p) => p.id === "satellite"),
-    },
+      image: "/map-satellite.jpg",
+      provider: TILE_PROVIDERS.find((p) => p.id === "satellite")
+    }
   ];
 
   const toggleOpen = () => {
@@ -44,23 +46,23 @@ export function MapTileSwitcher() {
   };
 
   return (
-    <div className=" bottom-24 sm:bottom-8 left-4 flex flex-col sm:flex-row items-start sm:items-center gap-2 z-[1000]">
+    <div className="bottom-24 sm:bottom-8 left-4 flex flex-col sm:flex-row items-start sm:items-center gap-2 z-[1000]">
       {/* Slide-out Panel - Above on mobile, Right on desktop */}
       <div
-        className={`order-first sm:order-last flex items-center gap-2 transition-all duration-300 ease-out ${
+        className={`order-first sm:order-last flex flex-col items-center gap-2 transition-all duration-300 ease-out ${
           isOpen
             ? "opacity-100 translate-y-0 sm:translate-y-0 sm:translate-x-0"
-            : "opacity-0 translate-y-4 sm:translate-y-0 sm:-translate-x-4 pointer-events-none"
+            : "opacity-0 translate-y-4  sm:-translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-1 border border-gray-200 dark:border-gray-700">
+        <div className="absolute sm:top-6 flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-1 border border-gray-200 dark:border-gray-700">
           {layerOptions.map((layer) => (
             <button
               key={layer.id}
-              onClick={() => layer.provider && onProviderChange(layer.id)}
+              onClick={() => layer.provider && setProviderId(layer.id)}
               disabled={!layer.provider}
               className={`flex flex-col items-center gap-1.5 px-2 sm:px-3 py-2 rounded-xl transition-all ${
-                selectedProviderId === layer.id
+                currentProviderId === layer.id
                   ? "bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-500 dark:ring-blue-400"
                   : "hover:bg-gray-50 dark:hover:bg-gray-700"
               } ${!layer.provider ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -84,29 +86,16 @@ export function MapTileSwitcher() {
       </div>
 
       {/* Main Tile Button */}
-      {/* <div className="flex flex-col items-center gap-1"> */}
       <button
         onClick={toggleOpen}
         className="flex flex-col items-center gap-1 rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors"
         aria-label="Choose Tile Themes"
       >
-        {/* <div className="relative h-16 w-16 sm:h-18 sm:w-20">
-            <Image
-              src={selectedLayer.image}
-              alt={`${selectedLayer.label} map preview`}
-              fill
-              sizes="(max-width: 640px) 5px, 80px"
-              className="object-cover"
-            />
-          </div> */}
         <SwatchBook
           className={
             theme === "dark" ? "h-5 w-5 text-gray-200" : "h-5 w-5 text-gray-600"
           }
         />
-        {/* <span className="block bg-white dark:bg-gray-800 px-2 py-1 text-[10px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
-            {selectedLayer.label}
-          </span> */}
       </button>
     </div>
     // </div>

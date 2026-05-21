@@ -1,16 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Search,
-  ChevronRight,
-  MapPin,
-  Ruler,
-  RotateCcw,
-  Locate,
-  PencilRuler,
-} from "lucide-react";
-import { useGeolocation } from "@/hooks/useGeolocation";
+import { Search } from "lucide-react";
+import { useGeolocation } from "@/hooks";
 import { MapInfo } from "@/components/map";
 
 // interface Country {
@@ -22,29 +14,11 @@ import { MapInfo } from "@/components/map";
 /**
  * MapSearchBar - Google Maps-style expandable search bar with keyboard navigation
  *
- * Features:
- * - Expandable search with smooth animations
- * - Debounced search (150ms)
- * - Keyboard navigation support:
- *   - Arrow Up/Down: Navigate through results
- *   - Enter: Select highlighted country
- *   - Escape: Close dropdown
- * - Visual feedback for selected item
- * - Accessibility support with ARIA attributes
- * - Auto-scroll selected item into view
  */
-export function MapSearchBar({
-  onCountrySelect,
-  selectedCountry,
-  onClearSelection,
-  onMeasurementClick,
-  onPOIClick,
-  isPOIPanelOpen,
-  onClosePOIPanel,
-}: MapSearchBarProps) {
+export function MapSearchBar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [countries, setCountries] = useState<Country[]>([]);
+  // const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -60,16 +34,15 @@ export function MapSearchBar({
     const fetchCountries = async () => {
       setLoading(true);
       try {
-        const query = searchQuery.trim();
-        const url = query
-          ? `/api/countries/search?q=${encodeURIComponent(query)}`
-          : "/api/countries/search";
-
-        const response = await fetch(url);
-        const data = await response.json();
-        setCountries(data);
+        // const query = searchQuery.trim();
+        // const url = query
+        //   ? `/api/countries/search?q=${encodeURIComponent(query)}`
+        //   : "/api/countries/search";
+        // const response = await fetch(url);
+        // const data = await response.json();
+        // setCountries(data);
       } catch {
-        setCountries([]);
+        // setCountries([]);
       } finally {
         setLoading(false);
       }
@@ -85,38 +58,27 @@ export function MapSearchBar({
     }
   }, [searchQuery, isExpanded]);
 
-  // Handle country selection
-  const handleCountrySelect = useCallback(
-    (countryId: string) => {
-      onCountrySelect(countryId);
-      setIsExpanded(false);
-      setSearchQuery("");
-      setSelectedIndex(-1);
-    },
-    [onCountrySelect]
-  );
-
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!isExpanded || countries.length === 0) return;
+      if (!isExpanded) return;
 
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setSelectedIndex((prev) =>
-            prev < countries.length - 1 ? prev + 1 : prev
-          );
+          // setSelectedIndex((prev) =>
+          //   prev < countries.length - 1 ? prev + 1 : prev,
+          // );
           break;
         case "ArrowUp":
           e.preventDefault();
-          setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+          // setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
           break;
         case "Enter":
           e.preventDefault();
-          if (selectedIndex >= 0 && selectedIndex < countries.length) {
-            handleCountrySelect(countries[selectedIndex].id);
-          }
+          // if (selectedIndex >= 0 && selectedIndex < countries.length) {
+          // do something
+          // }
           break;
         case "Escape":
           e.preventDefault();
@@ -126,7 +88,7 @@ export function MapSearchBar({
           break;
       }
     },
-    [isExpanded, countries, selectedIndex, handleCountrySelect]
+    [isExpanded, selectedIndex]
   );
 
   // Scroll selected item into view
@@ -134,7 +96,7 @@ export function MapSearchBar({
     if (selectedIndex >= 0 && itemRefs.current[selectedIndex]) {
       itemRefs.current[selectedIndex]?.scrollIntoView({
         block: "nearest",
-        behavior: "smooth",
+        behavior: "smooth"
       });
     }
   }, [selectedIndex]);
@@ -164,99 +126,35 @@ export function MapSearchBar({
     setIsExpanded(false);
   }, [locateUser]);
 
-  const selectedCountryName = selectedCountry?.properties?.NAME || "";
-  const hasSelection = !!selectedCountry;
-  const hasPOIPanel = !!isPOIPanelOpen;
-
   return (
-    <div className="search-container absolute left-0 right-0 sm:left-4 sm:right-auto top-3 z-[1001] px-4 sm:px-0">
+    <div className="search-container justify-center">
       {/* Search Box - always visible */}
       <div
         className={`flex items-center gap-2 bg-white dark:bg-gray-700/80 backdrop-blur px-4 py-2 sm:py-3.5 shadow-lg transition-all duration-50 ${
           isExpanded ? "rounded-t-lg" : "rounded-full"
         } w-full sm:w-[360px]`}
       >
-        {hasPOIPanel ? (
-          <>
-            {/* POI Panel Open Display */}
-            <span className="text-sm text-gray-800 dark:text-gray-200 font-semibold flex-1 truncate">
-              My Places
-            </span>
-            <button
-              onClick={() => {
-                onClosePOIPanel?.();
-                setSearchQuery("");
-                setIsExpanded(false);
-              }}
-              className="h-5 w-5 flex-shrink-0 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-              aria-label="Close POI panel"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </>
-        ) : hasSelection ? (
-          <>
-            {/* Selected Country Display */}
-            <span className="text-sm text-gray-800 dark:text-gray-200 font-semibold flex-1 truncate">
-              {selectedCountryName}
-            </span>
-            <button
-              onClick={() => {
-                onClearSelection?.();
-                setSearchQuery("");
-                setIsExpanded(false);
-              }}
-              className="h-5 w-5 flex-shrink-0 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-              aria-label="Clear selection"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </>
-        ) : (
-          <>
-            {/* Search Input */}
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Search on maps"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsExpanded(true)}
-              onKeyDown={handleKeyDown}
-              className="border-none bg-transparent text-base sm:text-sm text-gray-800 dark:text-gray-200 font-semibold outline-none placeholder:text-gray-500 dark:placeholder:text-gray-200 transition-all duration-300 w-full"
-              aria-label="Search countries"
-              aria-controls="search-results"
-              aria-activedescendant={
-                selectedIndex >= 0 ? `country-${selectedIndex}` : undefined
-              }
-              autoComplete="off"
-            />
-            <Search
-              className="h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500"
-              aria-hidden="true"
-            />
-          </>
-        )}
+        {/* Search Input */}
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder="Search on maps"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setIsExpanded(true)}
+          onKeyDown={handleKeyDown}
+          className="border-none bg-transparent text-base sm:text-sm text-gray-800 dark:text-gray-200 font-semibold outline-none placeholder:text-gray-500 dark:placeholder:text-gray-200 transition-all duration-300 w-full"
+          aria-label="Search countries"
+          aria-controls="search-results"
+          aria-activedescendant={
+            selectedIndex >= 0 ? `country-${selectedIndex}` : undefined
+          }
+          autoComplete="off"
+        />
+        <Search
+          className="h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500"
+          aria-hidden="true"
+        />
         <div className="ml-2 flex items-center gap-2 border-l border-gray-200 dark:border-gray-700 pl-3">
           {/* Desktop: Show locate button */}
           <button
@@ -302,7 +200,7 @@ export function MapSearchBar({
             </div>
           )}
 
-          {!loading && countries.length === 0 && searchQuery && (
+          {!loading && searchQuery && (
             <div
               className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
               role="status"
@@ -311,133 +209,8 @@ export function MapSearchBar({
               No results found for &quot;{searchQuery}&quot;
             </div>
           )}
-
-          {/* Search Results / Countries */}
-          {!loading && countries.length > 0 && (
-            <>
-              {countries.map((country, index) => (
-                <button
-                  key={country.id}
-                  ref={(el) => {
-                    itemRefs.current[index] = el;
-                  }}
-                  id={`country-${index}`}
-                  role="option"
-                  aria-selected={selectedIndex === index}
-                  onClick={() => handleCountrySelect(country.id)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                  className={`flex w-full items-start gap-4 px-4 py-3 text-left transition-colors ${
-                    selectedIndex === index
-                      ? "bg-blue-50 dark:bg-blue-900/30 border-l-2 border-blue-500 dark:border-blue-400"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-700 border-l-2 border-transparent"
-                  }`}
-                >
-                  <MapPin
-                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {country.name}
-                    </div>
-                    {country.nameLong !== country.name && (
-                      <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                        {country.nameLong}
-                      </div>
-                    )}
-                  </div>
-                  {selectedIndex === index && (
-                    <ChevronRight
-                      className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                  )}
-                </button>
-              ))}
-            </>
-          )}
-
-          {/* Locate Me Button */}
-          {!loading && countries.length > 0 && (
-            <div className="border-t border-gray-200 dark:border-gray-700 mt-2">
-              <button
-                onClick={handleLocateMe}
-                disabled={!isAvailable || isLocating}
-                className={`flex w-full items-center gap-3 px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed ${
-                  isLocating ? "animate-pulse" : ""
-                }`}
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/70 transition-colors">
-                  <Locate className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                    {isLocating ? "Locating..." : "Locate Me"}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {isLocating
-                      ? "Finding your location..."
-                      : "Find my current location"}
-                  </div>
-                </div>
-                <ChevronRight className="h-5 w-5 text-blue-400 dark:text-blue-500" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Map Tools Panel - Visible when search is expanded */}
-      {isExpanded && (
-        <div className="mt-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all duration-300">
-          <div className="px-3 py-3.5">
-            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-              Map Tools
-            </div>
-            <div className="grid grid-cols-4 gap-1">
-              <button
-                onClick={() => {
-                  onMeasurementClick?.();
-                  setIsExpanded(false);
-                }}
-                className="flex flex-col items-center gap-1 px-2 py-2 rounded-2xl bg-stone-200 dark:bg-gray-700 hover:bg-stone-300 dark:hover:bg-gray-600 transition-colors"
-              >
-                <Ruler className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
-                  Measure
-                </span>
-              </button>
-
-              <button
-                onClick={() => {
-                  onPOIClick?.();
-                  setIsExpanded(false);
-                }}
-                className="flex flex-col items-center gap-1 px-2 py-2 rounded-2xl bg-stone-200 dark:bg-gray-700 hover:bg-stone-300 dark:hover:bg-gray-600 transition-colors"
-              >
-                <MapPin className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
-                  My Places
-                </span>
-              </button>
-
-              <button className="flex flex-col items-center gap-1 px-2 py-2 rounded-2xl bg-stone-200 dark:bg-gray-700 hover:bg-stone-300 dark:hover:bg-gray-600 transition-colors opacity-50 cursor-not-allowed">
-                <PencilRuler className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
-                  Draw
-                </span>
-              </button>
-
-              <button className="flex flex-col items-center gap-1 px-2 py-2 rounded-2xl bg-stone-200 dark:bg-gray-700 hover:bg-stone-300 dark:hover:bg-gray-600 transition-colors opacity-50 cursor-not-allowed">
-                <RotateCcw className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
-                  Reset
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
