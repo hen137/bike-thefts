@@ -2,7 +2,7 @@
  * Map-related TypeScript type definitions
  */
 
-import type { Map as LeafletMap } from "leaflet";
+import type { HeatLayer, Map as LeafletMap } from "leaflet";
 
 /**
  * Map configuration options
@@ -63,6 +63,11 @@ export interface TileContextValue {
   tileProvider: TileProvider;
   currentProviderId: string;
   setProviderId: (id: string | null) => void;
+}
+
+export interface HeatContextValue {
+  heatLayer: HeatLayer | null;
+  setHeatLayer: (newHeatLayer: HeatLayer | null) => void;
 }
 
 /**

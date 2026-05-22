@@ -1,13 +1,13 @@
 "use client";
 
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, Suspense, useCallback } from "react";
 import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
-import { HeatLatLngTuple } from "leaflet";
-import { MapControlsProps } from "@/types/components";
-import { useMapControls } from "@/hooks";
-import { useGeolocation } from "@/hooks";
-import { HeatmapSlider } from "@/components/map";
-import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
+import { useMapControls, useGeolocation } from "@/hooks";
+import { Heatmap, HeatmapSlider } from "@/components/map";
+import { getBikeData } from "@/lib/bike-data";
+
+const startThumb = 1000;
+const endThumb = 500;
 
 /**
  * MapControls - Map control buttons at bottom right
@@ -16,14 +16,12 @@ import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
  * Uses project's useMapControls hook for map interactions
  * Memoized to prevent unnecessary re-renders
  */
-export const MapControls = memo(function MapControls({
-  onSliderChange
-}: MapControlsProps) {
+export const MapControls = memo(function MapControls() {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
   const { locateUser, isLocating, isAvailable } = useGeolocation();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [sliderValues, setSliderValue] = useState([1000, 500]);
+  const [sliderValues, setSliderValue] = useState([startThumb, endThumb]);
 
   // Listen for fullscreen changes
   useEffect(() => {
@@ -37,28 +35,12 @@ export const MapControls = memo(function MapControls({
     };
   }, []);
 
-  // draw heatmap
-  useEffect(() => {
-    // get date range
-    // query ranged subset
-    // calc values
-    // draw heatmap
-    // const values: HeatLatLngTuple[] = [
-    //   [
-    //     DEFAULT_MAP_CONFIG.defaultCenter[0],
-    //     DEFAULT_MAP_CONFIG.defaultCenter[1],
-    //     sliderValues[0] / 1000
-    //   ]
-    // ];
-    // if (map) onSliderChange(map, values);
-  }, [sliderValues, map]);
-
   // Oct, 2025 - Jan, 2014
   const min = new Date(2014, 0).getTime();
   const max = new Date(2025, 10).getTime();
-  const calcDates = (values: number[]) => {
-    const x = values[0] / 1000;
-    const y = values[1] / 1000;
+  const calcDates = useCallback((values: number[]) => {
+    const x = values[0] / startThumb;
+    const y = values[1] / startThumb;
 
     const dateDelta = max - min;
 
@@ -72,10 +54,17 @@ export const MapControls = memo(function MapControls({
       startDate: `${start.getMonth()}-${start.getFullYear()}`,
       endDate: `${end.getMonth()}-${end.getFullYear()}`
     };
-  };
+  }, []);
+
+  const bikeData = getBikeData();
 
   return (
     <div className="absolute bottom-24 sm:bottom-8 right-4 flex flex-col items-center gap-2 z-1000">
+      {/* Heatmap */}
+      <Suspense>
+        <Heatmap bikeData={bikeData} />
+      </Suspense>
+
       {/* Heatmap Slider */}
       <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
         <HeatmapSlider
