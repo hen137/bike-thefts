@@ -1,3 +1,5 @@
+"use client";
+
 export { LeafletMap } from "./LeafletMap";
 export { LeafletMarker } from "./LeafletMarker";
 export { LeafletTileLayer } from "./LeafletTileLayer";
@@ -16,3 +18,4 @@ export { MapMeasurementPanel } from "./MapMeasurementPanel";
 export { MapContextMenu } from "./MapContextMenu";
 export { HeatmapSlider } from "./HeatmapSlider";
 export { Heatmap } from "./Heatmap";
+export { DataBoundry } from "./DataBoundry";

@@ -1,13 +1,13 @@
 "use client";
 
-import { memo, useState, useEffect, Suspense, useCallback } from "react";
+import { memo, useState, useEffect } from "react";
 import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
 import { useMapControls, useGeolocation } from "@/hooks";
-import { Heatmap, HeatmapSlider } from "@/components/map";
-import { getBikeData } from "@/lib/bike-data";
+import { DataBoundry } from "@/components/map";
 
-const startThumb = 1000;
-const endThumb = 500;
+// const MAX_SLIDER_RANGE = 1000;
+// const endThumb = 1000;
+// const startThumb = 750;
 
 /**
  * MapControls - Map control buttons at bottom right
@@ -21,7 +21,16 @@ export const MapControls = memo(function MapControls() {
     useMapControls();
   const { locateUser, isLocating, isAvailable } = useGeolocation();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [sliderValues, setSliderValue] = useState([startThumb, endThumb]);
+  // const [sliderValues, setSliderValue] = useState<number[]>([
+  //   startThumb,
+  //   endThumb
+  // ]);
+  // const [endDateExtreme, setEndDateExtreme] = useState<MonthYear | null>(null);
+  // const [startDateExtreme, setStartDateExtreme] = useState<MonthYear | null>(
+  //   null
+  // );
+  // const [endDate, setEndDate] = useState<MonthYear | null>(null);
+  // const [startDate, setStartDate] = useState<MonthYear | null>(null);
 
   // Listen for fullscreen changes
   useEffect(() => {
@@ -35,50 +44,81 @@ export const MapControls = memo(function MapControls() {
     };
   }, []);
 
-  // Oct, 2025 - Jan, 2014
-  const min = new Date(2014, 0).getTime();
-  const max = new Date(2025, 10).getTime();
-  const calcDates = useCallback((values: number[]) => {
-    const x = values[0] / startThumb;
-    const y = values[1] / startThumb;
+  // useEffect(() => {
+  //   console.log(use(getBikeDataDateExtremes()));
+  //   // setStartDateExtreme({ month, year });
+  //   // setEndDateExtreme({ month, year });
+  // }, []);
 
-    const dateDelta = max - min;
+  // // listen for changes in range
+  // useEffect(() => {
+  //   if (startDateExtreme && endDateExtreme) {
+  //     const yearDelta = endDateExtreme.year - startDateExtreme.year;
+  //     const monthDelta =
+  //       endDateExtreme.month - startDateExtreme.month + 12 * yearDelta;
 
-    const alpha = dateDelta * x;
-    const beta = dateDelta * y;
+  //     const startMonths = Math.floor(
+  //       (sliderValues[0] * monthDelta) / MAX_SLIDER_RANGE
+  //     );
+  //     const endMonths = Math.floor(
+  //       (sliderValues[1] * monthDelta) / MAX_SLIDER_RANGE
+  //     );
 
-    const start = new Date(min + alpha);
-    const end = new Date(min + beta);
+  //     const startMonth = startDateExtreme.month + (startMonths % 12);
+  //     const startYear = startDateExtreme.year + Math.floor(startMonths / 12);
 
-    return {
-      startDate: `${start.getMonth()}-${start.getFullYear()}`,
-      endDate: `${end.getMonth()}-${end.getFullYear()}`
-    };
-  }, []);
+  //     const endMonth = startDateExtreme.month + (endMonths % 12);
+  //     const endYear = startDateExtreme.year + Math.floor(endMonths / 12);
 
-  const bikeData = getBikeData();
+  //     setStartDate({ month: startMonth, year: startYear });
+  //     setEndDate({ month: endMonth, year: endYear });
+  //     console.log({ endDate, startDate });
+  //   }
+  // }, [sliderValues, startDateExtreme, endDateExtreme]);
 
   return (
     <div className="absolute bottom-24 sm:bottom-8 right-4 flex flex-col items-center gap-2 z-1000">
       {/* Heatmap */}
-      <Suspense>
-        <Heatmap bikeData={bikeData} />
-      </Suspense>
+      <DataBoundry
+      // startDate={startDate}
+      // endDate={endDate}
+      // sliderValues={sliderValues}
+      // setSliderValue={setSliderValue}
+      />
+      {/* Heatmap */}
+      {/* <Suspense>
+          <Heatmap
+            bikeDataPromise={bikeDataPromise}
+            dateRanges={{ endDate, startDate }}
+          />
+        </Suspense> */}
 
       {/* Heatmap Slider */}
-      <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-        <HeatmapSlider
-          updateValues={setSliderValue}
-          sliderDates={calcDates(sliderValues)}
-        />
-      </div>
-      <div id="debug" className="absolute -left-200 w-100">
-        <p>Raw: {sliderValues.join(",")}</p>
-        <p>
-          Date: s:{calcDates(sliderValues).startDate}, e:
-          {calcDates(sliderValues).endDate}
-        </p>
-      </div>
+      {/* <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
+          <HeatmapSlider
+            initialValues={sliderValues}
+            updateValues={setSliderValue}
+            // updateValues={handleSliderUpdate}
+            sliderDates={{ endDate, startDate }}
+          />
+        </div>
+        <div id="debug" className="absolute -left-200 w-100">
+          <h4 className="font-bold">Slider</h4>
+          <div className="ml-4">
+            <p>Raw: {sliderValues.join(",")}</p>
+            <p>
+              Date: s:{`${startDate?.month}-${startDate?.year}`}, e:
+              {`${endDate?.month}-${endDate?.year}`}
+            </p>
+          </div>
+          <h4 className="font-bold">Data</h4>
+          <div className="ml-4">
+            <Suspense fallback={<>Fetching...</>}>
+              <BikeRecords bikeDataPromise={bikeDataPromise} />
+            </Suspense>
+          </div>
+        </div> */}
+
       {/* Location Button */}
       <button
         onClick={locateUser}

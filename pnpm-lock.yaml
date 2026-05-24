@@ -46,6 +46,9 @@ importers:
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
+      simple-statistics:
+        specifier: ^7.8.9
+        version: 7.8.9
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -6701,6 +6704,12 @@ packages:
       }
     engines: { node: ">=14" }
 
+  simple-statistics@7.8.9:
+    resolution:
+      {
+        integrity: sha512-YT6MLqYsz7y1rQZOLFlOCCgSRpCi6bqY417yhoOLI7aVoBi29dD39EPrOE03W9DY25H0J0jizVsHZnkLzyGJFg==
+      }
+
   slash@5.1.0:
     resolution:
       {
@@ -12026,6 +12035,8 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  simple-statistics@7.8.9: {}
 
   slash@5.1.0: {}
 

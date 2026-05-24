@@ -43,7 +43,7 @@ export function LeafletHeatLayer() {
         }
 
         // Create and add new heat layer
-        const heatLayer = L.heatLayer([], { radius: 25 });
+        const heatLayer = L.heatLayer([], {});
 
         // erroError handling for heat loading
         heatLayer.on("error", (error) => {

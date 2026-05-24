@@ -1,5 +1,3 @@
-"use client";
-
 import { HeatmapSliderProps } from "@/types/components";
 import {
   Slider,
@@ -22,16 +20,19 @@ const contentStyles =
   "w-30 h-15 bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-100";
 
 export function HeatmapSlider({
+  initialValues,
   updateValues,
+  commitValues,
   sliderDates
 }: HeatmapSliderProps) {
   return (
     <Slider
       className=" flex h-130 w-9 items-center justify-center"
       onValueChange={updateValues}
+      onValueCommit={commitValues}
       orientation="vertical"
       max={MAX_RANGE}
-      defaultValue={[1000, 500]}
+      defaultValue={initialValues}
       minStepsBetweenThumbs={MAX_RANGE / 10}
       step={1}
     >
@@ -42,26 +43,18 @@ export function HeatmapSlider({
             <TooltipTrigger asChild>
               <SliderThumb className={thumbStyles} />
             </TooltipTrigger>
-            <TooltipContent
-              side="left"
-              className={contentStyles}
-              sticky="always"
-            >
+            <TooltipContent side="left" className={contentStyles}>
               <TooltipArrow height={10} className="" />
-              {sliderDates.startDate}
+              {`${sliderDates.startDate?.month}-${sliderDates.startDate?.year}`}
             </TooltipContent>
           </TooltipRoot>
           <TooltipRoot>
             <TooltipTrigger asChild>
               <SliderThumb className={thumbStyles} />
             </TooltipTrigger>
-            <TooltipContent
-              side="left"
-              className={contentStyles}
-              sticky="always"
-            >
+            <TooltipContent side="left" className={contentStyles}>
               <TooltipArrow height={10} className="" />
-              {sliderDates.endDate}
+              {`${sliderDates.endDate?.month}-${sliderDates.endDate?.year}`}
             </TooltipContent>
           </TooltipRoot>
         </TooltipProvider>

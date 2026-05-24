@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useMemo, useContext } from "react";
-import { useMapContextMenu } from "@/hooks/useMapContextMenu";
-import { TileContext } from "@/contexts/TileContext";
+import { useMapContextMenu } from "@/hooks";
+import { TileContext, HeatProvider } from "@/contexts";
 import {
   LeafletHeatLayer,
   LeafletMap,
@@ -13,7 +13,6 @@ import {
   MapMeasurementPanel,
   MapTopBar
 } from "@/components/map";
-import { HeatProvider } from "@/contexts";
 
 /**
  * MapMain - Main map component with theme-aware tile provider
