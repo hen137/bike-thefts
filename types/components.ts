@@ -5,8 +5,47 @@ import type {
   Icon as LeafletIcon,
   Map as LeafletMap
 } from "leaflet";
-import { GeoJSONStyle } from "@/types/map";
+import {
+  BikeData,
+  BikeDateExtremes,
+  GeoJSONStyle,
+  MonthYear,
+  StartEndDates
+} from "@/types/map";
 import { ContextMenuPosition } from "@/types/hooks";
+
+/**
+ * DebugHUD component props
+ */
+export interface DebugHUDProps {
+  className?: string;
+  sliderValues: number[];
+  startDate: MonthYear | null;
+  endDate: MonthYear | null;
+  mean: number | null;
+  std: number | null;
+  avgIntensity: number | null;
+  blur: [number];
+  setBlur: (value: [number]) => void;
+  radius: [number];
+  setRadius: (value: [number]) => void;
+  maxZoom: [number];
+  setMaxZoom: (value: [number]) => void;
+  gradient: { [index: number]: string };
+  // setGradient: (value: { [index: number]: string }) => void;
+  bikeData: Promise<BikeData> | null;
+  bikeDateExtremes: BikeDateExtremes;
+}
+
+/**
+ * DebugSlider component props
+ */
+export interface DebugSliderProps {
+  updateValue: (value: [number]) => void;
+  defaultVal: [number];
+  max?: number;
+  increment?: number;
+}
 
 /**
  * MapErrorBoundry component props
@@ -99,9 +138,27 @@ export interface MenuItemProps {
 }
 
 /**
+ * Heatmap component props
+ */
+export interface HeatmapProps {
+  bikeDataPromise: Promise<BikeData>;
+  dateRanges: StartEndDates;
+  blur: number;
+  radius: number;
+  maxZoom: number;
+  gradient: { [index: number]: string };
+  //debug
+  updateMean: (value: number) => void;
+  updateStd: (value: number) => void;
+  updateAvgIntensity: (value: number) => void;
+}
+
+/**
  * HeatmapSlider component props
  */
 export interface HeatmapSliderProps {
+  initialValues: number[];
   updateValues: (values: number[]) => void;
-  sliderDates: { startDate: string; endDate: string };
+  commitValues: (values: number[]) => void;
+  sliderDates: StartEndDates;
 }

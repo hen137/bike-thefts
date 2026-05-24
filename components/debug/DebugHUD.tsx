@@ -1,45 +1,35 @@
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
 import { Suspense, use } from "react";
-import { DebugSlider } from "./DebugSlider";
-import { BikeData, BikeDateExtremes, MonthYear } from "@/types/map";
-
-interface DebugHUDProps {
-  className?: string;
-  sliderValues: number[];
-  startDate: MonthYear | null;
-  endDate: MonthYear | null;
-  mean: number | null;
-  std: number | null;
-  blur: [number];
-  setBlur: (value: [number]) => void;
-  radius: [number];
-  setRadius: (value: [number]) => void;
-  maxZoom: [number];
-  setMaxZoom: (value: [number]) => void;
-  bikeData: Promise<BikeData> | null;
-  bikeDateExtremes: Promise<BikeDateExtremes> | null;
-}
+import { DebugSlider } from "@/components/debug";
+import { BikeData, BikeDateExtremes } from "@/types/map";
+import { DebugHUDProps } from "@/types/components";
 
 function BikeRecords({
   bikeDataPromise,
-  bikeDateExtremesPromise
+  bikeDateExtremes
 }: {
   bikeDataPromise: Promise<BikeData>;
-  bikeDateExtremesPromise: Promise<BikeDateExtremes>;
+  bikeDateExtremes: BikeDateExtremes;
 }) {
   const bikeData = use(bikeDataPromise);
   const numFetches = bikeData.length;
   let totalRecords = 0;
   bikeData.forEach((batch) => (totalRecords += batch.features.length));
 
-  const { startDateExtreme, endDateExtreme } = use(bikeDateExtremesPromise);
+  const { startDateExtreme, endDateExtreme } = bikeDateExtremes;
 
   return (
     <div>
       <p>Fetches: {numFetches}</p>
       <p>Records: {totalRecords}</p>
-      <p>Start Date: {`${startDateExtreme.month}-${startDateExtreme.year}`}</p>
-      <p>End Date: {`${endDateExtreme.month}-${endDateExtreme.year}`}</p>
+      {startDateExtreme && (
+        <p>
+          Start Date: {`${startDateExtreme.month}-${startDateExtreme.year}`}
+        </p>
+      )}
+      {endDateExtreme && (
+        <p>End Date: {`${endDateExtreme.month}-${endDateExtreme.year}`}</p>
+      )}
     </div>
   );
 }
@@ -51,12 +41,15 @@ export function DebugHUD({
   endDate,
   mean,
   std,
+  avgIntensity,
   blur,
   setBlur,
   radius,
   setRadius,
   maxZoom,
   setMaxZoom,
+  // gradient,
+  // setGradient,
   bikeData,
   bikeDateExtremes
 }: DebugHUDProps) {
@@ -70,11 +63,14 @@ export function DebugHUD({
           {`${endDate?.month}-${endDate?.year}`}
         </p>
       </div>
+
       <h4 className="font-bold">Stats</h4>
       <div className="ml-4">
         <p>Mean: {mean}</p>
         <p>Std: {std}</p>
+        <p>Avg Intensity: {avgIntensity}</p>
       </div>
+
       <h4 className="font-bold">Heatmap Settings</h4>
       <div className="ml-4">
         <div className="relative flex items-center flex-row">
@@ -94,14 +90,16 @@ export function DebugHUD({
             increment={1}
           />
         </div>
+        {/* <p>Gradient: {JSON.stringify(gradient)}</p> */}
       </div>
+
       <h4 className="font-bold">Data</h4>
       <div className="ml-4">
         <Suspense fallback={<>Fetching...</>}>
           {bikeData && bikeDateExtremes && (
             <BikeRecords
               bikeDataPromise={bikeData}
-              bikeDateExtremesPromise={bikeDateExtremes}
+              bikeDateExtremes={bikeDateExtremes}
             />
           )}
         </Suspense>

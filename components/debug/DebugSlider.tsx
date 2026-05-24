@@ -1,11 +1,5 @@
 import { Slider, SliderRange, SliderThumb, SliderTrack } from "@/components/ui";
-
-interface DebugSliderProps {
-  updateValue: (value: [number]) => void;
-  defaultVal: [number];
-  max?: number;
-  increment?: number;
-}
+import { DebugSliderProps } from "@/types/components";
 
 export function DebugSlider({
   updateValue,
