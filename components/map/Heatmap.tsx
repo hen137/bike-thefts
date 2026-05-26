@@ -74,6 +74,7 @@ export function Heatmap({
             })
           ) {
             const coords = record.geometry.coordinates;
+            if (!coords || coords.length < 2) return;
 
             // if (!inToronto(coords)) return
 
