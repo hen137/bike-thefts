@@ -7,11 +7,16 @@ export function DebugSlider({
   max,
   increment = 5
 }: DebugSliderProps) {
+  const setValueWithHandler =
+    (setter: (value: number) => void) => (tupledValue: [number]) => {
+      setter(tupledValue[0]);
+    };
   return (
     <Slider
       className="relative h-2 w-60 ml-5 flex items-center justify-center"
-      defaultValue={defaultVal}
-      onValueCommit={updateValue}
+      defaultValue={[defaultVal]}
+      // onValueCommit={updateValue}
+      onValueChange={setValueWithHandler(updateValue)}
       step={increment}
       max={max}
     >

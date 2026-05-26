@@ -1,4 +1,10 @@
-import type { HeatLayer, Map as LeafletMap } from "leaflet";
+import type {
+  HeatLatLngTuple,
+  HeatLayer,
+  HeatMapOptions,
+  LatLng,
+  Map as LeafletMap
+} from "leaflet";
 
 /**
  * Map configuration options
@@ -10,13 +16,6 @@ export interface MapConfig {
   maxZoom: number;
   zoomControl: boolean;
   attributionControl: boolean;
-}
-
-export interface HeatmapConfig {
-  blur: number;
-  radius: number;
-  maxZoom: number;
-  gradient: { [index: number]: string };
 }
 
 /**
@@ -70,7 +69,11 @@ export interface TileContextValue {
 
 export interface HeatContextValue {
   heatLayer: HeatLayer | null;
+  heatOptions: HeatMapOptions | null;
+  heatValues: (LatLng | HeatLatLngTuple)[] | null;
   setHeatLayer: (newHeatLayer: HeatLayer | null) => void;
+  setHeatOptions(options: HeatMapOptions): void;
+  setHeatValues: (data: (LatLng | HeatLatLngTuple)[]) => void;
 }
 
 /**

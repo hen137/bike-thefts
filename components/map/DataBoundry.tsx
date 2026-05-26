@@ -32,13 +32,11 @@ export function DataBoundry() {
   );
   const [committedEndDate, commitEndDate] = useState<MonthYear | null>(null);
 
-  const [blur, setBlur] = useState<[number]>([DEFAULT_HEATMAP_CONFIG.blur]);
-  const [radius, setRadius] = useState<[number]>([
-    DEFAULT_HEATMAP_CONFIG.radius
-  ]);
-  const [maxZoom, setMaxZoom] = useState<[number]>([
-    DEFAULT_HEATMAP_CONFIG.maxZoom
-  ]);
+  const [blur, setBlur] = useState<number>(DEFAULT_HEATMAP_CONFIG.blur!);
+  const [radius, setRadius] = useState<number>(DEFAULT_HEATMAP_CONFIG.radius!);
+  const [maxZoom, setMaxZoom] = useState<number>(
+    DEFAULT_HEATMAP_CONFIG.maxZoom!
+  );
   const [gradient] = useState(DEFAULT_HEATMAP_CONFIG.gradient);
 
   const [bikeData, setBikeData] = useState<Promise<BikeData> | null>(null);
@@ -103,9 +101,9 @@ export function DataBoundry() {
               endDate: committedEndDate,
               startDate: committedStartDate
             }}
-            blur={blur[0]}
-            radius={radius[0]}
-            maxZoom={maxZoom[0]}
+            blur={blur}
+            radius={radius}
+            maxZoom={maxZoom}
             gradient={gradient}
             // debug
             updateMean={setMean}

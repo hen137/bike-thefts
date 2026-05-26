@@ -2,7 +2,8 @@
  * Default map configuration constants
  */
 
-import type { HeatmapConfig, MapConfig } from "@/types/map";
+import type { MapConfig } from "@/types/map";
+import { HeatMapOptions } from "leaflet";
 
 /**
  * Default map configuration
@@ -20,7 +21,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
 /**
  * Default heatmap configuration
  */
-export const DEFAULT_HEATMAP_CONFIG: HeatmapConfig = {
+export const DEFAULT_HEATMAP_CONFIG: HeatMapOptions = {
   blur: 30,
   radius: 60,
   maxZoom: 13,

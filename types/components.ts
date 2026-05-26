@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type {
+  ColorGradientConfig,
   HeatLatLngTuple,
   LatLng,
   Icon as LeafletIcon,
@@ -25,13 +26,13 @@ export interface DebugHUDProps {
   mean: number | null;
   std: number | null;
   avgIntensity: number | null;
-  blur: [number];
-  setBlur: (value: [number]) => void;
-  radius: [number];
-  setRadius: (value: [number]) => void;
-  maxZoom: [number];
-  setMaxZoom: (value: [number]) => void;
-  gradient: { [index: number]: string };
+  blur: number;
+  setBlur: (value: number) => void;
+  radius: number;
+  setRadius: (value: number) => void;
+  maxZoom: number;
+  setMaxZoom: (value: number) => void;
+  gradient: ColorGradientConfig | undefined;
   // setGradient: (value: { [index: number]: string }) => void;
   bikeData: Promise<BikeData> | null;
   bikeDateExtremes: BikeDateExtremes;
@@ -41,8 +42,8 @@ export interface DebugHUDProps {
  * DebugSlider component props
  */
 export interface DebugSliderProps {
-  updateValue: (value: [number]) => void;
-  defaultVal: [number];
+  updateValue: (value: number) => void;
+  defaultVal: number;
   max?: number;
   increment?: number;
 }
@@ -146,7 +147,7 @@ export interface HeatmapProps {
   blur: number;
   radius: number;
   maxZoom: number;
-  gradient: { [index: number]: string };
+  gradient: ColorGradientConfig | undefined;
   //debug
   updateMean: (value: number) => void;
   updateStd: (value: number) => void;
