@@ -37,7 +37,7 @@ export function Heatmap({
           : y >= dateRanges.startDate.year;
       const ltEnd =
         y == dateRanges.endDate.year
-          ? m <= dateRanges.startDate.month
+          ? m <= dateRanges.endDate.month
           : y <= dateRanges.endDate.year;
 
       return gtStart && ltEnd;
