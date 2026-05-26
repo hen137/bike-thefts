@@ -14,13 +14,24 @@ export function LeafletHeatLayer() {
   if (heatContext === undefined)
     throw new Error("LeafletHeatLayer must be used within a HeatProvider");
 
-  const { setHeatLayer } = heatContext;
+  const { setHeatLayer, setHeatOptions } = heatContext;
 
   useEffect(() => {
     // Wait for map to be ready
     if (!map) return;
 
     let isMounted = true;
+
+    const handleZoom = () => {
+      // TODO: set new options based on currentZoom
+      // const currentZoom = map.getZoom();
+
+      const newOptions = {};
+      setHeatOptions(newOptions);
+
+      console.log("Map zoomed, current zoom level:", map.getZoom());
+      console.log("New heat layer options applied:", newOptions);
+    };
 
     const setupHeatLayer = async () => {
       try {
@@ -50,6 +61,8 @@ export function LeafletHeatLayer() {
           console.error("Heat loading error:", error);
         });
 
+        map.on("zoom", handleZoom);
+
         heatLayer.addTo(map);
         heatLayerRef.current = heatLayer;
 
@@ -69,6 +82,7 @@ export function LeafletHeatLayer() {
 
       if (heatLayerRef.current) {
         try {
+          map.off("zoom", handleZoom);
           heatLayerRef.current.remove();
           heatLayerRef.current = null;
         } catch (error) {
