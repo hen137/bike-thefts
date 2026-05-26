@@ -19,19 +19,18 @@ const MAX_RECORDS = 2000;
 // export function inToronto() {}
 
 async function getBikeTotalRecords(where: string): Promise<number> {
-  return (
-    await (
-      await fetch(
-        QUERY_URL +
-          OUT_FIELDS +
-          DEFAULT_OUT_FIELDS_PARAMS +
-          WHERE +
-          where +
-          COUNT_QUERY_PARAM +
-          JSON_QUERY_PARAM
-      )
-    ).json()
-  ).count;
+  const resp = await fetch(
+    QUERY_URL +
+      OUT_FIELDS +
+      DEFAULT_OUT_FIELDS_PARAMS +
+      WHERE +
+      where +
+      COUNT_QUERY_PARAM +
+      JSON_QUERY_PARAM
+  );
+  if (!resp.ok)
+    throw new Error(`ArcGIS count request failed: ${resp.statusText}`);
+  return (await resp.json()).count;
 }
 
 export async function getBikeData({
@@ -50,7 +49,7 @@ export async function getBikeData({
 
   let bikeData: BikeData = [];
   for (let i = 0; i * MAX_RECORDS < totalRecords; i++) {
-    await fetch(
+    const resp = await fetch(
       QUERY_URL +
         OUT_FIELDS +
         DEFAULT_OUT_FIELDS_PARAMS +
@@ -58,7 +57,10 @@ export async function getBikeData({
         where +
         `&resultOffset=${MAX_RECORDS * i}` +
         GEOJSON_QUERY_PARAM
-    ).then(async (resp) => (bikeData = bikeData.concat(await resp.json())));
+    );
+    if (!resp.ok)
+      throw new Error(`ArcGIS data request failed: ${resp.statusText}`);
+    bikeData = bikeData.concat(await resp.json());
   }
 
   return bikeData;
