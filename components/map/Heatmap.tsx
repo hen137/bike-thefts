@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useCallback, useEffect } from "react";
-import type { HeatLatLngTuple, LatLng } from "leaflet";
+import type { HeatLatLngTuple } from "leaflet";
 import { mean, standardDeviation } from "simple-statistics";
 import { RefDate } from "@/types/map";
 import { HeatmapProps } from "@/types/components";
@@ -20,15 +20,8 @@ export function Heatmap({
   updateAvgIntensity
 }: HeatmapProps) {
   const map = useLeafletMap();
-  const heatLayer = useLeafletHeatLayer();
+  const { heatLayer, setHeatValues, setHeatOptions } = useLeafletHeatLayer();
   const bikeData = use(bikeDataPromise);
-
-  const drawHeatmap = useCallback(
-    async (values: (LatLng | HeatLatLngTuple)[]) => {
-      if (heatLayer) heatLayer.setLatLngs(values);
-    },
-    [heatLayer]
-  );
 
   const isInRange = useCallback(
     ({ month, year }: RefDate): boolean => {
@@ -53,14 +46,13 @@ export function Heatmap({
 
   // update heatmap settings
   useEffect(() => {
-    if (heatLayer)
-      heatLayer.setOptions({
-        blur,
-        radius,
-        maxZoom
-        // gradient
-      });
-  }, [blur, radius, maxZoom]);
+    setHeatOptions({
+      blur,
+      radius,
+      maxZoom
+      // gradient
+    });
+  }, [heatLayer, blur, radius, maxZoom]);
 
   // draw heatmap
   useEffect(() => {
@@ -124,11 +116,11 @@ export function Heatmap({
           [seen[key].coords[1], seen[key].coords[0], intensity]
         ]);
       }
-      updateAvgIntensity(mean(avgIntesities));
 
-      drawHeatmap(values);
+      updateAvgIntensity(mean(avgIntesities));
+      setHeatValues(values);
     }
-  }, [dateRanges]);
+  }, [heatLayer, dateRanges]);
 
   return null;
 }
