@@ -5,10 +5,6 @@ import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
 import { useMapControls, useGeolocation } from "@/hooks";
 import { DataBoundry } from "@/components/map";
 
-// const MAX_SLIDER_RANGE = 1000;
-// const endThumb = 1000;
-// const startThumb = 750;
-
 /**
  * MapControls - Map control buttons at bottom right
  * Includes: Location, Zoom In/Out, Reset View, Fullscreen
@@ -21,16 +17,6 @@ export const MapControls = memo(function MapControls() {
     useMapControls();
   const { locateUser, isLocating, isAvailable } = useGeolocation();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  // const [sliderValues, setSliderValue] = useState<number[]>([
-  //   startThumb,
-  //   endThumb
-  // ]);
-  // const [endDateExtreme, setEndDateExtreme] = useState<MonthYear | null>(null);
-  // const [startDateExtreme, setStartDateExtreme] = useState<MonthYear | null>(
-  //   null
-  // );
-  // const [endDate, setEndDate] = useState<MonthYear | null>(null);
-  // const [startDate, setStartDate] = useState<MonthYear | null>(null);
 
   // Listen for fullscreen changes
   useEffect(() => {
@@ -44,80 +30,10 @@ export const MapControls = memo(function MapControls() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   console.log(use(getBikeDataDateExtremes()));
-  //   // setStartDateExtreme({ month, year });
-  //   // setEndDateExtreme({ month, year });
-  // }, []);
-
-  // // listen for changes in range
-  // useEffect(() => {
-  //   if (startDateExtreme && endDateExtreme) {
-  //     const yearDelta = endDateExtreme.year - startDateExtreme.year;
-  //     const monthDelta =
-  //       endDateExtreme.month - startDateExtreme.month + 12 * yearDelta;
-
-  //     const startMonths = Math.floor(
-  //       (sliderValues[0] * monthDelta) / MAX_SLIDER_RANGE
-  //     );
-  //     const endMonths = Math.floor(
-  //       (sliderValues[1] * monthDelta) / MAX_SLIDER_RANGE
-  //     );
-
-  //     const startMonth = startDateExtreme.month + (startMonths % 12);
-  //     const startYear = startDateExtreme.year + Math.floor(startMonths / 12);
-
-  //     const endMonth = startDateExtreme.month + (endMonths % 12);
-  //     const endYear = startDateExtreme.year + Math.floor(endMonths / 12);
-
-  //     setStartDate({ month: startMonth, year: startYear });
-  //     setEndDate({ month: endMonth, year: endYear });
-  //     console.log({ endDate, startDate });
-  //   }
-  // }, [sliderValues, startDateExtreme, endDateExtreme]);
-
   return (
     <div className="absolute bottom-24 sm:bottom-8 right-4 flex flex-col items-center gap-2 z-1000">
       {/* Heatmap */}
-      <DataBoundry
-      // startDate={startDate}
-      // endDate={endDate}
-      // sliderValues={sliderValues}
-      // setSliderValue={setSliderValue}
-      />
-      {/* Heatmap */}
-      {/* <Suspense>
-          <Heatmap
-            bikeDataPromise={bikeDataPromise}
-            dateRanges={{ endDate, startDate }}
-          />
-        </Suspense> */}
-
-      {/* Heatmap Slider */}
-      {/* <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-          <HeatmapSlider
-            initialValues={sliderValues}
-            updateValues={setSliderValue}
-            // updateValues={handleSliderUpdate}
-            sliderDates={{ endDate, startDate }}
-          />
-        </div>
-        <div id="debug" className="absolute -left-200 w-100">
-          <h4 className="font-bold">Slider</h4>
-          <div className="ml-4">
-            <p>Raw: {sliderValues.join(",")}</p>
-            <p>
-              Date: s:{`${startDate?.month}-${startDate?.year}`}, e:
-              {`${endDate?.month}-${endDate?.year}`}
-            </p>
-          </div>
-          <h4 className="font-bold">Data</h4>
-          <div className="ml-4">
-            <Suspense fallback={<>Fetching...</>}>
-              <BikeRecords bikeDataPromise={bikeDataPromise} />
-            </Suspense>
-          </div>
-        </div> */}
+      <DataBoundry />
 
       {/* Location Button */}
       <button

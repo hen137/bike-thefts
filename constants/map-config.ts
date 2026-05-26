@@ -12,7 +12,7 @@ import { HeatMapOptions } from "leaflet";
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   defaultCenter: [43.70643, -79.39864],
   defaultZoom: 12,
-  minZoom: 6,
+  minZoom: 9,
   maxZoom: 18,
   zoomControl: false, // Using custom controls in dock
   attributionControl: true
