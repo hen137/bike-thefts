@@ -7,6 +7,7 @@ import { RefDate } from "@/types/map";
 import { HeatmapProps } from "@/types/components";
 import { useLeafletMap, useLeafletHeatLayer } from "@/hooks";
 import { calcNormalDistribution } from "@/lib/utils";
+import { SENTINAL_COORDINATES } from "@/constants/map-config";
 
 export function Heatmap({
   bikeDataPromise,
@@ -79,8 +80,7 @@ export function Heatmap({
             const coordsIndex = coords[1].toString() + coords[0].toString();
 
             // skips records with no location
-            if (coordsIndex === "5.08888749034163e-145.6843418860808e-14")
-              return;
+            if (coordsIndex === SENTINAL_COORDINATES) return;
 
             if (seen[coordsIndex])
               seen[coordsIndex].value = seen[coordsIndex].value + 1;

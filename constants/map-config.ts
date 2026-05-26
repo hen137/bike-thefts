@@ -37,3 +37,8 @@ export const MAP_ANIMATION_DURATION = 500;
  * Default map container height
  */
 export const DEFAULT_MAP_HEIGHT = "100vh";
+
+/**
+ * ArcGIS Sentinel coordinates used to identify records with no location data
+ */
+export const SENTINAL_COORDINATES = "5.08888749034163e-145.6843418860808e-14";
