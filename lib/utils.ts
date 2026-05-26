@@ -8,5 +8,5 @@ export function cn(...inputs: ClassValue[]) {
 export function calcNormalDistribution(x: number, mean: number, std: number) {
   const z = (x - mean) / std;
   const coeff = 1 / (std * Math.sqrt(2 * Math.PI));
-  return coeff * Math.exp(-((z ^ 2) / 2));
+  return coeff * Math.exp(-(z ** 2 / 2));
 }
