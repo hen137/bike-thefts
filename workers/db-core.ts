@@ -1,4 +1,7 @@
-import type { SQLiteDB } from "@/types/db";
+import type { SQLiteDB, BikeTheftRecord } from "@/types/db";
+
+const SENTINEL_LAT = 5.08888749034163e-14;
+const SENTINEL_LNG = 5.6843418860808e-14;
 
 export function createSchema(db: SQLiteDB): void {
   db.exec(`
@@ -37,4 +40,78 @@ export function createSchema(db: SQLiteDB): void {
     CREATE INDEX IF NOT EXISTS idx_occ_date ON bike_thefts(occ_date);
     CREATE INDEX IF NOT EXISTS idx_lat_lng  ON bike_thefts(lat, lng);
   `);
+}
+
+export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
+  const filtered = records.filter(
+    (r) =>
+      r.lat !== null &&
+      r.lng !== null &&
+      !(r.lat === SENTINEL_LAT && r.lng === SENTINEL_LNG)
+  );
+
+  const stmt = db.prepare<unknown>(`
+    INSERT OR IGNORE INTO bike_thefts (
+      objectid, event_unique_id, occ_date, occ_year, occ_month, occ_dow,
+      occ_day, occ_doy, occ_hour, report_date, report_year, report_month,
+      division, location_type, premises_type, hood_158, hood_140,
+      bike_make, bike_model, bike_type, bike_speed, bike_colour,
+      primary_offence, lat, lng
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?,
+      ?, ?, ?
+    )
+  `);
+
+  const insertMany = (
+    db as unknown as { transaction: (fn: () => void) => () => void }
+  ).transaction(() => {
+    for (const r of filtered) {
+      stmt.run(
+        r.objectid,
+        r.event_unique_id,
+        r.occ_date,
+        r.occ_year,
+        r.occ_month,
+        r.occ_dow,
+        r.occ_day,
+        r.occ_doy,
+        r.occ_hour,
+        r.report_date,
+        r.report_year,
+        r.report_month,
+        r.division,
+        r.location_type,
+        r.premises_type,
+        r.hood_158,
+        r.hood_140,
+        r.bike_make,
+        r.bike_model,
+        r.bike_type,
+        r.bike_speed,
+        r.bike_colour,
+        r.primary_offence,
+        r.lat,
+        r.lng
+      );
+    }
+  });
+
+  insertMany();
+}
+
+export function writeMeta(db: SQLiteDB, key: string, value: string): void {
+  db.prepare<unknown>(
+    "INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)"
+  ).run(key, value);
+}
+
+export function readMeta(db: SQLiteDB, key: string): string | null {
+  const row = db
+    .prepare<{ value: string }>("SELECT value FROM meta WHERE key = ?")
+    .get(key);
+  return row !== undefined ? row.value : null;
 }
