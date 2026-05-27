@@ -1,15 +1,20 @@
-import { Suspense, useCallback, useEffect, useState } from "react";
+"use client";
+
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { BikeData, MonthYear } from "@/types/map";
 import { Heatmap, HeatmapSlider } from "@/components/map";
 import { DebugHUD } from "@/components/debug";
 import { getBikeData } from "@/lib/bike-data";
 import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
+import { useLeafletHeatLayer } from "@/hooks";
 
 const MAX_SLIDER_RANGE = 1000;
 const endThumb = 1000;
 const startThumb = 750;
 
 export function DataBoundry() {
+  const { registerZoomRadiusHandler } = useLeafletHeatLayer();
+
   const [sliderValues, setSliderValue] = useState<number[]>([
     startThumb,
     endThumb
@@ -40,6 +45,15 @@ export function DataBoundry() {
   const [gradient] = useState(DEFAULT_HEATMAP_CONFIG.gradient);
 
   const [bikeData, setBikeData] = useState<Promise<BikeData> | null>(null);
+
+  useEffect(() => {
+    registerZoomRadiusHandler(setRadius);
+  }, [registerZoomRadiusHandler]);
+
+  const dateRanges = useMemo(
+    () => ({ endDate: committedEndDate, startDate: committedStartDate }),
+    [committedEndDate, committedStartDate]
+  );
 
   // debug
   const [mean, setMean] = useState<number | null>(null);
@@ -97,10 +111,7 @@ export function DataBoundry() {
         {bikeData && (
           <Heatmap
             bikeDataPromise={bikeData}
-            dateRanges={{
-              endDate: committedEndDate,
-              startDate: committedStartDate
-            }}
+            dateRanges={dateRanges}
             blur={blur}
             radius={radius}
             maxZoom={maxZoom}

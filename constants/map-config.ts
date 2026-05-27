@@ -13,7 +13,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
   defaultCenter: [43.70643, -79.39864],
   defaultZoom: 12,
   minZoom: 9,
-  maxZoom: 18,
+  maxZoom: 16,
   zoomControl: false, // Using custom controls in dock
   attributionControl: true
 };
@@ -42,3 +42,14 @@ export const DEFAULT_MAP_HEIGHT = "100vh";
  * ArcGIS Sentinel coordinates used to identify records with no location data
  */
 export const SENTINAL_COORDINATES = "5.08888749034163e-145.6843418860808e-14";
+
+export const ZOOM_MAPPING: { [key: number]: { radius: number } } = {
+  16: { radius: 95 },
+  15: { radius: 70 },
+  14: { radius: 45 },
+  13: { radius: 30 },
+  12: { radius: 25 },
+  11: { radius: 20 },
+  10: { radius: 15 },
+  9: { radius: 10 }
+};

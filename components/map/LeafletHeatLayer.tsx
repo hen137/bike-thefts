@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef } from "react";
 import { HeatLayer } from "leaflet";
 import { HeatContext } from "@/contexts";
 import { useLeafletMap } from "@/hooks";
+import { ZOOM_MAPPING } from "@/constants/map-config";
 
 export function LeafletHeatLayer() {
   const map = useLeafletMap();
@@ -14,7 +15,7 @@ export function LeafletHeatLayer() {
   if (heatContext === undefined)
     throw new Error("LeafletHeatLayer must be used within a HeatProvider");
 
-  const { setHeatLayer, setHeatOptions } = heatContext;
+  const { setHeatLayer, setZoomRadius } = heatContext;
 
   useEffect(() => {
     // Wait for map to be ready
@@ -23,14 +24,10 @@ export function LeafletHeatLayer() {
     let isMounted = true;
 
     const handleZoom = () => {
-      // TODO: set new options based on currentZoom
-      // const currentZoom = map.getZoom();
-
-      const newOptions = {};
-      setHeatOptions(newOptions);
-
-      console.log("Map zoomed, current zoom level:", map.getZoom());
-      console.log("New heat layer options applied:", newOptions);
+      // const radius = Math.round(1.2 * Math.exp(map.getZoom() / 3.75));
+      const radius = ZOOM_MAPPING[map.getZoom()].radius;
+      if (heatLayerRef.current) heatLayerRef.current.setOptions({ radius });
+      setZoomRadius(radius);
     };
 
     const setupHeatLayer = async () => {
@@ -65,6 +62,7 @@ export function LeafletHeatLayer() {
 
         heatLayer.addTo(map);
         heatLayerRef.current = heatLayer;
+        handleZoom();
 
         setHeatLayer(heatLayer);
       } catch (error) {

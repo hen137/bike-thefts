@@ -74,6 +74,8 @@ export interface HeatContextValue {
   setHeatLayer: (newHeatLayer: HeatLayer | null) => void;
   setHeatOptions(options: HeatMapOptions): void;
   setHeatValues: (data: (LatLng | HeatLatLngTuple)[]) => void;
+  setZoomRadius: (radius: number) => void;
+  registerZoomRadiusHandler: (handler: (radius: number) => void) => void;
 }
 
 /**
