@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import * as Comlink from "comlink";
 import { getDbWorker } from "@/lib/db-client";
 import type { DbInitResult, DbProgress, DbWorker } from "@/types/db";
 import type { Remote } from "comlink";
@@ -28,7 +29,7 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
     const w = getDbWorker();
     setWorker(w);
 
-    w.init((event) => setProgress(event))
+    w.init(Comlink.proxy((event) => setProgress(event)))
       .then((result) => {
         setInitResult(result);
         setIsReady(true);
@@ -43,7 +44,7 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
     setIsReady(false);
     setError(null);
     try {
-      await worker.refresh((event) => setProgress(event));
+      await worker.refresh(Comlink.proxy((event) => setProgress(event)));
       setIsReady(true);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
