@@ -6,6 +6,7 @@ import {
   isStale,
   shouldRefetch
 } from "@/workers/db-core";
+import { adaptDb } from "../helpers/sync-db-adapter";
 import type { BikeTheftRecord } from "@/types/db";
 
 function makeMockRecord(objectid: number): BikeTheftRecord {
@@ -68,50 +69,36 @@ describe("isStale", () => {
 describe("shouldRefetch", () => {
   let db: Database.Database;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     db = new Database(":memory:");
-    createSchema(db as unknown as Parameters<typeof createSchema>[0]);
+    await createSchema(adaptDb(db));
   });
 
   afterEach(() => {
     db.close();
   });
 
-  it("returns false when DB count is >= 50% of API total", () => {
+  it("returns false when DB count is >= 50% of API total", async () => {
     // Insert 100 records; apiCount = 150 → 100/150 = 66.7% >= 50%
     const records = Array.from({ length: 100 }, (_, i) =>
       makeMockRecord(i + 1)
     );
-    insertRecords(
-      db as unknown as Parameters<typeof insertRecords>[0],
-      records
-    );
-    expect(
-      shouldRefetch(db as unknown as Parameters<typeof shouldRefetch>[0], 150)
-    ).toBe(false);
+    await insertRecords(adaptDb(db), records);
+    expect(await shouldRefetch(adaptDb(db), 150)).toBe(false);
   });
 
-  it("returns true when DB count is < 50% of API total (corrupt/partial)", () => {
+  it("returns true when DB count is < 50% of API total (corrupt/partial)", async () => {
     // Insert 10 records; apiCount = 100 → 10/100 = 10% < 50%
     const records = Array.from({ length: 10 }, (_, i) => makeMockRecord(i + 1));
-    insertRecords(
-      db as unknown as Parameters<typeof insertRecords>[0],
-      records
-    );
-    expect(
-      shouldRefetch(db as unknown as Parameters<typeof shouldRefetch>[0], 100)
-    ).toBe(true);
+    await insertRecords(adaptDb(db), records);
+    expect(await shouldRefetch(adaptDb(db), 100)).toBe(true);
   });
 
-  it("returns true when DB is empty and apiCount > 0", () => {
-    expect(
-      shouldRefetch(db as unknown as Parameters<typeof shouldRefetch>[0], 1)
-    ).toBe(true);
+  it("returns true when DB is empty and apiCount > 0", async () => {
+    expect(await shouldRefetch(adaptDb(db), 1)).toBe(true);
   });
 
-  it("returns false when both DB count and apiCount are 0", () => {
-    expect(
-      shouldRefetch(db as unknown as Parameters<typeof shouldRefetch>[0], 0)
-    ).toBe(false);
+  it("returns false when both DB count and apiCount are 0", async () => {
+    expect(await shouldRefetch(adaptDb(db), 0)).toBe(false);
   });
 });

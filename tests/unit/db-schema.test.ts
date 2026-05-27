@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import Database from "better-sqlite3";
 import { createSchema } from "@/workers/db-core";
+import { adaptDb } from "../helpers/sync-db-adapter";
 
 describe("createSchema", () => {
   let db: Database.Database;
@@ -13,8 +14,8 @@ describe("createSchema", () => {
     db.close();
   });
 
-  it("creates the bike_thefts table with correct columns", () => {
-    createSchema(db);
+  it("creates the bike_thefts table with correct columns", async () => {
+    await createSchema(adaptDb(db));
 
     const columns = db
       .prepare("PRAGMA table_info(bike_thefts)")
@@ -53,8 +54,8 @@ describe("createSchema", () => {
     expect(pk?.pk).toBe(1);
   });
 
-  it("creates the meta table with key and value columns", () => {
-    createSchema(db);
+  it("creates the meta table with key and value columns", async () => {
+    await createSchema(adaptDb(db));
 
     const columns = db.prepare("PRAGMA table_info(meta)").all() as Array<{
       name: string;
@@ -72,8 +73,8 @@ describe("createSchema", () => {
     expect(pk?.pk).toBe(1);
   });
 
-  it("creates index idx_occ_date on bike_thefts(occ_date)", () => {
-    createSchema(db);
+  it("creates index idx_occ_date on bike_thefts(occ_date)", async () => {
+    await createSchema(adaptDb(db));
 
     const indexes = db
       .prepare(
@@ -85,8 +86,8 @@ describe("createSchema", () => {
     expect(indexNames).toContain("idx_occ_date");
   });
 
-  it("creates index idx_lat_lng on bike_thefts(lat, lng)", () => {
-    createSchema(db);
+  it("creates index idx_lat_lng on bike_thefts(lat, lng)", async () => {
+    await createSchema(adaptDb(db));
 
     const indexes = db
       .prepare(
@@ -98,10 +99,13 @@ describe("createSchema", () => {
     expect(indexNames).toContain("idx_lat_lng");
   });
 
-  it("is idempotent — calling createSchema twice does not throw", () => {
-    expect(() => {
-      createSchema(db);
-      createSchema(db);
-    }).not.toThrow();
+  it("is idempotent — calling createSchema twice does not throw", async () => {
+    const adapted = adaptDb(db);
+    await expect(
+      (async () => {
+        await createSchema(adapted);
+        await createSchema(adapted);
+      })()
+    ).resolves.not.toThrow();
   });
 });

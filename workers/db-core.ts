@@ -17,9 +17,12 @@ export function isStale(lastFetched: string | null, ttlDays: number): boolean {
  * Returns true if the local DB record count is < 50% of the API total count,
  * indicating a corrupt or partial fetch that should be redone.
  */
-export function shouldRefetch(db: SQLiteDB, apiCount: number): boolean {
+export async function shouldRefetch(
+  db: SQLiteDB,
+  apiCount: number
+): Promise<boolean> {
   if (apiCount === 0) return false;
-  const row = db
+  const row = await db
     .prepare<{ count: number }>("SELECT COUNT(*) as count FROM bike_thefts")
     .get();
   const localCount = row?.count ?? 0;
@@ -29,8 +32,8 @@ export function shouldRefetch(db: SQLiteDB, apiCount: number): boolean {
 const SENTINEL_LAT = 5.08888749034163e-14;
 const SENTINEL_LNG = 5.6843418860808e-14;
 
-export function createSchema(db: SQLiteDB): void {
-  db.exec(`
+export async function createSchema(db: SQLiteDB): Promise<void> {
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS bike_thefts (
       objectid          INTEGER PRIMARY KEY,
       event_unique_id   TEXT,
@@ -68,7 +71,10 @@ export function createSchema(db: SQLiteDB): void {
   `);
 }
 
-export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
+export async function insertRecords(
+  db: SQLiteDB,
+  records: BikeTheftRecord[]
+): Promise<void> {
   // Sentinel check uses && (both must be sentinel) because ArcGIS always
   // sets both coords to the sentinel pair together; a partial sentinel never occurs in practice.
   const filtered = records.filter(
@@ -94,9 +100,9 @@ export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
     )
   `);
 
-  const insertMany = db.transaction(() => {
+  const insertMany = db.transaction(async () => {
     for (const r of filtered) {
-      stmt.run(
+      await stmt.run(
         r.objectid,
         r.event_unique_id,
         r.occ_date,
@@ -126,28 +132,35 @@ export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
     }
   });
 
-  insertMany();
+  await insertMany();
 }
 
-export function writeMeta(db: SQLiteDB, key: string, value: string): void {
-  db.prepare<unknown>(
-    "INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)"
-  ).run(key, value);
+export async function writeMeta(
+  db: SQLiteDB,
+  key: string,
+  value: string
+): Promise<void> {
+  await db
+    .prepare<unknown>("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)")
+    .run(key, value);
 }
 
-export function readMeta(db: SQLiteDB, key: string): string | null {
-  const row = db
+export async function readMeta(
+  db: SQLiteDB,
+  key: string
+): Promise<string | null> {
+  const row = await db
     .prepare<{ value: string }>("SELECT value FROM meta WHERE key = ?")
     .get(key);
   return row !== undefined ? row.value : null;
 }
 
-export function queryHeatmap(
+export async function queryHeatmap(
   db: SQLiteDB,
   startDate: string,
   endDate: string
-): HeatRow[] {
-  return db
+): Promise<HeatRow[]> {
+  return await db
     .prepare<HeatRow>(
       `SELECT lat, lng, COUNT(*) as count
        FROM bike_thefts

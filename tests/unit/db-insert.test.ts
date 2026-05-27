@@ -6,10 +6,8 @@ import {
   writeMeta,
   readMeta
 } from "@/workers/db-core";
+import { adaptDb } from "../helpers/sync-db-adapter";
 import type { BikeTheftRecord } from "@/types/db";
-
-// Test helper: cast better-sqlite3 DB to SQLiteDB interface
-// better-sqlite3's Database is structurally compatible with SQLiteDB
 
 function makeRecord(overrides: Partial<BikeTheftRecord> = {}): BikeTheftRecord {
   return {
@@ -45,20 +43,18 @@ function makeRecord(overrides: Partial<BikeTheftRecord> = {}): BikeTheftRecord {
 describe("insertRecords", () => {
   let db: Database.Database;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     db = new Database(":memory:");
-    createSchema(db as unknown as Parameters<typeof createSchema>[0]);
+    await createSchema(adaptDb(db));
   });
 
   afterEach(() => {
     db.close();
   });
 
-  it("inserts all fields from a BikeTheftRecord", () => {
+  it("inserts all fields from a BikeTheftRecord", async () => {
     const record = makeRecord();
-    insertRecords(db as unknown as Parameters<typeof insertRecords>[0], [
-      record
-    ]);
+    await insertRecords(adaptDb(db), [record]);
 
     const row = db
       .prepare("SELECT * FROM bike_thefts WHERE objectid = ?")
@@ -92,7 +88,7 @@ describe("insertRecords", () => {
     expect(row!.lng).toBeCloseTo(record.lng as number);
   });
 
-  it("INSERT OR IGNORE: duplicate objectid does not throw or overwrite", () => {
+  it("INSERT OR IGNORE: duplicate objectid does not throw or overwrite", async () => {
     const original = makeRecord({
       objectid: 1,
       event_unique_id: "ORIGINAL-001"
@@ -102,15 +98,11 @@ describe("insertRecords", () => {
       event_unique_id: "DUPLICATE-002"
     });
 
-    insertRecords(db as unknown as Parameters<typeof insertRecords>[0], [
-      original
-    ]);
+    await insertRecords(adaptDb(db), [original]);
     // Should not throw
-    expect(() =>
-      insertRecords(db as unknown as Parameters<typeof insertRecords>[0], [
-        duplicate
-      ])
-    ).not.toThrow();
+    await expect(
+      insertRecords(adaptDb(db), [duplicate])
+    ).resolves.not.toThrow();
 
     const count = (
       db
@@ -125,7 +117,7 @@ describe("insertRecords", () => {
     expect(row.event_unique_id).toBe("ORIGINAL-001");
   });
 
-  it("filters out sentinel coordinates before insert", () => {
+  it("filters out sentinel coordinates before insert", async () => {
     // Sentinel: lat = 5.08888749034163e-14, lng = 5.6843418860808e-14
     const sentinel = makeRecord({
       objectid: 42,
@@ -133,9 +125,7 @@ describe("insertRecords", () => {
       lng: 5.6843418860808e-14
     });
 
-    insertRecords(db as unknown as Parameters<typeof insertRecords>[0], [
-      sentinel
-    ]);
+    await insertRecords(adaptDb(db), [sentinel]);
 
     const count = (
       db.prepare("SELECT COUNT(*) as cnt FROM bike_thefts").get() as {
@@ -145,17 +135,14 @@ describe("insertRecords", () => {
     expect(count).toBe(0);
   });
 
-  it("wraps batch in single transaction (atomicity): inserts all 3 records", () => {
+  it("wraps batch in single transaction (atomicity): inserts all 3 records", async () => {
     const records = [
       makeRecord({ objectid: 10 }),
       makeRecord({ objectid: 20 }),
       makeRecord({ objectid: 30 })
     ];
 
-    insertRecords(
-      db as unknown as Parameters<typeof insertRecords>[0],
-      records
-    );
+    await insertRecords(adaptDb(db), records);
 
     const count = (
       db.prepare("SELECT COUNT(*) as cnt FROM bike_thefts").get() as {
@@ -169,34 +156,24 @@ describe("insertRecords", () => {
 describe("writeMeta / readMeta", () => {
   let db: Database.Database;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     db = new Database(":memory:");
-    createSchema(db as unknown as Parameters<typeof createSchema>[0]);
+    await createSchema(adaptDb(db));
   });
 
   afterEach(() => {
     db.close();
   });
 
-  it("writeMeta stores key-value; readMeta retrieves it", () => {
-    writeMeta(
-      db as unknown as Parameters<typeof writeMeta>[0],
-      "last_fetched",
-      "2026-05-27T00:00:00.000Z"
-    );
+  it("writeMeta stores key-value; readMeta retrieves it", async () => {
+    await writeMeta(adaptDb(db), "last_fetched", "2026-05-27T00:00:00.000Z");
 
-    const result = readMeta(
-      db as unknown as Parameters<typeof readMeta>[0],
-      "last_fetched"
-    );
+    const result = await readMeta(adaptDb(db), "last_fetched");
     expect(result).toBe("2026-05-27T00:00:00.000Z");
   });
 
-  it("readMeta returns null for missing key", () => {
-    const result = readMeta(
-      db as unknown as Parameters<typeof readMeta>[0],
-      "nonexistent"
-    );
+  it("readMeta returns null for missing key", async () => {
+    const result = await readMeta(adaptDb(db), "nonexistent");
     expect(result).toBeNull();
   });
 });

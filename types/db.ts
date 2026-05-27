@@ -1,16 +1,18 @@
 export interface SQLiteStatement<T = unknown> {
-  run(...params: unknown[]): {
+  run(...params: unknown[]): Promise<{
     changes: number;
     lastInsertRowid: number | bigint;
-  };
-  get(...params: unknown[]): T | undefined;
-  all(...params: unknown[]): T[];
+  }>;
+  get(...params: unknown[]): Promise<T | undefined>;
+  all(...params: unknown[]): Promise<T[]>;
 }
 
 export interface SQLiteDB {
-  exec(sql: string): void;
+  exec(sql: string): Promise<void>;
   prepare<T = unknown>(sql: string): SQLiteStatement<T>;
-  transaction<T>(fn: (...args: unknown[]) => T): (...args: unknown[]) => T;
+  transaction<T>(
+    fn: (...args: unknown[]) => Promise<T>
+  ): (...args: unknown[]) => Promise<T>;
 }
 
 // Matches each row returned by the heatmap SQL query

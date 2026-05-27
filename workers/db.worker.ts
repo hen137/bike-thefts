@@ -1,7 +1,7 @@
 import * as Comlink from "comlink";
 import SQLiteESMFactory from "wa-sqlite/dist/wa-sqlite.mjs";
 import * as SQLite from "wa-sqlite";
-import { OPFSCoopSyncVFS } from "wa-sqlite/src/examples/OPFSCoopSyncVFS.js";
+import { AccessHandlePoolVFS } from "wa-sqlite/src/examples/AccessHandlePoolVFS.js";
 import {
   createSchema,
   insertRecords,
@@ -11,6 +11,7 @@ import {
   shouldRefetch,
   queryHeatmap
 } from "./db-core";
+import { createWaSqliteDb } from "./wa-sqlite-adapter";
 import type {
   BikeTheftRecord,
   DbInitResult,
@@ -20,20 +21,54 @@ import type {
 } from "@/types/db";
 
 const DB_NAME = "bike-thefts.db";
+// Directory used by the OPFS-backed VFS; the .db file lives inside it.
+const OPFS_DIR = "/bike-thefts";
 const ARCGIS_URL =
   "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/Bicycle_Thefts_Open_Data/FeatureServer/0/query?";
 const MAX_RECORDS = 2000;
 const TTL_DAYS = 7;
 
-// Holds the wa-sqlite DB handle (initialized lazily)
-let db: SQLite.Database | null = null;
+// Holds the SQLiteDB adapter (initialized lazily).
+let db: SQLiteDB | null = null;
 
-async function openDatabase(): Promise<SQLite.Database> {
+async function openDatabase(): Promise<SQLiteDB> {
   if (db) return db;
+
   const module = await SQLiteESMFactory();
-  const vfs = await OPFSCoopSyncVFS.create(DB_NAME, module);
-  SQLite.installVFS(module, vfs);
-  db = await SQLite.open(module, DB_NAME);
+  const sqlite3 = SQLite.Factory(module);
+
+  let vfsName: string | undefined;
+  try {
+    // AccessHandlePoolVFS uses synchronous OPFS access handles and works with
+    // the synchronous (non-Asyncify) wa-sqlite build.
+    const vfs = new AccessHandlePoolVFS(OPFS_DIR);
+    // The VFS opens OPFS access handles asynchronously during construction.
+    await vfs.isReady;
+    // wa-sqlite's VFS typings don't exactly match the SQLiteVFS parameter
+    // shape; the runtime object is a valid VFS, so cast through unknown.
+    sqlite3.vfs_register(
+      vfs as unknown as Parameters<typeof sqlite3.vfs_register>[0],
+      true
+    );
+    vfsName = vfs.name;
+  } catch (err) {
+    // OPFS may be unavailable (e.g. private browsing, unsupported browser).
+    // Fall back to the default in-memory storage so the app still works,
+    // losing only cross-session persistence.
+    console.warn(
+      "OPFS unavailable; falling back to in-memory SQLite (no persistence).",
+      err
+    );
+    vfsName = undefined;
+  }
+
+  const dbPointer = await sqlite3.open_v2(
+    DB_NAME,
+    SQLite.SQLITE_OPEN_CREATE | SQLite.SQLITE_OPEN_READWRITE,
+    vfsName
+  );
+
+  db = createWaSqliteDb(sqlite3, dbPointer);
   return db;
 }
 
@@ -48,7 +83,7 @@ async function fetchTotalCount(): Promise<number> {
 
 async function fetchPage(offset: number): Promise<BikeTheftRecord[]> {
   const resp = await fetch(
-    `${ARCGIS_URL}outFields=*&where=1%3D1&resultOffset=${offset}&f=geojson`
+    `${ARCGIS_URL}outFields=*&where=1%3D1&resultOffset=${offset}&resultRecordCount=${MAX_RECORDS}&f=geojson`
   );
   if (!resp.ok)
     throw new Error(`ArcGIS data request failed: ${resp.statusText}`);
@@ -91,10 +126,11 @@ async function fetchPage(offset: number): Promise<BikeTheftRecord[]> {
 }
 
 async function fetchAndStore(
-  theDb: SQLite.Database,
-  onProgress: (event: DbProgress) => void
+  theDb: SQLiteDB,
+  onProgress: (event: DbProgress) => void,
+  knownTotal?: number
 ): Promise<void> {
-  const total = await fetchTotalCount();
+  const total = knownTotal ?? (await fetchTotalCount());
   const totalPages = Math.ceil(total / MAX_RECORDS);
 
   let fetched = 0;
@@ -102,39 +138,36 @@ async function fetchAndStore(
     onProgress({ type: "fetching", fetched, total });
     const records = await fetchPage(page * MAX_RECORDS);
     onProgress({ type: "inserting", page: page + 1, totalPages });
-    insertRecords(theDb as unknown as SQLiteDB, records);
+    await insertRecords(theDb, records);
     fetched += records.length;
   }
-  writeMeta(
-    theDb as unknown as SQLiteDB,
-    "last_fetched",
-    new Date().toISOString()
-  );
-  writeMeta(theDb as unknown as SQLiteDB, "total_records", String(total));
+  await writeMeta(theDb, "last_fetched", new Date().toISOString());
+  await writeMeta(theDb, "total_records", String(total));
 }
 
 const worker: DbWorker = {
   async init(onProgress) {
     const theDb = await openDatabase();
-    const dbInterface = theDb as unknown as SQLiteDB;
-    createSchema(dbInterface);
+    await createSchema(theDb);
 
-    const lastFetched = readMeta(dbInterface, "last_fetched");
+    const lastFetched = await readMeta(theDb, "last_fetched");
 
     let stale = isStale(lastFetched, TTL_DAYS);
+    // Cache the API count so we never request it twice during init.
+    let apiCount: number | undefined;
     if (!stale) {
-      const apiCount = await fetchTotalCount();
-      stale = shouldRefetch(dbInterface, apiCount);
+      apiCount = await fetchTotalCount();
+      stale = await shouldRefetch(theDb, apiCount);
     }
 
     if (stale) {
-      // Wipe and re-fetch
-      (theDb as unknown as SQLiteDB).exec("DELETE FROM bike_thefts");
-      (theDb as unknown as SQLiteDB).exec("DELETE FROM meta");
-      await fetchAndStore(theDb, onProgress);
+      // Wipe and re-fetch.
+      await theDb.exec("DELETE FROM bike_thefts");
+      await theDb.exec("DELETE FROM meta");
+      await fetchAndStore(theDb, onProgress, apiCount);
     }
 
-    const countRow = dbInterface
+    const countRow = await theDb
       .prepare<{ count: number }>("SELECT COUNT(*) as count FROM bike_thefts")
       .get();
     const recordCount = countRow?.count ?? 0;
@@ -143,20 +176,19 @@ const worker: DbWorker = {
     return {
       status: stale ? "fresh" : "cached",
       recordCount,
-      lastFetched: readMeta(dbInterface, "last_fetched")
+      lastFetched: await readMeta(theDb, "last_fetched")
     } satisfies DbInitResult;
   },
 
   async queryHeatmap(startDate, endDate) {
     if (!db) throw new Error("DB not initialized");
-    return queryHeatmap(db as unknown as SQLiteDB, startDate, endDate);
+    return queryHeatmap(db, startDate, endDate);
   },
 
   async refresh(onProgress) {
     if (!db) throw new Error("DB not initialized");
-    const dbInterface = db as unknown as SQLiteDB;
-    dbInterface.exec("DELETE FROM bike_thefts");
-    dbInterface.exec("DELETE FROM meta");
+    await db.exec("DELETE FROM bike_thefts");
+    await db.exec("DELETE FROM meta");
     await fetchAndStore(db, onProgress);
     onProgress({ type: "ready" });
   }
