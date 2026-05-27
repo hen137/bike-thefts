@@ -9,12 +9,7 @@ test.describe("UI controls", () => {
   });
 
   test("top bar controls are visible without scrolling", async ({ page }) => {
-    // There should be some control bar visible in the viewport
-    const topBar = page
-      .locator(
-        "header, nav, [role='toolbar'], [class*='top-bar'], [class*='TopBar']"
-      )
-      .first();
+    const topBar = page.locator("[id='map-top-bar']");
     await expect(topBar).toBeInViewport();
   });
 

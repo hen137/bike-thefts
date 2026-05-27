@@ -13,7 +13,10 @@ import {
  */
 export const MapTopBar = memo(function MapTopBar() {
   return (
-    <div className="flex items-center absolute left-0 right-0 sm:left-4 sm:right-auto top-3 z-1000 px-4 sm:px-0 gap-2">
+    <div
+      id="map-top-bar"
+      className="flex items-center absolute left-0 right-0 sm:left-4 sm:right-auto top-3 z-1000 px-4 sm:px-0 gap-2"
+    >
       {/* Search Bar */}
       <MapSearchBar />
 
