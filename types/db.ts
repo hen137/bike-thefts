@@ -1,3 +1,17 @@
+export interface SQLiteStatement<T = unknown> {
+  run(...params: unknown[]): {
+    changes: number;
+    lastInsertRowid: number | bigint;
+  };
+  get(...params: unknown[]): T | undefined;
+  all(...params: unknown[]): T[];
+}
+
+export interface SQLiteDB {
+  exec(sql: string): void;
+  prepare<T = unknown>(sql: string): SQLiteStatement<T>;
+}
+
 // Matches each row returned by the heatmap SQL query
 export type HeatRow = {
   lat: number;

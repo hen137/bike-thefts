@@ -1,13 +1,4 @@
-export interface SQLiteStatement {
-  run(...params: unknown[]): unknown;
-  get(...params: unknown[]): unknown;
-  all(...params: unknown[]): unknown[];
-}
-
-export interface SQLiteDB {
-  exec(sql: string): void;
-  prepare(sql: string): SQLiteStatement;
-}
+import type { SQLiteDB } from "@/types/db";
 
 export function createSchema(db: SQLiteDB): void {
   db.exec(`
@@ -35,6 +26,7 @@ export function createSchema(db: SQLiteDB): void {
       bike_speed        INTEGER,
       bike_colour       TEXT,
       primary_offence   TEXT,
+      -- lat/lng intentionally allow NULL in schema; sentinel filtering in insertRecords() prevents NULL coords from being stored
       lat               REAL,
       lng               REAL
     );

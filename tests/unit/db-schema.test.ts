@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import Database from "better-sqlite3";
 import { createSchema } from "@/workers/db-core";
 
@@ -7,6 +7,10 @@ describe("createSchema", () => {
 
   beforeEach(() => {
     db = new Database(":memory:");
+  });
+
+  afterEach(() => {
+    db.close();
   });
 
   it("creates the bike_thefts table with correct columns", () => {
