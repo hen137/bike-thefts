@@ -94,8 +94,11 @@ describe("DbContext", () => {
     });
   });
 
-  it("worker reference is available from context after render", () => {
+  it("worker reference is available from context after effect runs", async () => {
     const { result } = renderHook(() => useDbContext(), { wrapper });
-    expect(result.current.worker).not.toBeNull();
+    // Worker is set inside useEffect (client-only), not during SSR render
+    await waitFor(() => {
+      expect(result.current.worker).not.toBeNull();
+    });
   });
 });
