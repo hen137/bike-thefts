@@ -107,7 +107,10 @@ export function DataBoundry() {
     if (isReady && worker) {
       // DB path: query, normalize, push to heat layer directly
       const startISO = `${startDate.year}-${String(startDate.month + 1).padStart(2, "0")}-01`;
-      const endISO = `${endDate.year}-${String(endDate.month + 1).padStart(2, "0")}-28`;
+      const endISO = new Date(endDate.year, endDate.month + 1, 0)
+        .toISOString()
+        .split("T")[0];
+      setBikeData(null);
       worker.queryHeatmap(startISO, endISO).then((rows) => {
         const { values, seenMean, stdev, avgIntensity } =
           buildHeatDataFromRows(rows);
