@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useCallback, useMemo } from "react";
+import { createContext, useRef, useState, useCallback, useMemo } from "react";
 import type {
   HeatLatLngTuple,
   HeatLayer,
@@ -37,6 +37,20 @@ export function HeatProvider({ children }: HeatProviderProps) {
     (LatLng | HeatLatLngTuple)[] | null
   >(null);
 
+  // Ref-based callback — avoids putting zoom radius in context state (prevents re-render loops)
+  const zoomRadiusHandlerRef = useRef<((r: number) => void) | null>(null);
+
+  const registerZoomRadiusHandler = useCallback(
+    (handler: (radius: number) => void) => {
+      zoomRadiusHandlerRef.current = handler;
+    },
+    []
+  );
+
+  const setZoomRadius = useCallback((radius: number) => {
+    zoomRadiusHandlerRef.current?.(radius);
+  }, []);
+
   // Memoized setHeat to prevent unnecessary re-renders
   const setHeatLayer = useCallback((newHeatLayer: HeatLayer | null) => {
     setHeatLayerState(newHeatLayer);
@@ -70,7 +84,9 @@ export function HeatProvider({ children }: HeatProviderProps) {
       heatValues,
       setHeatLayer,
       setHeatOptions,
-      setHeatValues
+      setHeatValues,
+      setZoomRadius,
+      registerZoomRadiusHandler
     }),
     [
       heatLayer,
@@ -78,7 +94,9 @@ export function HeatProvider({ children }: HeatProviderProps) {
       heatValues,
       setHeatLayer,
       setHeatOptions,
-      setHeatValues
+      setHeatValues,
+      setZoomRadius,
+      registerZoomRadiusHandler
     ]
   );
 
