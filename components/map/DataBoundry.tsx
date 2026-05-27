@@ -7,13 +7,16 @@ import { DebugHUD } from "@/components/debug";
 import { getBikeData } from "@/lib/bike-data";
 import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
 import { useLeafletHeatLayer } from "@/hooks";
+import { useDbContext } from "@/contexts/DbContext";
+import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
 
 const MAX_SLIDER_RANGE = 1000;
 const endThumb = 1000;
 const startThumb = 750;
 
 export function DataBoundry() {
-  const { registerZoomRadiusHandler } = useLeafletHeatLayer();
+  const { registerZoomRadiusHandler, setHeatValues } = useLeafletHeatLayer();
+  const { isReady, worker } = useDbContext();
 
   const [sliderValues, setSliderValue] = useState<number[]>([
     startThumb,
@@ -101,8 +104,23 @@ export function DataBoundry() {
     commitStartDate(startDate);
     commitEndDate(endDate);
 
-    setBikeData(getBikeData({ startDate, endDate }));
-  }, [commitedSliderValues, startDateExtreme, endDateExtreme]);
+    if (isReady && worker) {
+      // DB path: query, normalize, push to heat layer directly
+      const startISO = `${startDate.year}-${String(startDate.month + 1).padStart(2, "0")}-01`;
+      const endISO = `${endDate.year}-${String(endDate.month + 1).padStart(2, "0")}-28`;
+      worker.queryHeatmap(startISO, endISO).then((rows) => {
+        const { values, seenMean, stdev, avgIntensity } =
+          buildHeatDataFromRows(rows);
+        setHeatValues(values);
+        setMean(seenMean);
+        setStd(stdev);
+        setAvgIntensity(avgIntensity);
+      });
+    } else {
+      // Fallback path: direct API
+      setBikeData(getBikeData({ startDate, endDate }));
+    }
+  }, [commitedSliderValues, startDateExtreme, endDateExtreme, isReady, worker]);
 
   return (
     <>
