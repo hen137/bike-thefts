@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import * as Comlink from "comlink";
 import { getDbWorker } from "@/lib/db-client";
 import type { DbInitResult, DbProgress, DbWorker } from "@/types/db";
@@ -22,12 +22,16 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
   const [progress, setProgress] = useState<DbProgress | null>(null);
   const [initResult, setInitResult] = useState<DbInitResult | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  // null until useEffect runs (client-only — Worker not available on server)
-  const [worker, setWorker] = useState<Remote<DbWorker> | null>(null);
+  // Stored in a ref — Comlink Remote<T> is a Proxy and must not go through
+  // React state (setState treats functions as updater callbacks, corrupting the proxy).
+  // A separate boolean flag triggers the re-render that exposes it to consumers.
+  const workerRef = useRef<Remote<DbWorker> | null>(null);
+  const [workerReady, setWorkerReady] = useState(false);
 
   useEffect(() => {
     const w = getDbWorker();
-    setWorker(w);
+    workerRef.current = w;
+    setWorkerReady(true);
 
     w.init(Comlink.proxy((event) => setProgress(event)))
       .then((result) => {
@@ -40,11 +44,13 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const refresh = async () => {
-    if (!worker) return;
+    if (!workerRef.current) return;
     setIsReady(false);
     setError(null);
     try {
-      await worker.refresh(Comlink.proxy((event) => setProgress(event)));
+      await workerRef.current.refresh(
+        Comlink.proxy((event) => setProgress(event))
+      );
       setIsReady(true);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
@@ -58,7 +64,7 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
         progress,
         initResult,
         error,
-        worker,
+        worker: workerReady ? workerRef.current : null,
         refresh
       }}
     >
