@@ -3,6 +3,7 @@ import { mean, standardDeviation } from "simple-statistics";
 import { calcNormalDistribution } from "@/lib/utils";
 import { SENTINAL_COORDINATES } from "@/constants/map-config";
 import type { BikeData, RefDate, StartEndDates } from "@/types/map";
+import type { HeatRow } from "@/types/db";
 
 export function isInRange(
   dateRanges: StartEndDates,
@@ -71,6 +72,28 @@ export function buildHeatData(
     const intensity = calcNormalDistribution(seen[key].value, seenMean, stdev);
     avgIntensities.push(intensity);
     values.push([seen[key].coords[1], seen[key].coords[0], intensity]);
+  }
+
+  return { values, seenMean, stdev, avgIntensity: mean(avgIntensities) };
+}
+
+export function buildHeatDataFromRows(rows: HeatRow[]): HeatDataResult {
+  if (rows.length === 0) {
+    return { values: [], seenMean: 0, stdev: 0, avgIntensity: 0 };
+  }
+
+  const counts = rows.map((r) => r.count);
+  const seenMean = mean(counts);
+  const stdev = standardDeviation(counts);
+
+  const values: HeatLatLngTuple[] = [];
+  const avgIntensities: number[] = [];
+
+  for (const row of rows) {
+    const intensity =
+      stdev === 0 ? 1 : calcNormalDistribution(row.count, seenMean, stdev);
+    avgIntensities.push(intensity);
+    values.push([row.lat, row.lng, intensity]);
   }
 
   return { values, seenMean, stdev, avgIntensity: mean(avgIntensities) };
