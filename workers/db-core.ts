@@ -1,4 +1,4 @@
-import type { SQLiteDB, BikeTheftRecord } from "@/types/db";
+import type { SQLiteDB, BikeTheftRecord, HeatRow } from "@/types/db";
 
 /**
  * Returns true if the last_fetched timestamp is older than ttlDays,
@@ -140,4 +140,20 @@ export function readMeta(db: SQLiteDB, key: string): string | null {
     .prepare<{ value: string }>("SELECT value FROM meta WHERE key = ?")
     .get(key);
   return row !== undefined ? row.value : null;
+}
+
+export function queryHeatmap(
+  db: SQLiteDB,
+  startDate: string,
+  endDate: string
+): HeatRow[] {
+  return db
+    .prepare<HeatRow>(
+      `SELECT lat, lng, COUNT(*) as count
+       FROM bike_thefts
+       WHERE occ_date >= ? AND occ_date <= ?
+         AND lat IS NOT NULL AND lng IS NOT NULL
+       GROUP BY lat, lng`
+    )
+    .all(startDate, endDate);
 }
