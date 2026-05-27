@@ -28,6 +28,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      comlink:
+        specifier: ^4.4.2
+        version: 4.4.2
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -58,6 +61,9 @@ importers:
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      wa-sqlite:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       "@commitlint/cli":
         specifier: ^21.0.1
@@ -2969,6 +2975,12 @@ packages:
     resolution:
       {
         integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==
+      }
+
+  comlink@4.4.2:
+    resolution:
+      {
+        integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==
       }
 
   commander@2.20.3:
@@ -7659,6 +7671,12 @@ packages:
       }
     engines: { node: ">=18" }
 
+  wa-sqlite@1.0.0:
+    resolution:
+      {
+        integrity: sha512-Kyybo5/BaJp76z7gDWGk2J6Hthl4NIPsE+swgraEjy3IY6r5zIR02wAs1OJH4XtJp1y3puj3Onp5eMGS0z7nUA==
+      }
+
   webidl-conversions@8.0.1:
     resolution:
       {
@@ -9605,6 +9623,8 @@ snapshots:
   color-name@1.1.4: {}
 
   colord@2.9.3: {}
+
+  comlink@4.4.2: {}
 
   commander@2.20.3: {}
 
@@ -12713,6 +12733,8 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
+
+  wa-sqlite@1.0.0: {}
 
   webidl-conversions@8.0.1: {}
 
