@@ -1,5 +1,31 @@
 import type { SQLiteDB, BikeTheftRecord } from "@/types/db";
 
+/**
+ * Returns true if the last_fetched timestamp is older than ttlDays,
+ * or if last_fetched is null (never fetched).
+ * Boundary is exclusive: age >= ttlDays returns true.
+ */
+export function isStale(lastFetched: string | null, ttlDays: number): boolean {
+  if (!lastFetched) return true;
+  const fetchedAt = new Date(lastFetched).getTime();
+  const ageMs = Date.now() - fetchedAt;
+  const ttlMs = ttlDays * 24 * 60 * 60 * 1000;
+  return ageMs >= ttlMs;
+}
+
+/**
+ * Returns true if the local DB record count is < 50% of the API total count,
+ * indicating a corrupt or partial fetch that should be redone.
+ */
+export function shouldRefetch(db: SQLiteDB, apiCount: number): boolean {
+  if (apiCount === 0) return false;
+  const row = db
+    .prepare<{ count: number }>("SELECT COUNT(*) as count FROM bike_thefts")
+    .get();
+  const localCount = row?.count ?? 0;
+  return localCount / apiCount < 0.5;
+}
+
 const SENTINEL_LAT = 5.08888749034163e-14;
 const SENTINEL_LNG = 5.6843418860808e-14;
 
