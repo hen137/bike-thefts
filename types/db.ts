@@ -10,6 +10,7 @@ export interface SQLiteStatement<T = unknown> {
 export interface SQLiteDB {
   exec(sql: string): void;
   prepare<T = unknown>(sql: string): SQLiteStatement<T>;
+  transaction<T>(fn: (...args: unknown[]) => T): (...args: unknown[]) => T;
 }
 
 // Matches each row returned by the heatmap SQL query

@@ -43,6 +43,8 @@ export function createSchema(db: SQLiteDB): void {
 }
 
 export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
+  // Sentinel check uses && (both must be sentinel) because ArcGIS always
+  // sets both coords to the sentinel pair together; a partial sentinel never occurs in practice.
   const filtered = records.filter(
     (r) =>
       r.lat !== null &&
@@ -66,9 +68,7 @@ export function insertRecords(db: SQLiteDB, records: BikeTheftRecord[]): void {
     )
   `);
 
-  const insertMany = (
-    db as unknown as { transaction: (fn: () => void) => () => void }
-  ).transaction(() => {
+  const insertMany = db.transaction(() => {
     for (const r of filtered) {
       stmt.run(
         r.objectid,
