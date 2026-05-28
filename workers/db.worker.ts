@@ -176,7 +176,9 @@ const worker: DbWorker = {
     return {
       status: stale ? "fresh" : "cached",
       recordCount,
-      lastFetched: await readMeta(theDb, "last_fetched")
+      lastFetched: await readMeta(theDb, "last_fetched"),
+      minDate: await readMeta(theDb, "min_date"),
+      maxDate: await readMeta(theDb, "max_date")
     } satisfies DbInitResult;
   },
 
