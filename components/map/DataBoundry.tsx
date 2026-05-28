@@ -13,40 +13,29 @@ const MAX_SLIDER_RANGE = 1000;
 const endThumb = 1000;
 const startThumb = 750;
 
-function parseISOToMonthYear(iso: string): MonthYear {
-  const [year, month] = iso.split("-").map(Number);
-  return { year, month: month - 1 };
-}
-
 export function DataBoundry() {
   const {
     registerZoomRadiusHandler,
     setHeatValues,
     heatLayer,
-    setHeatOptions,
+    setHeatOptions
   } = useLeafletHeatLayer();
   const { isReady, worker, initResult } = useDbContext();
 
   const [sliderValues, setSliderValue] = useState<number[]>([
     startThumb,
-    endThumb,
+    endThumb
   ]);
   const [commitedSliderValues, commitSliderValues] = useState(sliderValues);
 
   const startDateExtreme = useMemo<MonthYear>(
-    () =>
-      initResult?.minDate
-        ? parseISOToMonthYear(initResult.minDate)
-        : { month: 0, year: 2014 },
-    [initResult?.minDate]
+    () => ({ month: 0, year: 2014 }),
+    []
   );
 
   const endDateExtreme = useMemo<MonthYear>(
-    () =>
-      initResult?.maxDate
-        ? parseISOToMonthYear(initResult.maxDate)
-        : { month: 11, year: 2026 },
-    [initResult?.maxDate]
+    () => ({ month: 11, year: 2026 }),
+    []
   );
 
   const [startDate, setStartDate] = useState<MonthYear | null>(null);
@@ -74,7 +63,7 @@ export function DataBoundry() {
 
   useEffect(() => {
     setHeatOptions({ blur, radius, maxZoom });
-  }, [heatLayer, blur, radius, maxZoom]);
+  }, [heatLayer, blur, radius, maxZoom, setHeatOptions]);
 
   const calcDateRange = useCallback(
     (sliderVals: number[]) => {
@@ -97,7 +86,7 @@ export function DataBoundry() {
 
       return {
         startDate: { month: startMonth, year: startYear },
-        endDate: { month: endMonth, year: endYear },
+        endDate: { month: endMonth, year: endYear }
       };
     },
     [startDateExtreme, endDateExtreme]
@@ -129,7 +118,7 @@ export function DataBoundry() {
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
       });
     }
-  }, [commitedSliderValues, isReady, worker, calcDateRange]);
+  }, [commitedSliderValues, isReady, worker, calcDateRange, setHeatValues]);
 
   return (
     <>
