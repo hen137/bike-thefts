@@ -6,13 +6,7 @@ import type {
   Icon as LeafletIcon,
   Map as LeafletMap
 } from "leaflet";
-import {
-  BikeData,
-  BikeDateExtremes,
-  GeoJSONStyle,
-  MonthYear,
-  StartEndDates
-} from "@/types/map";
+import { MonthYear, StartEndDates, GeoJSONStyle } from "@/types/map";
 import { ContextMenuPosition } from "@/types/hooks";
 
 /**
@@ -33,9 +27,10 @@ export interface DebugHUDProps {
   maxZoom: number;
   setMaxZoom: (value: number) => void;
   gradient: ColorGradientConfig | undefined;
-  // setGradient: (value: { [index: number]: string }) => void;
-  bikeData: Promise<BikeData> | null;
-  bikeDateExtremes: BikeDateExtremes;
+  totalRecords: number | null;
+  currentQueryCount: number | null;
+  dbMinDate: string | null;
+  dbMaxDate: string | null;
 }
 
 /**
@@ -136,22 +131,6 @@ export interface MenuItemProps {
   sublabel?: string;
   onClick: () => void;
   showCopied?: boolean;
-}
-
-/**
- * Heatmap component props
- */
-export interface HeatmapProps {
-  bikeDataPromise: Promise<BikeData>;
-  dateRanges: StartEndDates;
-  blur: number;
-  radius: number;
-  maxZoom: number;
-  gradient: ColorGradientConfig | undefined;
-  //debug
-  updateMean: (value: number) => void;
-  updateStd: (value: number) => void;
-  updateAvgIntensity: (value: number) => void;
 }
 
 /**

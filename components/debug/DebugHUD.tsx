@@ -1,41 +1,14 @@
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
-import { Suspense, use } from "react";
 import { DebugSlider } from "@/components/debug";
-import { BikeData, BikeDateExtremes } from "@/types/map";
 import { DebugHUDProps } from "@/types/components";
 
-function BikeRecords({
-  bikeDataPromise,
-  bikeDateExtremes
-}: {
-  bikeDataPromise: Promise<BikeData>;
-  bikeDateExtremes: BikeDateExtremes;
-}) {
-  const bikeData = use(bikeDataPromise);
-  const numFetches = bikeData.length;
-  let totalRecords = 0;
-  bikeData.forEach((batch) => (totalRecords += batch.features.length));
-
-  const { startDateExtreme, endDateExtreme } = bikeDateExtremes;
-
-  return (
-    <div>
-      <p>Fetches: {numFetches}</p>
-      <p>Records: {totalRecords}</p>
-      {startDateExtreme && (
-        <p>
-          Start Date: {`${startDateExtreme.month}-${startDateExtreme.year}`}
-        </p>
-      )}
-      {endDateExtreme && (
-        <p>End Date: {`${endDateExtreme.month}-${endDateExtreme.year}`}</p>
-      )}
-    </div>
-  );
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  const [year, month] = iso.split("-");
+  return `${month}-${year}`;
 }
 
 export function DebugHUD({
-  //   className = "",
   sliderValues,
   startDate,
   endDate,
@@ -48,10 +21,10 @@ export function DebugHUD({
   setRadius,
   maxZoom,
   setMaxZoom,
-  // gradient,
-  // setGradient,
-  bikeData,
-  bikeDateExtremes
+  totalRecords,
+  currentQueryCount,
+  dbMinDate,
+  dbMaxDate
 }: DebugHUDProps) {
   return (
     <div id="debug" className="absolute -left-200 w-100">
@@ -90,19 +63,15 @@ export function DebugHUD({
             increment={1}
           />
         </div>
-        {/* <p>Gradient: {JSON.stringify(gradient)}</p> */}
       </div>
 
-      <h4 className="font-bold">Data</h4>
+      <h4 className="font-bold">Database</h4>
       <div className="ml-4">
-        <Suspense fallback={<>Fetching...</>}>
-          {bikeData && bikeDateExtremes && (
-            <BikeRecords
-              bikeDataPromise={bikeData}
-              bikeDateExtremes={bikeDateExtremes}
-            />
-          )}
-        </Suspense>
+        <p>Total records: {totalRecords ?? "—"}</p>
+        <p>Current query: {currentQueryCount ?? "—"} records</p>
+        <p>
+          Date range: {formatDate(dbMinDate)} → {formatDate(dbMaxDate)}
+        </p>
       </div>
     </div>
   );
