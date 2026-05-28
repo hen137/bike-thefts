@@ -133,6 +133,15 @@ export async function insertRecords(
   });
 
   await insertMany();
+
+  const minRow = await db
+    .prepare<{ v: string }>("SELECT MIN(occ_date) as v FROM bike_thefts")
+    .get();
+  const maxRow = await db
+    .prepare<{ v: string }>("SELECT MAX(occ_date) as v FROM bike_thefts")
+    .get();
+  if (minRow?.v) await writeMeta(db, "min_date", minRow.v);
+  if (maxRow?.v) await writeMeta(db, "max_date", maxRow.v);
 }
 
 export async function writeMeta(

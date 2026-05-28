@@ -177,3 +177,48 @@ describe("writeMeta / readMeta", () => {
     expect(result).toBeNull();
   });
 });
+
+describe("insertRecords — min/max date meta", () => {
+  let db: Database.Database;
+
+  beforeEach(async () => {
+    db = new Database(":memory:");
+    await createSchema(adaptDb(db));
+  });
+
+  afterEach(() => {
+    db.close();
+  });
+
+  it("writes min_date and max_date to meta after insert", async () => {
+    const records = [
+      makeRecord({
+        objectid: 1,
+        occ_date: "2020-03-15",
+        lat: 43.7,
+        lng: -79.4
+      }),
+      makeRecord({
+        objectid: 2,
+        occ_date: "2018-01-01",
+        lat: 43.8,
+        lng: -79.5
+      }),
+      makeRecord({ objectid: 3, occ_date: "2022-12-31", lat: 43.9, lng: -79.3 })
+    ];
+    await insertRecords(adaptDb(db), records);
+    expect(await readMeta(adaptDb(db), "min_date")).toBe("2018-01-01");
+    expect(await readMeta(adaptDb(db), "max_date")).toBe("2022-12-31");
+  });
+
+  it("updates min/max when insertRecords is called a second time", async () => {
+    await insertRecords(adaptDb(db), [
+      makeRecord({ objectid: 1, occ_date: "2020-01-01", lat: 43.7, lng: -79.4 })
+    ]);
+    await insertRecords(adaptDb(db), [
+      makeRecord({ objectid: 2, occ_date: "2015-06-01", lat: 43.8, lng: -79.5 })
+    ]);
+    expect(await readMeta(adaptDb(db), "min_date")).toBe("2015-06-01");
+    expect(await readMeta(adaptDb(db), "max_date")).toBe("2020-01-01");
+  });
+});
