@@ -41,7 +41,9 @@ describe("DbContext", () => {
     mockInit.mockResolvedValue({
       status: "cached",
       recordCount: 1000,
-      lastFetched: "2026-05-27T00:00:00.000Z"
+      lastFetched: "2026-05-27T00:00:00.000Z",
+      minDate: null,
+      maxDate: null
     });
 
     const { result } = renderHook(() => useDbContext(), { wrapper });
@@ -57,7 +59,9 @@ describe("DbContext", () => {
       return Promise.resolve({
         status: "fresh",
         recordCount: 500,
-        lastFetched: null
+        lastFetched: null,
+        minDate: null,
+        maxDate: null
       });
     });
 
@@ -74,7 +78,9 @@ describe("DbContext", () => {
     mockInit.mockResolvedValue({
       status: "cached",
       recordCount: 1000,
-      lastFetched: "2026-05-27T00:00:00.000Z"
+      lastFetched: "2026-05-27T00:00:00.000Z",
+      minDate: null,
+      maxDate: null
     });
 
     const { result } = renderHook(() => useDbContext(), { wrapper });
