@@ -19,6 +19,8 @@ const thumbStyles =
 const contentStyles =
   "w-30 h-15 bg-white dark:bg-slate-700 text-gray-600 dark:text-gray-100";
 
+const stepSize = Math.round(MAX_RANGE / 144);
+
 export function HeatmapSlider({
   initialValues,
   updateValues,
@@ -33,8 +35,8 @@ export function HeatmapSlider({
       orientation="vertical"
       max={MAX_RANGE}
       defaultValue={initialValues}
-      minStepsBetweenThumbs={MAX_RANGE / 10}
-      step={1}
+      minStepsBetweenThumbs={stepSize * 2}
+      step={stepSize}
     >
       <SliderTrack className="relative h-full w-1 bg-gray-600 dark:bg-gray-100 rounded-full">
         <SliderRange className="absolute w-1 bg-blue-600 dark:bg-blue-400 rounded-full" />

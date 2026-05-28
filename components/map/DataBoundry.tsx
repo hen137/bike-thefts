@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { MonthYear } from "@/types/map";
 import { HeatmapSlider } from "@/components/map";
 import { DebugHUD } from "@/components/debug";
@@ -8,6 +8,7 @@ import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
 import { useLeafletHeatLayer } from "@/hooks";
 import { useDbContext } from "@/contexts/DbContext";
 import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
+import { calcRawSliderToDates } from "@/lib/utils";
 
 const MAX_SLIDER_RANGE = 1000;
 const endThumb = 1000;
@@ -27,16 +28,6 @@ export function DataBoundry() {
     endThumb
   ]);
   const [commitedSliderValues, commitSliderValues] = useState(sliderValues);
-
-  const startDateExtreme = useMemo<MonthYear>(
-    () => ({ month: 0, year: 2014 }),
-    []
-  );
-
-  const endDateExtreme = useMemo<MonthYear>(
-    () => ({ month: 11, year: 2026 }),
-    []
-  );
 
   const [startDate, setStartDate] = useState<MonthYear | null>(null);
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
@@ -65,49 +56,49 @@ export function DataBoundry() {
     setHeatOptions({ blur, radius, maxZoom });
   }, [heatLayer, blur, radius, maxZoom, setHeatOptions]);
 
-  const calcDateRange = useCallback(
-    (sliderVals: number[]) => {
-      const yearDelta = endDateExtreme.year - startDateExtreme.year;
-      const monthDelta =
-        endDateExtreme.month - startDateExtreme.month + 12 * yearDelta;
-
-      const startMonths = Math.floor(
-        (sliderVals[0] * monthDelta) / MAX_SLIDER_RANGE
+  // responsive slider tooltip re-renders
+  useEffect(() => {
+    if (isReady) {
+      const { startDate, endDate } = calcRawSliderToDates(
+        sliderValues,
+        MAX_SLIDER_RANGE,
+        {
+          lowerBound: initResult?.minDate
+            ? new Date(initResult.minDate)
+            : new Date(2013, 0),
+          upperBound: initResult?.maxDate
+            ? new Date(initResult.maxDate)
+            : new Date(2026, 11)
+        }
       );
-      const endMonths = Math.floor(
-        (sliderVals[1] * monthDelta) / MAX_SLIDER_RANGE
-      );
-
-      const startMonth = startDateExtreme.month + (startMonths % 12);
-      const startYear = startDateExtreme.year + Math.floor(startMonths / 12);
-
-      const endMonth = startDateExtreme.month + (endMonths % 12);
-      const endYear = startDateExtreme.year + Math.floor(endMonths / 12);
-
-      return {
-        startDate: { month: startMonth, year: startYear },
-        endDate: { month: endMonth, year: endYear }
-      };
-    },
-    [startDateExtreme, endDateExtreme]
-  );
+      setStartDate(startDate);
+      setEndDate(endDate);
+    }
+  }, [sliderValues, isReady, initResult]);
 
   useEffect(() => {
-    const { startDate, endDate } = calcDateRange(sliderValues);
-    setStartDate(startDate);
-    setEndDate(endDate);
-  }, [sliderValues, calcDateRange]);
-
-  useEffect(() => {
-    const { startDate, endDate } = calcDateRange(commitedSliderValues);
-    setStartDate(startDate);
-    setEndDate(endDate);
-
     if (isReady && worker) {
+      const { startDate, endDate } = calcRawSliderToDates(
+        commitedSliderValues,
+        MAX_SLIDER_RANGE,
+        {
+          lowerBound: initResult?.minDate
+            ? new Date(initResult.minDate)
+            : new Date(2013, 0),
+          upperBound: initResult?.maxDate
+            ? new Date(initResult.maxDate)
+            : new Date(2026, 11)
+        }
+      );
+
+      setStartDate(startDate);
+      setEndDate(endDate);
+
       const startISO = `${startDate.year}-${String(startDate.month + 1).padStart(2, "0")}-01`;
       const endISO = new Date(endDate.year, endDate.month + 1, 0)
         .toISOString()
         .split("T")[0];
+
       worker.queryHeatmap(startISO, endISO).then((rows) => {
         const { values, seenMean, stdev, avgIntensity } =
           buildHeatDataFromRows(rows);
@@ -118,7 +109,7 @@ export function DataBoundry() {
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
       });
     }
-  }, [commitedSliderValues, isReady, worker, calcDateRange, setHeatValues]);
+  }, [commitedSliderValues, isReady, worker, initResult, setHeatValues]);
 
   return (
     <>
