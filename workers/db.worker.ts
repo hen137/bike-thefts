@@ -172,13 +172,38 @@ const worker: DbWorker = {
       .get();
     const recordCount = countRow?.count ?? 0;
 
+    let minDate = await readMeta(theDb, "min_date");
+    let maxDate = await readMeta(theDb, "max_date");
+
+    // Backfill min/max for DBs created before this meta was added.
+    if (!minDate || !maxDate) {
+      const minRow = await theDb
+        .prepare<{
+          v: string;
+        }>("SELECT MIN(occ_date) as v FROM bike_thefts WHERE occ_date != ''")
+        .get();
+      const maxRow = await theDb
+        .prepare<{
+          v: string;
+        }>("SELECT MAX(occ_date) as v FROM bike_thefts WHERE occ_date != ''")
+        .get();
+      if (minRow?.v) {
+        await writeMeta(theDb, "min_date", minRow.v);
+        minDate = minRow.v;
+      }
+      if (maxRow?.v) {
+        await writeMeta(theDb, "max_date", maxRow.v);
+        maxDate = maxRow.v;
+      }
+    }
+
     onProgress({ type: "ready" });
     return {
       status: stale ? "fresh" : "cached",
       recordCount,
       lastFetched: await readMeta(theDb, "last_fetched"),
-      minDate: await readMeta(theDb, "min_date"),
-      maxDate: await readMeta(theDb, "max_date")
+      minDate,
+      maxDate
     } satisfies DbInitResult;
   },
 
