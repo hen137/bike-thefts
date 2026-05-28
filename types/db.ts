@@ -34,6 +34,8 @@ export type DbInitResult = {
   status: "fresh" | "cached"; // 'fresh' = just fetched, 'cached' = loaded from OPFS
   recordCount: number;
   lastFetched: string | null; // ISO timestamp or null if never fetched
+  minDate: string | null; // YYYY-MM-DD format or null if no records
+  maxDate: string | null; // YYYY-MM-DD format or null if no records
 };
 
 // Comlink-exposed worker interface
