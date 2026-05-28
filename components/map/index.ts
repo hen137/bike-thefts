@@ -17,5 +17,4 @@ export { MapInfo } from "./MapInfo";
 export { MapMeasurementPanel } from "./MapMeasurementPanel";
 export { MapContextMenu } from "./MapContextMenu";
 export { HeatmapSlider } from "./HeatmapSlider";
-export { Heatmap } from "./Heatmap";
 export { DataBoundry } from "./DataBoundry";
