@@ -27,7 +27,7 @@ export function DebugHUD({
   dbMaxDate
 }: DebugHUDProps) {
   return (
-    <div id="debug" className="absolute -left-200 w-100">
+    <div id="debug" className="absolute left-100 top-20 w-100 z-1000">
       <h4 className="font-bold">Slider</h4>
       <div className="ml-4">
         <p>Raw: {sliderValues.join(",")}</p>
