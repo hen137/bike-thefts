@@ -25,6 +25,9 @@ const DB_NAME = "bike-thefts.db";
 const OPFS_DIR = "/bike-thefts";
 const ARCGIS_URL =
   "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/Bicycle_Thefts_Open_Data/FeatureServer/0/query?";
+const ARCGIS_FILTER =
+  "outFields=*&where=(OCC_DATE%20IS%20NOT%20NULL)%20AND%20(OCC_DATE%20>=%20'01/01/2010')";
+
 const MAX_RECORDS = 2000;
 const TTL_DAYS = 7;
 
@@ -74,7 +77,7 @@ async function openDatabase(): Promise<SQLiteDB> {
 
 async function fetchTotalCount(): Promise<number> {
   const resp = await fetch(
-    `${ARCGIS_URL}outFields=*&where=1%3D1&returnCountOnly=true&f=json`
+    `${ARCGIS_URL}${ARCGIS_FILTER}&returnCountOnly=true&f=json`
   );
   if (!resp.ok)
     throw new Error(`ArcGIS count request failed: ${resp.statusText}`);
@@ -83,7 +86,7 @@ async function fetchTotalCount(): Promise<number> {
 
 async function fetchPage(offset: number): Promise<BikeTheftRecord[]> {
   const resp = await fetch(
-    `${ARCGIS_URL}outFields=*&where=1%3D1&resultOffset=${offset}&resultRecordCount=${MAX_RECORDS}&f=geojson`
+    `${ARCGIS_URL}${ARCGIS_FILTER}&resultOffset=${offset}&resultRecordCount=${MAX_RECORDS}&f=geojson`
   );
   if (!resp.ok)
     throw new Error(`ArcGIS data request failed: ${resp.statusText}`);

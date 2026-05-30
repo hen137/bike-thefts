@@ -65,10 +65,10 @@ export function DataBoundry() {
         {
           lowerBound: initResult?.minDate
             ? new Date(initResult.minDate)
-            : new Date(2013, 0),
+            : new Date(2010, 0),
           upperBound: initResult?.maxDate
             ? new Date(initResult.maxDate)
-            : new Date(2026, 11)
+            : new Date()
         }
       );
       setStartDate(startDate);
@@ -84,10 +84,10 @@ export function DataBoundry() {
         {
           lowerBound: initResult?.minDate
             ? new Date(initResult.minDate)
-            : new Date(2013, 0),
+            : new Date(2010, 0),
           upperBound: initResult?.maxDate
             ? new Date(initResult.maxDate)
-            : new Date(2026, 11)
+            : new Date()
         }
       );
 
