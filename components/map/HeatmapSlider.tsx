@@ -47,7 +47,7 @@ export function HeatmapSlider({
             </TooltipTrigger>
             <TooltipContent side="left" className={contentStyles}>
               <TooltipArrow height={10} className="" />
-              {`${sliderDates.startDate?.month}-${sliderDates.startDate?.year}`}
+              {`${sliderDates.startDate?.month ? sliderDates.startDate?.month + 1 : ""}-${sliderDates.startDate?.year}`}
             </TooltipContent>
           </TooltipRoot>
           <TooltipRoot>
@@ -56,7 +56,7 @@ export function HeatmapSlider({
             </TooltipTrigger>
             <TooltipContent side="left" className={contentStyles}>
               <TooltipArrow height={10} className="" />
-              {`${sliderDates.endDate?.month}-${sliderDates.endDate?.year}`}
+              {`${sliderDates.endDate?.month ? sliderDates.endDate?.month + 1 : ""}-${sliderDates.endDate?.year}`}
             </TooltipContent>
           </TooltipRoot>
         </TooltipProvider>

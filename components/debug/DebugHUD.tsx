@@ -32,8 +32,10 @@ export function DebugHUD({
       <div className="ml-4">
         <p>Raw: {sliderValues.join(",")}</p>
         <p>
-          Date: s:{`${startDate?.month}-${startDate?.year}`}, e:
-          {`${endDate?.month}-${endDate?.year}`}
+          Date: s:
+          {`${startDate?.month ? startDate?.month + 1 : ""}-${startDate?.year}`}
+          , e:
+          {`${endDate?.month ? endDate?.month + 1 : ""}-${endDate?.year}`}
         </p>
       </div>
 
