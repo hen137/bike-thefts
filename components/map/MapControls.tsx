@@ -12,9 +12,8 @@ import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
 import { calcRawSliderToDates } from "@/lib/utils";
 import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
 import { MonthYear } from "@/types";
-import { DebugHUD } from "../debug";
+import { DebugHUD } from "@/components/debug";
 import { HeatmapSlider } from "./HeatmapSlider";
-// import { DataBoundry } from "@/components/map";
 
 const MAX_SLIDER_RANGE = 1000;
 const endThumb = 1000;
@@ -143,9 +142,6 @@ export const MapControls = memo(function MapControls() {
   return (
     <div>
       <div className="absolute bottom-24 sm:bottom-8 right-4 flex flex-col items-center gap-2 z-1000">
-        {/* Heatmap */}
-        {/* <DataBoundry /> */}
-
         {/* Time Range Slider */}
         <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
           <HeatmapSlider
