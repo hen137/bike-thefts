@@ -171,11 +171,11 @@ export async function queryHeatmap(
 ): Promise<HeatRow[]> {
   return await db
     .prepare<HeatRow>(
-      `SELECT lat, lng, COUNT(*) as count
+      `SELECT hood_158, lat, lng, COUNT(*) as count
        FROM bike_thefts
        WHERE occ_date >= ? AND occ_date <= ?
          AND lat IS NOT NULL AND lng IS NOT NULL
-       GROUP BY lat, lng`
+       GROUP BY hood_158, lat, lng`
     )
     .all(startDate, endDate);
 }

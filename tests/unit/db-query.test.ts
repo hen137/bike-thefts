@@ -110,13 +110,23 @@ describe("queryHeatmap", () => {
 
   it("handles single record correctly", async () => {
     await insertRecords(adaptDb(db), [
-      makeMockRecord(1, { occ_date: "2021-03-10", lat: 43.65, lng: -79.38 })
+      makeMockRecord(1, {
+        occ_date: "2021-03-10",
+        lat: 43.65,
+        lng: -79.38,
+        hood_158: "123"
+      })
     ]);
 
     const result = await queryHeatmap(adaptDb(db), "2021-01-01", "2021-12-31");
 
     expect(result).toHaveLength(1);
-    expect(result[0]).toEqual({ lat: 43.65, lng: -79.38, count: 1 });
+    expect(result[0]).toEqual({
+      hood_158: "123",
+      lat: 43.65,
+      lng: -79.38,
+      count: 1
+    });
   });
 
   it("multiple distinct coordinates return separate HeatRows", async () => {
