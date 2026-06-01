@@ -38,6 +38,7 @@ const sampleRows: HeatRow[] = [
 function setHeatLayerMock() {
   return {
     registerZoomRadiusHandler: vi.fn(),
+    registerZoomBlurHandler: vi.fn(),
     setHeatValues: vi.fn(),
     heatLayer: null,
     heatOptions: null,

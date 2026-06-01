@@ -34,6 +34,7 @@ export const MapControls = memo(function MapControls() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const {
     registerZoomRadiusHandler,
+    registerZoomBlurHandler,
     setHeatValues,
     heatLayer,
     setHeatOptions
@@ -78,6 +79,10 @@ export const MapControls = memo(function MapControls() {
   useEffect(() => {
     registerZoomRadiusHandler(setRadius);
   }, [registerZoomRadiusHandler]);
+
+  useEffect(() => {
+    registerZoomBlurHandler(setBlur);
+  }, [registerZoomBlurHandler]);
 
   useEffect(() => {
     setHeatOptions({ blur, radius, maxZoom });

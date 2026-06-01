@@ -15,7 +15,7 @@ export function LeafletHeatLayer() {
   if (heatContext === undefined)
     throw new Error("LeafletHeatLayer must be used within a HeatProvider");
 
-  const { setHeatLayer, setZoomRadius } = heatContext;
+  const { setHeatLayer, setZoomRadius, setZoomBlur } = heatContext;
 
   useEffect(() => {
     // Wait for map to be ready
@@ -24,10 +24,12 @@ export function LeafletHeatLayer() {
     let isMounted = true;
 
     const handleZoom = () => {
-      // const radius = Math.round(1.2 * Math.exp(map.getZoom() / 3.75));
-      const radius = ZOOM_MAPPING[map.getZoom()].radius;
-      if (heatLayerRef.current) heatLayerRef.current.setOptions({ radius });
+      const { radius, blur } = ZOOM_MAPPING[map.getZoom()];
+      if (heatLayerRef.current) {
+        heatLayerRef.current.setOptions({ radius, blur });
+      }
       setZoomRadius(radius);
+      setZoomBlur(blur);
     };
 
     const setupHeatLayer = async () => {

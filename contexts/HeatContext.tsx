@@ -39,6 +39,7 @@ export function HeatProvider({ children }: HeatProviderProps) {
 
   // Ref-based callback — avoids putting zoom radius in context state (prevents re-render loops)
   const zoomRadiusHandlerRef = useRef<((r: number) => void) | null>(null);
+  const zoomBlurHandlerRef = useRef<((b: number) => void) | null>(null);
 
   const registerZoomRadiusHandler = useCallback(
     (handler: (radius: number) => void) => {
@@ -47,8 +48,19 @@ export function HeatProvider({ children }: HeatProviderProps) {
     []
   );
 
+  const registerZoomBlurHandler = useCallback(
+    (handler: (blur: number) => void) => {
+      zoomBlurHandlerRef.current = handler;
+    },
+    []
+  );
+
   const setZoomRadius = useCallback((radius: number) => {
     zoomRadiusHandlerRef.current?.(radius);
+  }, []);
+
+  const setZoomBlur = useCallback((blur: number) => {
+    zoomBlurHandlerRef.current?.(blur);
   }, []);
 
   // Memoized setHeat to prevent unnecessary re-renders
@@ -86,7 +98,9 @@ export function HeatProvider({ children }: HeatProviderProps) {
       setHeatOptions,
       setHeatValues,
       setZoomRadius,
-      registerZoomRadiusHandler
+      setZoomBlur,
+      registerZoomRadiusHandler,
+      registerZoomBlurHandler
     }),
     [
       heatLayer,
@@ -96,7 +110,9 @@ export function HeatProvider({ children }: HeatProviderProps) {
       setHeatOptions,
       setHeatValues,
       setZoomRadius,
-      registerZoomRadiusHandler
+      setZoomBlur,
+      registerZoomRadiusHandler,
+      registerZoomBlurHandler
     ]
   );
 

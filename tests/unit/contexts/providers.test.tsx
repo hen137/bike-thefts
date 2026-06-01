@@ -92,6 +92,14 @@ describe("HeatProvider", () => {
     act(() => result.current!.setZoomRadius(95));
     expect(handler).toHaveBeenCalledWith(95);
   });
+
+  it("setZoomBlur forwards the blur to the registered handler", () => {
+    const { result } = renderHook(() => useContext(HeatContext), { wrapper });
+    const handler = vi.fn();
+    act(() => result.current!.registerZoomBlurHandler(handler));
+    act(() => result.current!.setZoomBlur(12));
+    expect(handler).toHaveBeenCalledWith(12);
+  });
 });
 
 describe("TileProvider", () => {
