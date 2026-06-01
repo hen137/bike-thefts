@@ -22,9 +22,9 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
  * Default heatmap configuration
  */
 export const DEFAULT_HEATMAP_CONFIG: HeatMapOptions = {
-  blur: 30,
-  radius: 60,
-  maxZoom: 13,
+  blur: 11,
+  radius: 8,
+  maxZoom: 10,
   gradient: { 0.4: "blue", 0.65: "lime", 1: "red" }
 };
 
@@ -43,13 +43,14 @@ export const DEFAULT_MAP_HEIGHT = "100vh";
  */
 export const SENTINAL_COORDINATES = "5.08888749034163e-145.6843418860808e-14";
 
-export const ZOOM_MAPPING: { [key: number]: { radius: number } } = {
-  16: { radius: 95 },
-  15: { radius: 70 },
-  14: { radius: 45 },
-  13: { radius: 30 },
-  12: { radius: 25 },
-  11: { radius: 20 },
-  10: { radius: 15 },
-  9: { radius: 10 }
-};
+export const ZOOM_MAPPING: { [key: number]: { radius: number; blur: number } } =
+  {
+    16: { radius: 65, blur: 80 },
+    15: { radius: 40, blur: 60 },
+    14: { radius: 25, blur: 39 },
+    13: { radius: 15, blur: 22 },
+    12: { radius: 8, blur: 11 },
+    11: { radius: 5, blur: 7 },
+    10: { radius: 3, blur: 3 },
+    9: { radius: 2, blur: 2 }
+  };
