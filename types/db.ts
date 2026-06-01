@@ -17,6 +17,14 @@ export interface SQLiteDB {
 
 // Matches each row returned by the heatmap SQL query
 export type HeatRow = {
+  hood_158: number;
+  lat: number;
+  lng: number;
+  count: number;
+};
+
+//
+export type HoodRow = {
   lat: number;
   lng: number;
   count: number;
