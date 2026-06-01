@@ -1,5 +1,5 @@
-import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
-import { DebugSlider } from "@/components/debug";
+// import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
+// import { DebugSlider } from "@/components/debug";
 import { DebugHUDProps } from "@/types/components";
 
 function formatDate(iso: string | null): string {
@@ -14,11 +14,11 @@ export function DebugHUD({
   endDate,
   avgIntensity,
   blur,
-  setBlur,
+  // setBlur,
   radius,
-  setRadius,
+  // setRadius,
   maxZoom,
-  setMaxZoom,
+  // setMaxZoom,
   totalRecords,
   currentQueryCount,
   dbMinDate,
@@ -46,20 +46,24 @@ export function DebugHUD({
       <div className="ml-4">
         <div className="relative flex items-center flex-row">
           <p>Blur: {blur}</p>
-          <DebugSlider updateValue={setBlur} defaultVal={blur} />
+          {/* <DebugSlider updateValue={setBlur} defaultVal={blur} increment={1} /> */}
         </div>
         <div className="relative flex items-center flex-row">
           <p>Radius: {radius}</p>
-          <DebugSlider updateValue={setRadius} defaultVal={radius} />
+          {/* <DebugSlider
+            updateValue={setRadius}
+            defaultVal={radius}
+            increment={1}
+          /> */}
         </div>
         <div className="relative flex items-center flex-row">
           <p>Max Zoom: {maxZoom}</p>
-          <DebugSlider
+          {/* <DebugSlider
             updateValue={setMaxZoom}
             defaultVal={maxZoom}
             max={DEFAULT_MAP_CONFIG.maxZoom}
             increment={1}
-          />
+          /> */}
         </div>
       </div>
 
