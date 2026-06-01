@@ -75,7 +75,9 @@ export interface HeatContextValue {
   setHeatOptions(options: HeatMapOptions): void;
   setHeatValues: (data: (LatLng | HeatLatLngTuple)[]) => void;
   setZoomRadius: (radius: number) => void;
+  setZoomBlur: (blur: number) => void;
   registerZoomRadiusHandler: (handler: (radius: number) => void) => void;
+  registerZoomBlurHandler: (handler: (blur: number) => void) => void;
 }
 
 /**
