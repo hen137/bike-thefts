@@ -12,8 +12,6 @@ export function DebugHUD({
   sliderValues,
   startDate,
   endDate,
-  mean,
-  std,
   avgIntensity,
   blur,
   setBlur,
@@ -41,8 +39,6 @@ export function DebugHUD({
 
       <h4 className="font-bold">Stats</h4>
       <div className="ml-4">
-        <p>Mean: {mean}</p>
-        <p>Std: {std}</p>
         <p>Avg Intensity: {avgIntensity}</p>
       </div>
 

@@ -17,8 +17,6 @@ export interface DebugHUDProps {
   sliderValues: number[];
   startDate: MonthYear | null;
   endDate: MonthYear | null;
-  mean: number | null;
-  std: number | null;
   avgIntensity: number | null;
   blur: number;
   setBlur: (value: number) => void;

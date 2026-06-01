@@ -60,8 +60,6 @@ export const MapControls = memo(function MapControls() {
   );
 
   // debug
-  const [mean, setMean] = useState<number | null>(null);
-  const [std, setStd] = useState<number | null>(null);
   const [avgIntensity, setAvgIntensity] = useState<number | null>(null);
 
   // Listen for fullscreen changes
@@ -128,11 +126,8 @@ export const MapControls = memo(function MapControls() {
         .split("T")[0];
 
       worker.queryHeatmap(startISO, endISO).then((rows) => {
-        const { values, seenMean, stdev, avgIntensity } =
-          buildHeatDataFromRows(rows);
+        const { values, avgIntensity } = buildHeatDataFromRows(rows, true);
         setHeatValues(values);
-        setMean(seenMean);
-        setStd(stdev);
         setAvgIntensity(avgIntensity);
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
       });
@@ -241,8 +236,6 @@ export const MapControls = memo(function MapControls() {
         sliderValues={sliderValues}
         startDate={startDate}
         endDate={endDate}
-        mean={mean}
-        std={std}
         avgIntensity={avgIntensity}
         blur={blur}
         setBlur={setBlur}
