@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { waitFor } from "@testing-library/react";
-import { renderHook } from "@testing-library/react";
+import { waitFor, renderHook, act } from "@testing-library/react";
 import React from "react";
 
 const mockInit = vi.fn();
@@ -106,5 +105,47 @@ describe("DbContext", () => {
     await waitFor(() => {
       expect(result.current.worker).not.toBeNull();
     });
+  });
+
+  it("refresh() re-runs the worker and ends ready", async () => {
+    mockInit.mockResolvedValue({
+      status: "cached",
+      recordCount: 10,
+      lastFetched: null,
+      minDate: null,
+      maxDate: null
+    });
+    mockRefresh.mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useDbContext(), { wrapper });
+    await waitFor(() => expect(result.current.isReady).toBe(true));
+
+    await act(async () => {
+      await result.current.refresh();
+    });
+
+    expect(mockRefresh).toHaveBeenCalledWith(expect.any(Function));
+    expect(result.current.isReady).toBe(true);
+  });
+
+  it("refresh() sets error state when the worker rejects", async () => {
+    mockInit.mockResolvedValue({
+      status: "cached",
+      recordCount: 10,
+      lastFetched: null,
+      minDate: null,
+      maxDate: null
+    });
+    mockRefresh.mockRejectedValue(new Error("refresh failed"));
+
+    const { result } = renderHook(() => useDbContext(), { wrapper });
+    await waitFor(() => expect(result.current.isReady).toBe(true));
+
+    await act(async () => {
+      await result.current.refresh();
+    });
+
+    expect(result.current.error?.message).toBe("refresh failed");
+    expect(result.current.isReady).toBe(false);
   });
 });
