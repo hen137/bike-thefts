@@ -5,8 +5,11 @@ import {
   isValidCoordinate,
   validateMapConfig,
   isValidTileUrl,
-  clampZoom
+  clampZoom,
+  isValidMarkerPosition,
+  isValidLeafletBounds
 } from "@/lib/utils/validation";
+import type { LatLngBounds } from "leaflet";
 
 describe("isValidZoom", () => {
   it("accepts zoom within default range", () => {
@@ -136,6 +139,97 @@ describe("validateMapConfig", () => {
     const result = validateMapConfig({ defaultCenter: [200, 0] });
     expect(result.isValid).toBe(false);
     expect(result.errors.some((e) => e.includes("center"))).toBe(true);
+  });
+  it("errors when defaultZoom is NaN / non-number", () => {
+    expect(
+      validateMapConfig({ defaultZoom: NaN }).errors.some((e) =>
+        e.includes("Default zoom must be a number")
+      )
+    ).toBe(true);
+  });
+  it("errors when defaultZoom out of 0–20 range", () => {
+    expect(
+      validateMapConfig({ defaultZoom: 25 }).errors.some((e) =>
+        e.includes("between 0 and 20")
+      )
+    ).toBe(true);
+  });
+  it("errors when minZoom is NaN", () => {
+    expect(
+      validateMapConfig({ minZoom: NaN }).errors.some((e) =>
+        e.includes("Min zoom must be a number")
+      )
+    ).toBe(true);
+  });
+  it("errors when minZoom < 0", () => {
+    expect(
+      validateMapConfig({ minZoom: -1 }).errors.some((e) =>
+        e.includes("Min zoom must be >= 0")
+      )
+    ).toBe(true);
+  });
+  it("errors when maxZoom is NaN", () => {
+    expect(
+      validateMapConfig({ maxZoom: NaN }).errors.some((e) =>
+        e.includes("Max zoom must be a number")
+      )
+    ).toBe(true);
+  });
+  it("errors when maxZoom > 20", () => {
+    expect(
+      validateMapConfig({ maxZoom: 25 }).errors.some((e) =>
+        e.includes("Max zoom must be <= 20")
+      )
+    ).toBe(true);
+  });
+});
+
+describe("isValidMarkerPosition", () => {
+  it("accepts a valid position", () => {
+    expect(isValidMarkerPosition([43.7, -79.4])).toBe(true);
+  });
+  it("rejects an out-of-range position", () => {
+    expect(isValidMarkerPosition([91, 0])).toBe(false);
+  });
+  it("rejects NaN", () => {
+    expect(isValidMarkerPosition([NaN, 0])).toBe(false);
+  });
+});
+
+describe("isValidLeafletBounds", () => {
+  const makeBounds = (sw: [number, number], ne: [number, number]) =>
+    ({
+      getSouthWest: () => ({ lat: sw[0], lng: sw[1] }),
+      getNorthEast: () => ({ lat: ne[0], lng: ne[1] })
+    }) as unknown as LatLngBounds;
+
+  it("returns false for null / undefined", () => {
+    expect(isValidLeafletBounds(null)).toBe(false);
+    expect(isValidLeafletBounds(undefined)).toBe(false);
+  });
+  it("accepts well-formed, properly-ordered bounds", () => {
+    expect(isValidLeafletBounds(makeBounds([43.6, -79.6], [43.9, -79.1]))).toBe(
+      true
+    );
+  });
+  it("rejects when sw.lat > ne.lat (inverted)", () => {
+    expect(isValidLeafletBounds(makeBounds([43.9, -79.6], [43.6, -79.1]))).toBe(
+      false
+    );
+  });
+  it("rejects when a corner is out of coordinate range", () => {
+    expect(isValidLeafletBounds(makeBounds([-91, -79.6], [43.9, -79.1]))).toBe(
+      false
+    );
+  });
+  it("returns false when accessor throws", () => {
+    const throwing = {
+      getSouthWest: () => {
+        throw new Error("not ready");
+      },
+      getNorthEast: () => ({ lat: 0, lng: 0 })
+    } as unknown as LatLngBounds;
+    expect(isValidLeafletBounds(throwing)).toBe(false);
   });
 });
 
