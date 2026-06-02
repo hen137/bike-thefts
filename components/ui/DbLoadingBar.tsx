@@ -32,7 +32,7 @@ export function DbLoadingBar() {
       : `Indexing page ${progress.page} / ${progress.totalPages}`;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-slate-800 text-white z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-slate-800 text-white z-5000">
       <div className="p-3 flex items-center justify-between">
         <span className="text-sm">{label}</span>
         <span className="text-sm text-slate-400">{percentage}%</span>
