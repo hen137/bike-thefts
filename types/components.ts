@@ -1,12 +1,45 @@
 import type { ReactNode } from "react";
 import type {
+  ColorGradientConfig,
   HeatLatLngTuple,
   LatLng,
   Icon as LeafletIcon,
   Map as LeafletMap
 } from "leaflet";
-import { GeoJSONStyle } from "@/types/map";
+import { MonthYear, StartEndDates, GeoJSONStyle } from "@/types/map";
 import { ContextMenuPosition } from "@/types/hooks";
+
+/**
+ * DebugHUD component props
+ */
+export interface DebugHUDProps {
+  className?: string;
+  sliderValues: number[];
+  startDate: MonthYear | null;
+  endDate: MonthYear | null;
+  avgIntensity: number | null;
+  blur: number;
+  setBlur: (value: number) => void;
+  radius: number;
+  setRadius: (value: number) => void;
+  maxZoom: number;
+  setMaxZoom: (value: number) => void;
+  gradient: ColorGradientConfig | undefined;
+  totalRecords: number | null;
+  currentQueryCount: number | null;
+  dbMinDate: string | null;
+  dbMaxDate: string | null;
+}
+
+/**
+ * DebugSlider component props
+ */
+export interface DebugSliderProps {
+  updateValue: (value: number) => void;
+  defaultVal: number;
+  max?: number;
+  increment?: number;
+}
 
 /**
  * MapErrorBoundry component props
@@ -102,6 +135,8 @@ export interface MenuItemProps {
  * HeatmapSlider component props
  */
 export interface HeatmapSliderProps {
+  initialValues: number[];
   updateValues: (values: number[]) => void;
-  sliderDates: { startDate: string; endDate: string };
+  commitValues: (values: number[]) => void;
+  sliderDates: StartEndDates;
 }

@@ -1,8 +1,10 @@
-/**
- * Map-related TypeScript type definitions
- */
-
-import type { Map as LeafletMap } from "leaflet";
+import type {
+  HeatLatLngTuple,
+  HeatLayer,
+  HeatMapOptions,
+  LatLng,
+  Map as LeafletMap
+} from "leaflet";
 
 /**
  * Map configuration options
@@ -65,6 +67,19 @@ export interface TileContextValue {
   setProviderId: (id: string | null) => void;
 }
 
+export interface HeatContextValue {
+  heatLayer: HeatLayer | null;
+  heatOptions: HeatMapOptions | null;
+  heatValues: (LatLng | HeatLatLngTuple)[] | null;
+  setHeatLayer: (newHeatLayer: HeatLayer | null) => void;
+  setHeatOptions(options: HeatMapOptions): void;
+  setHeatValues: (data: (LatLng | HeatLatLngTuple)[]) => void;
+  setZoomRadius: (radius: number) => void;
+  setZoomBlur: (blur: number) => void;
+  registerZoomRadiusHandler: (handler: (radius: number) => void) => void;
+  registerZoomBlurHandler: (handler: (blur: number) => void) => void;
+}
+
 /**
  * Coordinate tuple type
  */
@@ -78,4 +93,14 @@ export interface Bounds {
   south: number;
   east: number;
   west: number;
+}
+
+export interface MonthYear {
+  month: number;
+  year: number;
+}
+
+export interface StartEndDates {
+  startDate: MonthYear | null;
+  endDate: MonthYear | null;
 }

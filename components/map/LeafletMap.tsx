@@ -3,7 +3,7 @@
 import { useEffect, useRef, useContext, useCallback } from "react";
 import type { Map as LeafletMapInstance, LeafletMouseEvent } from "leaflet";
 import type { LeafletMapProps } from "@/types/components";
-import { MapContext } from "@/contexts/MapContext";
+import { MapContext } from "@/contexts";
 import { DEFAULT_MAP_CONFIG } from "@/constants/map-config";
 
 /**

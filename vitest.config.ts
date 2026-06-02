@@ -9,8 +9,26 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     include: ["**/*.test.{ts,tsx}"],
     coverage: {
+      provider: "v8",
       reporter: ["text", "json-summary", "html"],
-      exclude: ["node_modules/", ".next/", "tests/e2e/"]
+      // Instrument the whole source tree, not just files touched by a test,
+      // so untested modules show up as 0% instead of being invisible.
+      include: [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "contexts/**/*.{ts,tsx}",
+        "hooks/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "workers/**/*.{ts,tsx}"
+      ],
+      exclude: [
+        "node_modules/",
+        ".next/",
+        "tests/",
+        "**/*.d.ts",
+        "**/index.ts", // barrel re-exports only
+        "types/**"
+      ]
     }
   },
   resolve: {

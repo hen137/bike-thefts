@@ -3,25 +3,26 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProviderWrapper } from "@/components/providers/ThemeProviderWrapper";
 import { Toaster } from "@/components/ui/sonner";
+import { DbProvider } from "@/contexts/DbContext";
+import { DbLoadingBar } from "@/components/ui/DbLoadingBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 export const metadata: Metadata = {
   title: "Toronto Bike Thefts",
-  description:
-    "A map of bike theft activity in Toronto, ON",
+  description: "A map of bike theft activity in Toronto, ON"
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -31,8 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProviderWrapper>
-          {children}
-          <Toaster />
+          <DbProvider>
+            {children}
+            <Toaster />
+            <DbLoadingBar />
+          </DbProvider>
         </ThemeProviderWrapper>
       </body>
     </html>

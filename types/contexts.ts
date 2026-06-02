@@ -11,3 +11,7 @@ export interface ThemeProviderProps {
 export interface TileProviderProps {
   children: ReactNode;
 }
+
+export interface HeatProviderProps {
+  children: ReactNode;
+}

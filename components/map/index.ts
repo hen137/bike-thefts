@@ -1,6 +1,9 @@
+"use client";
+
 export { LeafletMap } from "./LeafletMap";
 export { LeafletMarker } from "./LeafletMarker";
 export { LeafletTileLayer } from "./LeafletTileLayer";
+export { LeafletHeatLayer } from "./LeafletHeatLayer";
 export { LeafletGeoJSON } from "./LeafletGeoJSON";
 export { MapErrorBoundary } from "./MapErrorBoundary";
 export { MapLoadingSpinner } from "./MapLoadingSpinner";

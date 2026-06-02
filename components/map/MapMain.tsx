@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useMemo, useContext } from "react";
-import { HeatLatLngTuple, LatLng, Map } from "leaflet";
-import { useMapContextMenu } from "@/hooks/useMapContextMenu";
-import { TileContext } from "@/contexts/TileContext";
+import { useMapContextMenu } from "@/hooks";
+import { TileContext, HeatProvider } from "@/contexts";
 import {
+  LeafletHeatLayer,
   LeafletMap,
   LeafletTileLayer,
   MapContextMenu,
@@ -61,19 +61,6 @@ export function MapMain() {
   // do something
   // }, []);
 
-  const handleDrawHeatmap = useCallback(
-    async (map: Map, values: (LatLng | HeatLatLngTuple)[]) => {
-      const leaflet = await import("leaflet");
-      const L = leaflet.default ?? leaflet;
-      (window as Window & { L?: typeof L }).L = L;
-      await import("leaflet.heat");
-
-      // const heatmap =
-      L.heatLayer(values, { radius: 25 }).addTo(map);
-    },
-    []
-  );
-
   // Memoize tile layer props to prevent unnecessary updates
   const tileLayerProps = useMemo(
     () => ({
@@ -86,26 +73,29 @@ export function MapMain() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Map */}
-      <LeafletMap
-        className="w-full h-full"
-        // onClick={handleMapClick}
-        // onMouseMove={handleMapMouseMove}
-        // cursorStyle={isSelectingPOILocation ? "crosshair" : "grab"}
-      >
-        <LeafletTileLayer
-          url={tileLayerProps.url}
-          attribution={tileLayerProps.attribution}
-          maxZoom={tileLayerProps.maxZoom}
-        />
-        {/* <LeafletGeoJSON data={selectedCountry} style={GEOJSON_STYLE} /> */}
-      </LeafletMap>
+      <HeatProvider>
+        {/* Map */}
+        <LeafletMap
+          className="w-full h-full"
+          // onClick={handleMapClick}
+          // onMouseMove={handleMapMouseMove}
+          // cursorStyle={isSelectingPOILocation ? "crosshair" : "grab"}
+        >
+          <LeafletTileLayer
+            url={tileLayerProps.url}
+            attribution={tileLayerProps.attribution}
+            maxZoom={tileLayerProps.maxZoom}
+          />
+          <LeafletHeatLayer />
+          {/* <LeafletGeoJSON data={selectedCountry} style={GEOJSON_STYLE} /> */}
+        </LeafletMap>
+
+        {/* Map Controls */}
+        <MapControls />
+      </HeatProvider>
 
       {/* Top Bar */}
       <MapTopBar />
-
-      {/* Map Controls */}
-      <MapControls onSliderChange={handleDrawHeatmap} />
 
       {/* Measurement Panel */}
       <MapMeasurementPanel

@@ -6,5 +6,5 @@ export { useMapControls } from "./useMapControls";
 export { useSafeMapOperations } from "./useSafeMapOperations";
 export { useMeasurement } from "./useMeasurement";
 export { useMapTileProvider } from "./useMapTileProvider";
-
-// @/hooks
+export { useLeafletHeatLayer } from "./useLeafletHeatLayer";
+export { useDbContext } from "./useDbContext";
