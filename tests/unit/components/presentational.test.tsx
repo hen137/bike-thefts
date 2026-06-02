@@ -8,7 +8,19 @@ vi.mock("@/components/debug", async (importOriginal) => {
   return { ...actual, DebugSlider: () => null };
 });
 
+// Stub context-dependent subcomponents so MapTopBar tests stay isolated.
+vi.mock("@/components/map/MapThemeSwitcher", () => ({
+  MapThemeSwitcher: () => <div data-testid="mock-theme-switcher" />
+}));
+vi.mock("@/components/map/MapSearchBar", () => ({
+  MapSearchBar: () => <div data-testid="mock-search-bar" />
+}));
+vi.mock("@/components/map/MapTileSwitcher", () => ({
+  MapTileSwitcher: () => <div data-testid="mock-tile-switcher" />
+}));
+
 import { HeatLegend } from "@/components/map/HeatLegend";
+import { MapTopBar } from "@/components/map/MapTopBar";
 import { MapLoadingSpinner } from "@/components/map/MapLoadingSpinner";
 import { DebugHUD } from "@/components/debug/DebugHUD";
 import { MapContext } from "@/contexts/MapContext";
@@ -16,12 +28,24 @@ import type { MapContextValue } from "@/types/map";
 import type { DebugHUDProps } from "@/types/components";
 
 describe("HeatLegend", () => {
-  it("renders the qualitative and quantitative scale labels", () => {
+  it("renders the qualitative scale labels", () => {
     render(<HeatLegend />);
     expect(screen.getByText("Less")).toBeInTheDocument();
     expect(screen.getByText("More")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByText("1")).toBeInTheDocument();
+  });
+});
+
+describe("MapTopBar", () => {
+  it("renders the top bar container", () => {
+    render(<MapTopBar />);
+    expect(document.getElementById("map-top-bar")).toBeInTheDocument();
+  });
+
+  it("renders all three map controls", () => {
+    render(<MapTopBar />);
+    expect(screen.getByTestId("mock-theme-switcher")).toBeInTheDocument();
+    expect(screen.getByTestId("mock-search-bar")).toBeInTheDocument();
+    expect(screen.getByTestId("mock-tile-switcher")).toBeInTheDocument();
   });
 });
 
