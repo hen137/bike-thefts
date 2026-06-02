@@ -13,12 +13,12 @@ import { calcRawSliderToDates } from "@/lib/utils";
 import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
 import { MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
-import { HeatmapSlider } from "./HeatmapSlider";
 import { HeatLegend } from "./HeatLegend";
+// import { HeatmapSlider } from "./HeatmapSlider";
 
 const MAX_SLIDER_RANGE = 1000;
-const endThumb = 1000;
-const startThumb = 750;
+// const endThumb = 1000;
+// const startThumb = 750;
 
 /**
  * MapControls - Map control buttons at bottom right
@@ -27,7 +27,27 @@ const startThumb = 750;
  * Uses project's useMapControls hook for map interactions
  * Memoized to prevent unnecessary re-renders
  */
-export const MapControls = memo(function MapControls() {
+interface MapControlsProps {
+  drawerOpen: boolean;
+  onDrawerToggle: () => void;
+  sliderValues: number[];
+  committedSliderValues: number[];
+  startDate: MonthYear | null;
+  setStartDate: (val: MonthYear) => void;
+  endDate: MonthYear | null;
+  setEndDate: (val: MonthYear) => void;
+}
+
+export const MapControls = memo(function MapControls({
+  drawerOpen,
+  onDrawerToggle,
+  sliderValues,
+  committedSliderValues,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate
+}: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
   const { locateUser, isLocating, isAvailable } = useGeolocation();
@@ -41,14 +61,14 @@ export const MapControls = memo(function MapControls() {
   } = useLeafletHeatLayer();
   const { isReady, worker, initResult } = useDbContext();
 
-  const [sliderValues, setSliderValue] = useState<number[]>([
-    startThumb,
-    endThumb
-  ]);
-  const [commitedSliderValues, commitSliderValues] = useState(sliderValues);
+  // const [sliderValues, setSliderValue] = useState<number[]>([
+  //   startThumb,
+  //   endThumb
+  // ]);
+  // const [commitedSliderValues, commitSliderValues] = useState(sliderValues);
 
-  const [startDate, setStartDate] = useState<MonthYear | null>(null);
-  const [endDate, setEndDate] = useState<MonthYear | null>(null);
+  // const [startDate, setStartDate] = useState<MonthYear | null>(null);
+  // const [endDate, setEndDate] = useState<MonthYear | null>(null);
 
   const [blur, setBlur] = useState<number>(DEFAULT_HEATMAP_CONFIG.blur!);
   const [radius, setRadius] = useState<number>(DEFAULT_HEATMAP_CONFIG.radius!);
@@ -111,7 +131,7 @@ export const MapControls = memo(function MapControls() {
   useEffect(() => {
     if (isReady && worker) {
       const { startDate, endDate } = calcRawSliderToDates(
-        commitedSliderValues,
+        committedSliderValues,
         MAX_SLIDER_RANGE,
         {
           lowerBound: initResult?.minDate
@@ -138,22 +158,42 @@ export const MapControls = memo(function MapControls() {
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
       });
     }
-  }, [commitedSliderValues, isReady, worker, initResult, setHeatValues]);
+  }, [committedSliderValues, isReady, worker, initResult, setHeatValues]);
 
   return (
     <div>
-      <div className="absolute left-150 bottom-3 z-1000">
+      {/* Drawer trigger — tracks drawer position */}
+      <button
+        onClick={onDrawerToggle}
+        className={`fixed top-3 z-[2000] flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-[right] duration-300 ease-in-out ${drawerOpen ? "right-[336px]" : "right-4"}`}
+        title={drawerOpen ? "Close panel" : "Open panel"}
+        aria-label={drawerOpen ? "Close panel" : "Open panel"}
+      >
+        <svg
+          className="h-5 w-5 text-gray-600 dark:text-gray-100"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      <div className="absolute w-screen flex justify-center bottom-3 z-1000">
         <HeatLegend />
       </div>
-      <div className="absolute bottom-24 sm:bottom-8 right-4 flex flex-col items-center gap-2 z-1000">
+      <div className="absolute bottom-24 sm:bottom-8 left-4 flex flex-col items-center gap-2 z-1000">
         {/* Time Range Slider */}
         <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-          <HeatmapSlider
+          {/* <HeatmapSlider
             initialValues={sliderValues}
             updateValues={setSliderValue}
             commitValues={commitSliderValues}
             sliderDates={{ endDate, startDate }}
-          />
+          /> */}
         </div>
 
         {/* Location Button */}

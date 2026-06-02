@@ -89,7 +89,18 @@ describe("MapControls — DB query integration", () => {
       refresh: vi.fn()
     } as unknown as ReturnType<typeof useDbContext>);
 
-    render(<MapControls />);
+    render(
+      <MapControls
+        drawerOpen={false}
+        onDrawerToggle={() => {}}
+        sliderValues={[750, 1000]}
+        committedSliderValues={[750, 1000]}
+        startDate={null}
+        setStartDate={() => {}}
+        endDate={null}
+        setEndDate={() => {}}
+      />
+    );
 
     await waitFor(() => {
       expect(mockQueryHeatmap).toHaveBeenCalled();
@@ -124,7 +135,18 @@ describe("MapControls — DB query integration", () => {
       refresh: vi.fn()
     } as unknown as ReturnType<typeof useDbContext>);
 
-    render(<MapControls />);
+    render(
+      <MapControls
+        drawerOpen={false}
+        onDrawerToggle={() => {}}
+        sliderValues={[750, 1000]}
+        committedSliderValues={[750, 1000]}
+        startDate={null}
+        setStartDate={() => {}}
+        endDate={null}
+        setEndDate={() => {}}
+      />
+    );
 
     await waitFor(() => {
       expect(heatLayerHook.setHeatValues).toHaveBeenCalled();
@@ -147,7 +169,18 @@ describe("MapControls — DB query integration", () => {
       refresh: vi.fn()
     } as unknown as ReturnType<typeof useDbContext>);
 
-    render(<MapControls />);
+    render(
+      <MapControls
+        drawerOpen={false}
+        onDrawerToggle={() => {}}
+        sliderValues={[750, 1000]}
+        committedSliderValues={[750, 1000]}
+        startDate={null}
+        setStartDate={() => {}}
+        endDate={null}
+        setEndDate={() => {}}
+      />
+    );
 
     // Allow effects to settle
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -172,6 +205,19 @@ describe("MapControls — DB query integration", () => {
     } as unknown as ReturnType<typeof useDbContext>);
 
     // Should render without throwing despite no worker
-    expect(() => render(<MapControls />)).not.toThrow();
+    expect(() =>
+      render(
+        <MapControls
+          drawerOpen={false}
+          onDrawerToggle={() => {}}
+          sliderValues={[750, 1000]}
+          committedSliderValues={[750, 1000]}
+          startDate={null}
+          setStartDate={() => {}}
+          endDate={null}
+          setEndDate={() => {}}
+        />
+      )
+    ).not.toThrow();
   });
 });

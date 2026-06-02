@@ -4,15 +4,18 @@ import { useState, useCallback, useMemo, useContext } from "react";
 import { useMapContextMenu } from "@/hooks";
 import { TileContext, HeatProvider } from "@/contexts";
 import {
+  DrawerPanel,
   LeafletHeatLayer,
   LeafletMap,
   LeafletTileLayer,
   MapContextMenu,
   MapControls,
-  MapInfo,
   MapMeasurementPanel,
   MapTopBar
 } from "@/components/map";
+import { MonthYear } from "@/types/map";
+
+const initialSliderValues = [750, 1000];
 
 /**
  * MapMain - Main map component with theme-aware tile provider
@@ -26,6 +29,13 @@ export function MapMain() {
   // const [selectedCountry, setSelectedCountry] =
   //   useState<GeoJSON.Feature | null>(null);
   const [isMeasurementOpen, setIsMeasurementOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sliderValues, setSliderValue] =
+    useState<number[]>(initialSliderValues);
+  const [commitedSliderValues, commitSliderValues] =
+    useState<number[]>(initialSliderValues);
+  const [startDate, setStartDate] = useState<MonthYear | null>(null);
+  const [endDate, setEndDate] = useState<MonthYear | null>(null);
 
   const tileContext = useContext(TileContext);
 
@@ -91,7 +101,25 @@ export function MapMain() {
         </LeafletMap>
 
         {/* Map Controls */}
-        <MapControls />
+        <MapControls
+          drawerOpen={drawerOpen}
+          onDrawerToggle={() => setDrawerOpen((prev) => !prev)}
+          sliderValues={sliderValues}
+          committedSliderValues={commitedSliderValues}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
+
+        {/* Side Drawer */}
+        <DrawerPanel
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          sliderValues={sliderValues}
+          setSliderValue={setSliderValue}
+          commitSliderValues={commitSliderValues}
+        />
       </HeatProvider>
 
       {/* Top Bar */}
@@ -112,7 +140,7 @@ export function MapMain() {
       />
 
       {/* Info Menu */}
-      <MapInfo />
+      {/* <MapInfo /> */}
     </div>
   );
 }
