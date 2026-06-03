@@ -246,13 +246,14 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
               0
             </text>
 
-            {/* X-axis label */}
+            {/* X-axis label — starts just right of the arrowhead */}
             <text
-              x={X1 + 12}
-              y={Y0 + 11}
+              x={X1 + 14}
+              y={Y0 + 4}
               fontSize={9}
               fill={LABEL}
-              textAnchor="end"
+              textAnchor="start"
+              dominantBaseline="middle"
             >
               Δt
             </text>
