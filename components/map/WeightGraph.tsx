@@ -8,14 +8,13 @@ interface WeightGraphProps {
   onKChange: (k: number) => void;
 }
 
-const X0 = 24,
-  X1 = 216,
-  Y0 = 82,
-  Y1 = 12;
+const X0 = 30,
+  X1 = 218,
+  Y0 = 100,
+  Y1 = 14;
 const VW = 240,
-  VH = 100;
+  VH = 118;
 
-// pill dimensions
 const PW = 8,
   PH = 20;
 
@@ -95,17 +94,17 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
   return (
     <div
       className="overflow-hidden transition-all duration-300 ease-in-out"
-      style={{ maxHeight: visible ? "130px" : "0px", opacity: visible ? 1 : 0 }}
+      style={{ maxHeight: visible ? "160px" : "0px", opacity: visible ? 1 : 0 }}
     >
       <div
         className="rounded-lg mx-1 mt-1 overflow-hidden"
-        style={{ background: "#0d1117" }}
+        style={{ background: "#111827" }}
       >
         <svg
           ref={svgRef}
           viewBox={`0 0 ${VW} ${VH}`}
           className="w-full"
-          style={{ height: "100px", display: "block" }}
+          style={{ height: "140px", display: "block" }}
           aria-label="Time weighting curve"
         >
           <defs>
@@ -117,21 +116,15 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
               height="12"
               patternUnits="userSpaceOnUse"
             >
-              <circle cx="1" cy="1" r="0.8" fill="#94a3b8" opacity="0.2" />
+              <circle cx="1" cy="1" r="0.85" fill="#94a3b8" opacity="0.22" />
             </pattern>
             <clipPath id="wg-clip">
               <rect x={X0} y={Y1 - 4} width={X1 - X0} height={Y0 - Y1 + 4} />
             </clipPath>
           </defs>
 
-          {/* Dot grid */}
-          <rect
-            x={X0}
-            y={Y1 - 4}
-            width={X1 - X0}
-            height={Y0 - Y1 + 4}
-            fill="url(#wg-dots)"
-          />
+          {/* Full-area dot grid */}
+          <rect x={0} y={0} width={VW} height={VH} fill="url(#wg-dots)" />
 
           {/* Axes */}
           <line
@@ -139,9 +132,8 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
             y1={Y1 - 4}
             x2={X0}
             y2={Y0}
-            stroke="#94a3b8"
-            strokeWidth={1}
-            strokeOpacity={0.5}
+            stroke="#64748b"
+            strokeWidth={1.5}
             strokeLinecap="round"
           />
           <line
@@ -149,26 +141,35 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
             y1={Y0}
             x2={X1 + 4}
             y2={Y0}
-            stroke="#94a3b8"
-            strokeWidth={1}
-            strokeOpacity={0.5}
+            stroke="#64748b"
+            strokeWidth={1.5}
             strokeLinecap="round"
           />
 
-          {/* Axis labels */}
+          {/* Y-axis tick labels */}
           <text
-            x={12}
-            y={(Y0 + Y1) / 2}
+            x={X0 - 4}
+            y={Y1 + 8}
             fontSize={9}
             fill="#94a3b8"
-            textAnchor="middle"
-            transform={`rotate(-90,12,${(Y0 + Y1) / 2})`}
+            textAnchor="end"
           >
-            weight
+            1
           </text>
           <text
+            x={X0 - 4}
+            y={Y0 - 2}
+            fontSize={9}
+            fill="#94a3b8"
+            textAnchor="end"
+          >
+            0
+          </text>
+
+          {/* X-axis label */}
+          <text
             x={X1 + 4}
-            y={Y0 + 10}
+            y={Y0 + 11}
             fontSize={9}
             fill="#94a3b8"
             textAnchor="end"
@@ -192,6 +193,18 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
           {/* Drag handle pill (Inv / InvQuad only) */}
           {hasHandle && (
             <>
+              {/* line above handle */}
+              <line
+                x1={hx}
+                y1={Y1 - 4}
+                x2={hx}
+                y2={hy - PH / 2 - 2}
+                stroke="#64748b"
+                strokeWidth={1}
+                strokeDasharray="3,2"
+                opacity={0.5}
+              />
+              {/* line below handle */}
               <line
                 x1={hx}
                 y1={hy + PH / 2 + 2}
