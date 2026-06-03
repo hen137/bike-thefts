@@ -37,7 +37,12 @@ export function DrawerPanel({
                   <Drawer.Title className="text-lg font-bold">
                     Toronto Bike Thefts
                   </Drawer.Title>
-                  <Drawer.Description>Panel Description</Drawer.Description>
+                  <Drawer.Description>
+                    <a href="https://data.tps.ca/datasets/TorontoPS::bicycle-thefts-open-data/about">
+                      Bike Thefts Open Data from{" "}
+                    </a>
+                    Toronto Police Service
+                  </Drawer.Description>
                 </div>
                 {/* Range Settings */}
                 <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 py-4">
@@ -54,9 +59,8 @@ export function DrawerPanel({
                     />
                   </div>
                 </div>
-                {/* Reported Thefts */}
+                {/* Data Modes */}
                 <div className="border-b-2 p-4">Modes</div>
-                {/* Theft Predictions */}
               </div>
               <div className="border-t-2 p-4">
                 {/* Footer */}

@@ -9,14 +9,8 @@ vi.mock("@/components/debug", async (importOriginal) => {
 });
 
 // Stub context-dependent subcomponents so MapTopBar tests stay isolated.
-vi.mock("@/components/map/MapThemeSwitcher", () => ({
-  MapThemeSwitcher: () => <div data-testid="mock-theme-switcher" />
-}));
 vi.mock("@/components/map/MapSearchBar", () => ({
   MapSearchBar: () => <div data-testid="mock-search-bar" />
-}));
-vi.mock("@/components/map/MapTileSwitcher", () => ({
-  MapTileSwitcher: () => <div data-testid="mock-tile-switcher" />
 }));
 
 import { HeatLegend } from "@/components/map/HeatLegend";
@@ -41,11 +35,9 @@ describe("MapTopBar", () => {
     expect(document.getElementById("map-top-bar")).toBeInTheDocument();
   });
 
-  it("renders all three map controls", () => {
+  it("renders the search bar", () => {
     render(<MapTopBar />);
-    expect(screen.getByTestId("mock-theme-switcher")).toBeInTheDocument();
     expect(screen.getByTestId("mock-search-bar")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-tile-switcher")).toBeInTheDocument();
   });
 });
 

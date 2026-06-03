@@ -9,7 +9,11 @@ import { TileContext } from "@/contexts/TileContext";
  * MapThemeSwitcher - Toggle between light and dark themes
  * Also switches the base map tile layer accordingly
  */
-export function MapThemeSwitcher() {
+interface MapThemeSwitcherProps {
+  className?: string;
+}
+
+export function MapThemeSwitcher({ className }: MapThemeSwitcherProps) {
   const { theme, toggleTheme, mounted } = useTheme();
 
   const tileContext = useContext(TileContext);
@@ -26,10 +30,14 @@ export function MapThemeSwitcher() {
     toggleTheme();
   };
 
+  const buttonClass =
+    className ??
+    "rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors";
+
   // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <button className="rounded-full bg-white p-2 shadow-lg">
+      <button className={buttonClass}>
         <div className="h-5 w-5" />
       </button>
     );
@@ -38,7 +46,7 @@ export function MapThemeSwitcher() {
   return (
     <button
       onClick={handleToggleTheme}
-      className="rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors"
+      className={buttonClass}
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       aria-label={
         theme === "dark" ? "Switch to light mode" : "Switch to dark mode"

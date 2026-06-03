@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import type { HeatRow } from "@/types/db";
 
 // MapControls drives the DB query flow (formerly in the deleted DataBoundry
@@ -16,6 +16,12 @@ vi.mock("@/components/map/HeatmapSlider", () => ({
 }));
 vi.mock("@/components/map/HeatLegend", () => ({ HeatLegend: () => null }));
 vi.mock("@/components/debug", () => ({ DebugHUD: () => null }));
+vi.mock("@/components/map/MapThemeSwitcher", () => ({
+  MapThemeSwitcher: () => null
+}));
+vi.mock("@/components/map/MapTileSwitcher", () => ({
+  MapTileSwitcher: () => null
+}));
 
 import { MapControls } from "@/components/map/MapControls";
 import {
@@ -219,5 +225,72 @@ describe("MapControls — DB query integration", () => {
         />
       )
     ).not.toThrow();
+  });
+});
+
+describe("MapControls — right-side control stack layout", () => {
+  const defaultHookState = () => {
+    mockUseMapControls.mockReturnValue({
+      map: null,
+      zoomIn: vi.fn(),
+      zoomOut: vi.fn(),
+      toggleFullscreen: vi.fn(),
+      resetView: vi.fn()
+    } as unknown as ReturnType<typeof useMapControls>);
+    mockUseGeolocation.mockReturnValue({
+      locateUser: vi.fn(),
+      isLocating: false,
+      isAvailable: true
+    } as unknown as ReturnType<typeof useGeolocation>);
+    mockUseLeafletHeatLayer.mockReturnValue(
+      setHeatLayerMock() as unknown as ReturnType<typeof useLeafletHeatLayer>
+    );
+    mockUseDbContext.mockReturnValue({
+      isReady: false,
+      worker: null,
+      progress: null,
+      initResult: null,
+      error: null,
+      refresh: vi.fn()
+    } as unknown as ReturnType<typeof useDbContext>);
+  };
+
+  const defaultProps = {
+    onDrawerToggle: vi.fn(),
+    sliderValues: [750, 1000],
+    committedSliderValues: [750, 1000],
+    startDate: null,
+    setStartDate: vi.fn(),
+    endDate: null,
+    setEndDate: vi.fn()
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    defaultHookState();
+  });
+
+  it("drawer trigger container has right-4 class when drawer is closed", () => {
+    render(<MapControls {...defaultProps} drawerOpen={false} />);
+    const trigger = screen.getByRole("button", { name: /open panel/i });
+    expect(trigger.parentElement!.className).toContain("right-4");
+  });
+
+  it("drawer trigger container has right-[336px] class when drawer is open", () => {
+    render(<MapControls {...defaultProps} drawerOpen={true} />);
+    const trigger = screen.getByRole("button", { name: /close panel/i });
+    expect(trigger.parentElement!.className).toContain("right-[336px]");
+  });
+
+  it("container is fixed-positioned", () => {
+    render(<MapControls {...defaultProps} drawerOpen={false} />);
+    const trigger = screen.getByRole("button", { name: /open panel/i });
+    expect(trigger.parentElement!.className).toContain("fixed");
+  });
+
+  it("container stacks items vertically (flex-col)", () => {
+    render(<MapControls {...defaultProps} drawerOpen={false} />);
+    const trigger = screen.getByRole("button", { name: /open panel/i });
+    expect(trigger.parentElement!.className).toContain("flex-col");
   });
 });

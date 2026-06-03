@@ -14,6 +14,8 @@ import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
 import { MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
 import { HeatLegend } from "./HeatLegend";
+import { MapThemeSwitcher } from "./MapThemeSwitcher";
+import { MapTileSwitcher } from "./MapTileSwitcher";
 // import { HeatmapSlider } from "./HeatmapSlider";
 
 const MAX_SLIDER_RANGE = 1000;
@@ -162,25 +164,31 @@ export const MapControls = memo(function MapControls({
 
   return (
     <div>
-      {/* Drawer trigger — tracks drawer position */}
-      <button
-        onClick={onDrawerToggle}
-        className={`fixed top-3 z-[2000] flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-[right] duration-300 ease-in-out ${drawerOpen ? "right-[336px]" : "right-4"}`}
-        title={drawerOpen ? "Close panel" : "Open panel"}
-        aria-label={drawerOpen ? "Close panel" : "Open panel"}
+      {/* Right-side control stack — drawer trigger + theme + tile switchers */}
+      <div
+        className={`fixed top-3 z-[2000] flex flex-col gap-2 transition-[right] duration-300 ease-in-out ${drawerOpen ? "right-[336px]" : "right-4"}`}
       >
-        <svg
-          className="h-5 w-5 text-gray-600 dark:text-gray-100"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
+        <button
+          onClick={onDrawerToggle}
+          className="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600"
+          title={drawerOpen ? "Close panel" : "Open panel"}
+          aria-label={drawerOpen ? "Close panel" : "Open panel"}
         >
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+          <svg
+            className="h-5 w-5 text-gray-600 dark:text-gray-100"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <MapThemeSwitcher className="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
+        <MapTileSwitcher buttonClassName="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
+      </div>
 
       <div className="absolute w-screen flex justify-center bottom-3 z-1000">
         <HeatLegend />

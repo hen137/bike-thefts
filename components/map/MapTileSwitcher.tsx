@@ -7,10 +7,11 @@ import { useTheme } from "@/hooks";
 import { TileContext } from "@/contexts";
 import { TILE_PROVIDERS } from "@/constants/tile-providers";
 
-/**
- * MapTileSwitcher - Tile layer switcher UI
- */
-export function MapTileSwitcher() {
+interface MapTileSwitcherProps {
+  buttonClassName?: string;
+}
+
+export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { theme } = useTheme();
@@ -23,7 +24,6 @@ export function MapTileSwitcher() {
 
   const { currentProviderId, setProviderId } = tileContext;
 
-  // Map tile providers to display options with PNG previews
   const layerOptions = [
     {
       id: theme === "light" ? "osm" : "dark",
@@ -41,21 +41,21 @@ export function MapTileSwitcher() {
     }
   ];
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
+  const triggerClass =
+    buttonClassName ??
+    "flex flex-col items-center gap-1 rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors";
 
   return (
-    <div className="bottom-24 sm:bottom-8 left-4 flex flex-col sm:flex-row items-start sm:items-center gap-2 z-[1000]">
-      {/* Slide-out Panel - Above on mobile, Right on desktop */}
+    <div className="relative">
+      {/* Slide-out panel — opens below, right-aligned */}
       <div
-        className={`order-first sm:order-last flex flex-col items-center gap-2 transition-all duration-300 ease-out ${
+        className={`absolute top-full right-0 mt-2 transition-all duration-300 ease-out ${
           isOpen
-            ? "opacity-100 translate-y-0 sm:translate-y-0 sm:translate-x-0"
-            : "opacity-0 translate-y-4  sm:-translate-y-4 pointer-events-none"
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
-        <div className="absolute sm:top-6 flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-1 border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-1 border border-gray-200 dark:border-gray-700">
           {layerOptions.map((layer) => (
             <button
               key={layer.id}
@@ -85,10 +85,10 @@ export function MapTileSwitcher() {
         </div>
       </div>
 
-      {/* Main Tile Button */}
+      {/* Trigger button */}
       <button
-        onClick={toggleOpen}
-        className="flex flex-col items-center gap-1 rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+        className={triggerClass}
         aria-label="Choose Tile Themes"
       >
         <SwatchBook
@@ -98,6 +98,5 @@ export function MapTileSwitcher() {
         />
       </button>
     </div>
-    // </div>
   );
 }
