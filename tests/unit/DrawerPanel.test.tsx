@@ -86,7 +86,7 @@ const defaultProps = {
   sliderValues: [250, 750],
   setSliderValue: vi.fn(),
   commitSliderValues: vi.fn(),
-  byHood: false,
+  byHood: true,
   setByHood: vi.fn(),
   timeWeighting: "None",
   setTimeWeighting: vi.fn(),

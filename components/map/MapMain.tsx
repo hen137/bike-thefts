@@ -36,7 +36,7 @@ export function MapMain() {
     useState<number[]>(initialSliderValues);
   const [startDate, setStartDate] = useState<MonthYear | null>(null);
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
-  const [byHood, setByHood] = useState(false);
+  const [byHood, setByHood] = useState(true);
   const [timeWeighting, setTimeWeighting] = useState("None");
   const [weightKInv, setWeightKInv] = useState(0.5);
   const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
