@@ -179,7 +179,7 @@ describe("DrawerPanel", () => {
   describe("collapsible sections — accordion behaviour", () => {
     it("opens Reported Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Scaling")).toBeInTheDocument();
+      expect(screen.getByText("Local Scaling")).toBeInTheDocument();
       expect(screen.getByText("Time Weighting")).toBeInTheDocument();
     });
 
@@ -194,17 +194,17 @@ describe("DrawerPanel", () => {
         screen.getByRole("button", { name: /Predict Future Thefts/i })
       );
       expect(screen.getByText("Poisson")).toBeInTheDocument();
-      expect(screen.queryByText("Scaling")).not.toBeInTheDocument();
+      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
     });
 
     it("closes the open section when its header is clicked again", () => {
       render(<DrawerPanel {...defaultProps} />);
       fireEvent.click(screen.getByRole("button", { name: /Reported Thefts/i }));
-      expect(screen.queryByText("Scaling")).not.toBeInTheDocument();
+      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
     });
   });
 
-  describe("Scaling toggle — byHood wiring", () => {
+  describe("Local Scaling toggle — byHood wiring", () => {
     it("highlights Municipal when byHood=false", () => {
       render(<DrawerPanel {...defaultProps} byHood={false} />);
       expect(

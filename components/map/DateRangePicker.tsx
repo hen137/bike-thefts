@@ -237,19 +237,32 @@ export function DateRangePicker({
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <MonthPicker
-        value={startDate}
-        onChange={handleStartChange}
-        min={min}
-        max={endDate}
-      />
-      <span className="select-none text-gray-400 dark:text-slate-500">–</span>
-      <MonthPicker
-        value={endDate}
-        onChange={handleEndChange}
-        min={startDate}
-        max={max}
-      />
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+          Start
+        </p>
+        <MonthPicker
+          value={startDate}
+          onChange={handleStartChange}
+          min={min}
+          max={endDate}
+        />
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <div className="invisible text-xs leading-none">X</div>
+        <span className="select-none text-gray-400 dark:text-slate-500">–</span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+          End
+        </p>
+        <MonthPicker
+          value={endDate}
+          onChange={handleEndChange}
+          min={startDate}
+          max={max}
+        />
+      </div>
     </div>
   );
 }

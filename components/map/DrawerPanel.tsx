@@ -64,7 +64,7 @@ export function DrawerPanel({
                   </Drawer.Description>
                 </div>
                 {/* Range Settings */}
-                <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 py-4">
+                <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 pb-4 pt-2">
                   <DateRangePicker
                     sliderValues={sliderValues}
                     setSliderValue={setSliderValue}
@@ -87,7 +87,7 @@ export function DrawerPanel({
                   >
                     <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2">
                       <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                        Scaling
+                        Local Scaling
                       </p>
                       <SegmentedToggle
                         options={["Municipal", "Neighbourhood"]}
