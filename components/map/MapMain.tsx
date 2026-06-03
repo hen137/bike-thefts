@@ -38,6 +38,7 @@ export function MapMain() {
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
   const [byHood, setByHood] = useState(false);
   const [timeWeighting, setTimeWeighting] = useState("None");
+  const [weightK, setWeightK] = useState(1.0);
 
   const tileContext = useContext(TileContext);
 
@@ -114,6 +115,7 @@ export function MapMain() {
           setEndDate={setEndDate}
           byHood={byHood}
           timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
+          weightK={weightK}
         />
 
         {/* Side Drawer */}
@@ -127,6 +129,8 @@ export function MapMain() {
           setByHood={setByHood}
           timeWeighting={timeWeighting}
           setTimeWeighting={setTimeWeighting}
+          weightK={weightK}
+          setWeightK={setWeightK}
         />
       </HeatProvider>
 

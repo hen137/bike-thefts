@@ -327,7 +327,8 @@ describe("MapControls — right-side control stack layout", () => {
     endDate: null,
     setEndDate: vi.fn(),
     byHood: false as boolean,
-    timeWeighting: "none" as "none" | "linear" | "exponential"
+    timeWeighting: "None" as "None" | "Lin" | "Inv" | "InvQuad",
+    weightK: 1.0
   };
 
   beforeEach(() => {

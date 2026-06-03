@@ -37,6 +37,7 @@ interface MapControlsProps {
   setEndDate: (val: MonthYear) => void;
   byHood: boolean;
   timeWeighting: "None" | "Lin" | "Inv" | "InvQuad";
+  weightK: number;
 }
 
 export const MapControls = memo(function MapControls({
@@ -49,7 +50,8 @@ export const MapControls = memo(function MapControls({
   endDate,
   setEndDate,
   byHood,
-  timeWeighting
+  timeWeighting,
+  weightK
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
@@ -154,7 +156,8 @@ export const MapControls = memo(function MapControls({
             | "lin"
             | "inv"
             | "invquad",
-          endDate
+          endDate,
+          weightK
         );
         setHeatValues(values);
         setAvgIntensity(avgIntensity);
@@ -168,7 +171,8 @@ export const MapControls = memo(function MapControls({
     initResult,
     setHeatValues,
     byHood,
-    timeWeighting
+    timeWeighting,
+    weightK
   ]);
 
   return (
