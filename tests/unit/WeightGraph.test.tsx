@@ -12,12 +12,12 @@ const noop = () => {};
 
 describe("WeightGraph", () => {
   describe("visibility", () => {
-    it("is hidden (max-height 0) when mode is None", () => {
+    it("is collapsed (gridTemplateRows 0fr) when mode is None", () => {
       const { container } = render(
         <WeightGraph mode="None" k={1} onKChange={noop} />
       );
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.maxHeight).toBe("0px");
+      expect(wrapper.style.gridTemplateRows).toBe("0fr");
     });
 
     it("is visible when mode is Lin", () => {
@@ -25,7 +25,7 @@ describe("WeightGraph", () => {
         <WeightGraph mode="Lin" k={1} onKChange={noop} />
       );
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.maxHeight).not.toBe("0px");
+      expect(wrapper.style.gridTemplateRows).toBe("1fr");
     });
 
     it("is visible when mode is Inv", () => {
@@ -33,7 +33,7 @@ describe("WeightGraph", () => {
         <WeightGraph mode="Inv" k={1} onKChange={noop} />
       );
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.maxHeight).not.toBe("0px");
+      expect(wrapper.style.gridTemplateRows).toBe("1fr");
     });
 
     it("is visible when mode is InvQuad", () => {
@@ -41,7 +41,7 @@ describe("WeightGraph", () => {
         <WeightGraph mode="InvQuad" k={1} onKChange={noop} />
       );
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.maxHeight).not.toBe("0px");
+      expect(wrapper.style.gridTemplateRows).toBe("1fr");
     });
   });
 
@@ -114,7 +114,7 @@ describe("WeightGraph", () => {
   });
 
   describe("drag interaction", () => {
-    it("calls onKChange on pointer move after pointer down", () => {
+    it("calls onKChange on pointer up after dragging", () => {
       const onKChange = vi.fn();
       const { container } = render(
         <WeightGraph mode="Inv" k={1} onKChange={onKChange} />
@@ -138,7 +138,9 @@ describe("WeightGraph", () => {
 
       fireEvent.pointerDown(handle, { clientX: 120, pointerId: 1 });
       fireEvent.pointerMove(handle, { clientX: 150, pointerId: 1 });
-      expect(onKChange).toHaveBeenCalled();
+      expect(onKChange).not.toHaveBeenCalled(); // fires on up, not move
+      fireEvent.pointerUp(handle, { pointerId: 1 });
+      expect(onKChange).toHaveBeenCalledTimes(1);
       const [newK] = onKChange.mock.calls[0];
       expect(newK).toBeGreaterThan(0);
       expect(newK).toBeLessThanOrEqual(2.0);
