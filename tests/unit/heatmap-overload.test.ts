@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { buildHeatDataFromRows, getTimeWeight } from "@/lib/utils/heatmap";
+import {
+  buildHeatDataFromRows,
+  computeHistBins,
+  getTimeWeight
+} from "@/lib/utils/heatmap";
 import type { HeatRow } from "@/types/db";
 import type { MonthYear } from "@/types/map";
 
@@ -172,6 +176,54 @@ describe("buildHeatDataFromRows — byHood=true (stratified)", () => {
       values: [],
       avgIntensity: 0
     });
+  });
+});
+
+describe("computeHistBins", () => {
+  const REF14: MonthYear = { year: 2026, month: 0 };
+
+  it("returns nBins-length array", () => {
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 5, occ_date: "2025-01-01" }
+    ];
+    expect(computeHistBins(rows, REF14)).toHaveLength(14);
+  });
+
+  it("returns all-zero array for empty rows", () => {
+    const bins = computeHistBins([], REF14);
+    expect(bins).toHaveLength(14);
+    expect(bins.every((b) => b === 0)).toBe(true);
+  });
+
+  it("normalizes so max bin is 1", () => {
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-07-01" },
+      { hood_158: 2, lat: 2, lng: 2, count: 2, occ_date: "2024-01-01" }
+    ];
+    const bins = computeHistBins(rows, REF14);
+    expect(Math.max(...bins)).toBe(1);
+    expect(bins.every((b) => b >= 0 && b <= 1)).toBe(true);
+  });
+
+  it("recent rows land in lower-index bins than old rows", () => {
+    // ref: Jan 2026; recent = Dec 2025 (delta ~1mo); old = Jan 2014 (delta ~144mo)
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-12-15" },
+      { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2014-01-15" }
+    ];
+    const bins = computeHistBins(rows, REF14);
+    const recentBin = bins.findIndex((b) => b > 0);
+    const oldBin =
+      bins.length - 1 - [...bins].reverse().findIndex((b) => b > 0);
+    expect(oldBin).toBeGreaterThan(recentBin);
+  });
+
+  it("respects custom nBins", () => {
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 1, occ_date: "2025-01-01" }
+    ];
+    expect(computeHistBins(rows, REF14, 20)).toHaveLength(20);
+    expect(computeHistBins(rows, REF14, 5)).toHaveLength(5);
   });
 });
 

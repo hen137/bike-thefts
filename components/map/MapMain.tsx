@@ -39,6 +39,7 @@ export function MapMain() {
   const [byHood, setByHood] = useState(false);
   const [timeWeighting, setTimeWeighting] = useState("None");
   const [weightK, setWeightK] = useState(1.0);
+  const [histBins, setHistBins] = useState<number[]>([]);
 
   const tileContext = useContext(TileContext);
 
@@ -116,6 +117,7 @@ export function MapMain() {
           byHood={byHood}
           timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
           weightK={weightK}
+          onHistBins={setHistBins}
         />
 
         {/* Side Drawer */}
@@ -131,6 +133,7 @@ export function MapMain() {
           setTimeWeighting={setTimeWeighting}
           weightK={weightK}
           setWeightK={setWeightK}
+          histBins={histBins}
         />
       </HeatProvider>
 

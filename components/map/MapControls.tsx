@@ -10,7 +10,7 @@ import {
 } from "@/hooks";
 import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
 import { calcRawSliderToDates } from "@/lib/utils";
-import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
+import { buildHeatDataFromRows, computeHistBins } from "@/lib/utils/heatmap";
 import { MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
 import { HeatLegend } from "./HeatLegend";
@@ -38,6 +38,7 @@ interface MapControlsProps {
   byHood: boolean;
   timeWeighting: "None" | "Lin" | "Inv" | "InvQuad";
   weightK: number;
+  onHistBins: (bins: number[]) => void;
 }
 
 export const MapControls = memo(function MapControls({
@@ -51,7 +52,8 @@ export const MapControls = memo(function MapControls({
   setEndDate,
   byHood,
   timeWeighting,
-  weightK
+  weightK,
+  onHistBins
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
@@ -162,6 +164,7 @@ export const MapControls = memo(function MapControls({
         setHeatValues(values);
         setAvgIntensity(avgIntensity);
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
+        onHistBins(computeHistBins(rows, endDate));
       });
     }
   }, [

@@ -6,6 +6,7 @@ interface WeightGraphProps {
   mode: string;
   k: number;
   onKChange: (k: number) => void;
+  histBins?: number[];
 }
 
 // X0/X1/Y0/Y1 snap to the dot grid (dots at multiples of 12, offset 6)
@@ -58,7 +59,12 @@ function halfT(mode: string, k: number): number {
   return 0;
 }
 
-export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
+export function WeightGraph({
+  mode,
+  k,
+  onKChange,
+  histBins
+}: WeightGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragging = useRef(false);
   const pendingK = useRef(k);
@@ -257,6 +263,27 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
             >
               Δt
             </text>
+
+            {/* Time-delta histogram — dim bars behind the curve */}
+            {histBins && histBins.length > 0 && (
+              <g clipPath="url(#wg-clip)">
+                {histBins.map((v, i) => {
+                  const bw = (X1 - X0) / histBins.length;
+                  const bh = v * (Y0 - Y1);
+                  return (
+                    <rect
+                      key={i}
+                      x={X0 + i * bw}
+                      y={Y0 - bh}
+                      width={bw - 1}
+                      height={bh}
+                      fill="#3b82f6"
+                      opacity={0.2}
+                    />
+                  );
+                })}
+              </g>
+            )}
 
             {/* Curve */}
             {visible && (

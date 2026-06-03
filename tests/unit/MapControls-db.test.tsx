@@ -37,8 +37,8 @@ const mockUseDbContext = vi.mocked(useDbContext);
 const mockUseLeafletHeatLayer = vi.mocked(useLeafletHeatLayer);
 
 const sampleRows: HeatRow[] = [
-  { hood_158: 77, lat: 43.7, lng: -79.4, count: 3 },
-  { hood_158: 77, lat: 43.71, lng: -79.41, count: 6 }
+  { hood_158: 77, lat: 43.7, lng: -79.4, count: 3, occ_date: "2024-01-01" },
+  { hood_158: 77, lat: 43.71, lng: -79.41, count: 6, occ_date: "2025-06-01" }
 ];
 
 function setHeatLayerMock() {
@@ -107,6 +107,7 @@ describe("MapControls — DB query integration", () => {
         setEndDate={() => {}}
         byHood={false}
         timeWeighting="none"
+        onHistBins={vi.fn()}
       />
     );
 
@@ -155,6 +156,7 @@ describe("MapControls — DB query integration", () => {
         setEndDate={() => {}}
         byHood={false}
         timeWeighting="none"
+        onHistBins={vi.fn()}
       />
     );
 
@@ -191,6 +193,7 @@ describe("MapControls — DB query integration", () => {
         setEndDate={() => {}}
         byHood={false}
         timeWeighting="none"
+        onHistBins={vi.fn()}
       />
     );
 
@@ -267,6 +270,7 @@ describe("MapControls — DB query integration", () => {
         setEndDate={() => {}}
         byHood={false}
         timeWeighting="none"
+        onHistBins={vi.fn()}
       />
     );
 
@@ -284,6 +288,7 @@ describe("MapControls — DB query integration", () => {
         setEndDate={() => {}}
         byHood={true}
         timeWeighting="none"
+        onHistBins={vi.fn()}
       />
     );
 
@@ -328,7 +333,8 @@ describe("MapControls — right-side control stack layout", () => {
     setEndDate: vi.fn(),
     byHood: false as boolean,
     timeWeighting: "None" as "None" | "Lin" | "Inv" | "InvQuad",
-    weightK: 1.0
+    weightK: 1.0,
+    onHistBins: vi.fn()
   };
 
   beforeEach(() => {

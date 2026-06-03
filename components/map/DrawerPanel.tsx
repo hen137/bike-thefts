@@ -22,6 +22,7 @@ interface DrawerPanelProps {
   setTimeWeighting: (val: string) => void;
   weightK: number;
   setWeightK: (k: number) => void;
+  histBins?: number[];
 }
 
 export function DrawerPanel({
@@ -35,7 +36,8 @@ export function DrawerPanel({
   timeWeighting,
   setTimeWeighting,
   weightK,
-  setWeightK
+  setWeightK,
+  histBins
 }: DrawerPanelProps) {
   const [openSection, setOpenSection] = useState<SectionId | null>("reported");
   const [poissonIndex, setPoissonIndex] = useState(0);
@@ -115,6 +117,7 @@ export function DrawerPanel({
                       mode={timeWeighting}
                       k={weightK}
                       onKChange={setWeightK}
+                      histBins={histBins}
                     />
                   </CollapsibleSection>
                   <CollapsibleSection

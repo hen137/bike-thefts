@@ -23,6 +23,42 @@ export function getTimeWeight(
   return 1;
 }
 
+export function computeHistBins(
+  rows: HeatRow[],
+  refDate: MonthYear,
+  nBins: number = 14
+): number[] {
+  if (rows.length === 0) return new Array(nBins).fill(0);
+
+  let maxDelta = 0;
+  const deltas: number[] = [];
+  for (const r of rows) {
+    const rowDate = new Date(r.occ_date);
+    const delta = Math.max(
+      0,
+      (refDate.year - rowDate.getFullYear()) * 12 +
+        (refDate.month - rowDate.getMonth())
+    );
+    deltas.push(delta);
+    if (delta > maxDelta) maxDelta = delta;
+  }
+
+  const bins = new Array(nBins).fill(0);
+  if (maxDelta === 0) {
+    bins[0] = 1;
+    return bins;
+  }
+
+  rows.forEach((r, i) => {
+    const t = deltas[i] / maxDelta;
+    const idx = Math.min(nBins - 1, Math.floor(t * nBins));
+    bins[idx] += r.count;
+  });
+
+  const maxBin = Math.max(...bins);
+  return maxBin === 0 ? bins : bins.map((b) => b / maxBin);
+}
+
 export function buildHeatDataFromRows(
   rows: HeatRow[],
   byHood: boolean = false,
