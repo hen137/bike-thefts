@@ -187,14 +187,7 @@ export const MapControls = memo(function MapControls({
       </div>
       <div className="absolute bottom-24 sm:bottom-8 left-4 flex flex-col items-center gap-2 z-1000">
         {/* Time Range Slider */}
-        <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-          {/* <HeatmapSlider
-            initialValues={sliderValues}
-            updateValues={setSliderValue}
-            commitValues={commitSliderValues}
-            sliderDates={{ endDate, startDate }}
-          /> */}
-        </div>
+        <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg"></div>
 
         {/* Location Button */}
         <button

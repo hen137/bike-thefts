@@ -6,13 +6,21 @@ type SliderProps = {
   onValueChange?: (vals: number[]) => void;
   onValueCommit?: (vals: number[]) => void;
   max?: number;
+  value?: number[];
   children?: ReactNode;
 };
 
 vi.mock("@/components/ui", () => ({
-  Slider: ({ onValueChange, onValueCommit, max, children }: SliderProps) => (
+  Slider: ({
+    onValueChange,
+    onValueCommit,
+    max,
+    value,
+    children
+  }: SliderProps) => (
     <div>
       <output data-testid="slider-max">{max}</output>
+      <output data-testid="slider-value">{value?.join(",")}</output>
       <button onClick={() => onValueChange?.([100, 900])}>change</button>
       <button onClick={() => onValueCommit?.([100, 900])}>commit</button>
       {children}
@@ -28,7 +36,7 @@ vi.mock("@/components/ui", () => ({
 import { HeatSlider } from "@/components/map/HeatSlider";
 
 const defaultProps = {
-  initialValues: [250, 750],
+  values: [250, 750],
   updateValues: vi.fn(),
   commitValues: vi.fn()
 };
@@ -46,6 +54,20 @@ describe("HeatSlider", () => {
   it("passes max=1000 to Slider", () => {
     render(<HeatSlider {...defaultProps} />);
     expect(screen.getByTestId("slider-max")).toHaveTextContent("1000");
+  });
+
+  it("passes values as controlled value to Slider", () => {
+    render(<HeatSlider {...defaultProps} values={[300, 800]} />);
+    expect(screen.getByTestId("slider-value")).toHaveTextContent("300,800");
+  });
+
+  it("reflects updated values prop when re-rendered", () => {
+    const { rerender } = render(
+      <HeatSlider {...defaultProps} values={[100, 900]} />
+    );
+    expect(screen.getByTestId("slider-value")).toHaveTextContent("100,900");
+    rerender(<HeatSlider {...defaultProps} values={[200, 600]} />);
+    expect(screen.getByTestId("slider-value")).toHaveTextContent("200,600");
   });
 
   it("calls updateValues with new values on change", () => {

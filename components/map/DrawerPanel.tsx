@@ -40,7 +40,7 @@ export function DrawerPanel({
                   <Drawer.Description>Panel Description</Drawer.Description>
                 </div>
                 {/* Range Settings */}
-                <div className="flex min-h-[120px] flex-col items-center justify-center gap-4 border-b-2 px-4 py-6">
+                <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 py-4">
                   <DateRangePicker
                     sliderValues={sliderValues}
                     setSliderValue={setSliderValue}
@@ -48,7 +48,7 @@ export function DrawerPanel({
                   />
                   <div className="w-full">
                     <HeatSlider
-                      initialValues={sliderValues}
+                      values={sliderValues}
                       updateValues={setSliderValue}
                       commitValues={commitSliderValues}
                     />
