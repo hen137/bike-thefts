@@ -20,7 +20,7 @@ interface HeatSliderProps {
 const MAX_RANGE = 1000;
 
 const thumbStyles =
-  "block rounded-full shadow-lg size-5 bg-gray-600 dark:bg-gray-100";
+  "block size-5 rounded-full bg-gray-600 shadow-lg dark:bg-gray-100 focus:outline-none";
 
 export function HeatSlider({
   values,
@@ -29,18 +29,18 @@ export function HeatSlider({
 }: HeatSliderProps) {
   return (
     <Slider
-      className="flex h-1 w-full items-center justify-center"
+      className="relative flex w-full touch-none select-none items-center"
       onValueChange={updateValues}
       onValueCommit={commitValues}
       max={MAX_RANGE}
       value={values}
       step={1}
     >
-      <SliderTrack className="relative h-1 w-full bg-gray-600 dark:bg-gray-100 rounded-full">
-        <SliderRange className="absolute w-full bg-blue-600 dark:bg-blue-400 rounded-full" />
-        <SliderThumb className={thumbStyles} />
-        <SliderThumb className={thumbStyles} />
+      <SliderTrack className="relative h-1 w-full grow rounded-full bg-gray-600 dark:bg-gray-100">
+        <SliderRange className="absolute h-full rounded-full bg-blue-600 dark:bg-blue-400" />
       </SliderTrack>
+      <SliderThumb className={thumbStyles} />
+      <SliderThumb className={thumbStyles} />
     </Slider>
   );
 }
