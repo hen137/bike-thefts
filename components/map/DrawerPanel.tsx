@@ -110,14 +110,12 @@ export function DrawerPanel({
                         )}
                         onChange={(val) => setTimeWeighting(val)}
                       />
-                      <div className="col-span-2">
-                        <WeightGraph
-                          mode={timeWeighting}
-                          k={weightK}
-                          onKChange={setWeightK}
-                        />
-                      </div>
                     </div>
+                    <WeightGraph
+                      mode={timeWeighting}
+                      k={weightK}
+                      onKChange={setWeightK}
+                    />
                   </CollapsibleSection>
                   <CollapsibleSection
                     title="Predict Future Thefts"
