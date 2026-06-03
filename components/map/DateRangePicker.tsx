@@ -101,7 +101,7 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
         onBlur={commitInput}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            e.currentTarget.blur();
+            commitInput();
           }
         }}
         className="w-[72px] bg-transparent px-2 py-1 text-center text-sm text-gray-700 outline-none dark:text-gray-200"
