@@ -21,6 +21,7 @@ export type HeatRow = {
   lat: number;
   lng: number;
   count: number;
+  occ_date: string;
 };
 
 //
@@ -28,6 +29,7 @@ export type HoodRow = {
   lat: number;
   lng: number;
   count: number;
+  occ_date: string;
 };
 
 // Progress events emitted from worker → main thread via Comlink callback

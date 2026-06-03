@@ -171,7 +171,7 @@ export async function queryHeatmap(
 ): Promise<HeatRow[]> {
   return await db
     .prepare<HeatRow>(
-      `SELECT hood_158, lat, lng, COUNT(*) as count
+      `SELECT hood_158, lat, lng, COUNT(*) as count, occ_date
        FROM bike_thefts
        WHERE occ_date >= ? AND occ_date <= ?
          AND lat IS NOT NULL AND lng IS NOT NULL
