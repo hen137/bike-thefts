@@ -38,7 +38,8 @@ export function MapMain() {
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
   const [byHood, setByHood] = useState(false);
   const [timeWeighting, setTimeWeighting] = useState("None");
-  const [weightK, setWeightK] = useState(1.0);
+  const [weightKInv, setWeightKInv] = useState(1.0);
+  const [weightKInvQuad, setWeightKInvQuad] = useState(1.0);
   const [histBins, setHistBins] = useState<number[]>([]);
 
   const tileContext = useContext(TileContext);
@@ -116,7 +117,8 @@ export function MapMain() {
           setEndDate={setEndDate}
           byHood={byHood}
           timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
-          weightK={weightK}
+          weightKInv={weightKInv}
+          weightKInvQuad={weightKInvQuad}
           onHistBins={setHistBins}
         />
 
@@ -131,8 +133,10 @@ export function MapMain() {
           setByHood={setByHood}
           timeWeighting={timeWeighting}
           setTimeWeighting={setTimeWeighting}
-          weightK={weightK}
-          setWeightK={setWeightK}
+          weightKInv={weightKInv}
+          setWeightKInv={setWeightKInv}
+          weightKInvQuad={weightKInvQuad}
+          setWeightKInvQuad={setWeightKInvQuad}
           histBins={histBins}
         />
       </HeatProvider>

@@ -37,7 +37,8 @@ interface MapControlsProps {
   setEndDate: (val: MonthYear) => void;
   byHood: boolean;
   timeWeighting: "None" | "Lin" | "Inv" | "InvQuad";
-  weightK: number;
+  weightKInv: number;
+  weightKInvQuad: number;
   onHistBins: (bins: number[]) => void;
 }
 
@@ -52,7 +53,8 @@ export const MapControls = memo(function MapControls({
   setEndDate,
   byHood,
   timeWeighting,
-  weightK,
+  weightKInv,
+  weightKInvQuad,
   onHistBins
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
@@ -150,6 +152,8 @@ export const MapControls = memo(function MapControls({
         .split("T")[0];
 
       worker.queryHeatmap(startISO, endISO).then((rows) => {
+        const activeK =
+          timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
         const { values, avgIntensity } = buildHeatDataFromRows(
           rows,
           byHood,
@@ -159,7 +163,7 @@ export const MapControls = memo(function MapControls({
             | "inv"
             | "invquad",
           endDate,
-          weightK
+          activeK
         );
         setHeatValues(values);
         setAvgIntensity(avgIntensity);
@@ -175,7 +179,8 @@ export const MapControls = memo(function MapControls({
     setHeatValues,
     byHood,
     timeWeighting,
-    weightK
+    weightKInv,
+    weightKInvQuad
   ]);
 
   return (

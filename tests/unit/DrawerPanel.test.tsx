@@ -90,8 +90,10 @@ const defaultProps = {
   setByHood: vi.fn(),
   timeWeighting: "None",
   setTimeWeighting: vi.fn(),
-  weightK: 1.0,
-  setWeightK: vi.fn()
+  weightKInv: 1.0,
+  setWeightKInv: vi.fn(),
+  weightKInvQuad: 1.0,
+  setWeightKInvQuad: vi.fn()
 };
 
 describe("DrawerPanel", () => {
@@ -304,27 +306,52 @@ describe("DrawerPanel", () => {
   });
 
   describe("WeightGraph integration", () => {
-    it("renders WeightGraph with current timeWeighting and weightK", () => {
+    it("passes weightKInv to WeightGraph when mode is Inv", () => {
       render(
-        <DrawerPanel {...defaultProps} timeWeighting="Inv" weightK={0.8} />
+        <DrawerPanel {...defaultProps} timeWeighting="Inv" weightKInv={0.8} />
       );
       const graph = screen.getByTestId("weight-graph");
-      expect(graph).toBeInTheDocument();
       expect(graph.dataset.mode).toBe("Inv");
       expect(graph.dataset.k).toBe("0.8");
     });
 
-    it("calls setWeightK when WeightGraph fires onKChange", () => {
-      const setWeightK = vi.fn();
+    it("passes weightKInvQuad to WeightGraph when mode is InvQuad", () => {
+      render(
+        <DrawerPanel
+          {...defaultProps}
+          timeWeighting="InvQuad"
+          weightKInvQuad={0.3}
+        />
+      );
+      const graph = screen.getByTestId("weight-graph");
+      expect(graph.dataset.mode).toBe("InvQuad");
+      expect(graph.dataset.k).toBe("0.3");
+    });
+
+    it("calls setWeightKInv when Inv mode fires onKChange", () => {
+      const setWeightKInv = vi.fn();
       render(
         <DrawerPanel
           {...defaultProps}
           timeWeighting="Inv"
-          setWeightK={setWeightK}
+          setWeightKInv={setWeightKInv}
         />
       );
       fireEvent.click(screen.getByRole("button", { name: "change-k" }));
-      expect(setWeightK).toHaveBeenCalledWith(0.5);
+      expect(setWeightKInv).toHaveBeenCalledWith(0.5);
+    });
+
+    it("calls setWeightKInvQuad when InvQuad mode fires onKChange", () => {
+      const setWeightKInvQuad = vi.fn();
+      render(
+        <DrawerPanel
+          {...defaultProps}
+          timeWeighting="InvQuad"
+          setWeightKInvQuad={setWeightKInvQuad}
+        />
+      );
+      fireEvent.click(screen.getByRole("button", { name: "change-k" }));
+      expect(setWeightKInvQuad).toHaveBeenCalledWith(0.5);
     });
   });
 });
