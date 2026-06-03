@@ -36,7 +36,7 @@ export function CollapsibleSection({
         <span className="font-medium text-sm">{title}</span>
       </button>
       {open && (
-        <div className="px-4 pb-3 pt-2 text-sm text-slate-700 dark:text-slate-300">
+        <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300">
           {children}
         </div>
       )}
