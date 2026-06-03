@@ -161,40 +161,74 @@ describe("buildHeatDataFromRows — byHood=true (stratified)", () => {
 });
 
 describe("getTimeWeight", () => {
-  it("lin: weight is 1 at delta=0 and 0 at delta=maxDelta", () => {
-    expect(getTimeWeight("lin", 0, 10)).toBe(1);
-    expect(getTimeWeight("lin", 10, 10)).toBe(0);
+  describe("lin", () => {
+    it("returns 1 at delta=0", () => {
+      expect(getTimeWeight("lin", 0, 10)).toBe(1);
+    });
+    it("returns 0 at delta=maxDelta", () => {
+      expect(getTimeWeight("lin", 10, 10)).toBe(0);
+    });
+    it("returns 0.5 at delta=maxDelta/2", () => {
+      expect(getTimeWeight("lin", 5, 10)).toBeCloseTo(0.5);
+    });
+    it("clamps to 0 when delta > maxDelta", () => {
+      expect(getTimeWeight("lin", 20, 10)).toBe(0);
+    });
   });
 
-  it("lin: weight is 0.5 at delta=maxDelta/2", () => {
-    expect(getTimeWeight("lin", 5, 10)).toBeCloseTo(0.5);
+  describe("inv (k=1 default)", () => {
+    it("returns 1 at delta=0", () => {
+      expect(getTimeWeight("inv", 0, 10)).toBe(1);
+    });
+    it("returns 0.5 at delta=maxDelta (half-life at t=1 when k=1)", () => {
+      expect(getTimeWeight("inv", 10, 10)).toBeCloseTo(0.5);
+    });
+    it("returns higher weight for smaller k (steeper decay)", () => {
+      const gradual = getTimeWeight("inv", 5, 10, 1.0);
+      const steep = getTimeWeight("inv", 5, 10, 0.2);
+      expect(steep).toBeLessThan(gradual);
+    });
+    it("returns lower weight for larger k (more gradual decay)", () => {
+      const gradual = getTimeWeight("inv", 5, 10, 2.0);
+      const normal = getTimeWeight("inv", 5, 10, 1.0);
+      expect(gradual).toBeGreaterThan(normal);
+    });
   });
 
-  it("lin: clamps to 0 when delta exceeds maxDelta", () => {
-    expect(getTimeWeight("lin", 20, 10)).toBe(0);
+  describe("invquad (k=1 default)", () => {
+    it("returns 1 at delta=0", () => {
+      expect(getTimeWeight("invquad", 0, 10)).toBe(1);
+    });
+    it("returns 0.5 at delta=maxDelta (same endpoint as inv at k=1)", () => {
+      expect(getTimeWeight("invquad", 10, 10)).toBeCloseTo(0.5);
+    });
+    it("is above inv at mid-range delta (flatter curve for t<1)", () => {
+      // t=0.5: inv=1/(0.5+1)=0.667, invquad=1/(0.25+1)=0.8
+      const inv = getTimeWeight("inv", 5, 10);
+      const invquad = getTimeWeight("invquad", 5, 10);
+      expect(invquad).toBeGreaterThan(inv);
+    });
+    it("k controls steepness: smaller k → lower weight at mid-range", () => {
+      const gradual = getTimeWeight("invquad", 5, 10, 1.0);
+      const steep = getTimeWeight("invquad", 5, 10, 0.2);
+      expect(steep).toBeLessThan(gradual);
+    });
   });
 
-  it("inv: weight is 1 at delta=0", () => {
-    expect(getTimeWeight("inv", 0, 10)).toBe(1);
-  });
-
-  it("inv: weight is 0.5 at delta=maxDelta", () => {
-    expect(getTimeWeight("inv", 10, 10)).toBeCloseTo(0.5);
-  });
-
-  it("invquad: weight is 1 at delta=0", () => {
-    expect(getTimeWeight("invquad", 0, 10)).toBe(1);
-  });
-
-  it("invquad: weight decreases faster than inv at same delta", () => {
-    const inv = getTimeWeight("inv", 5, 10);
-    const invquad = getTimeWeight("invquad", 5, 10);
-    expect(invquad).toBeLessThan(inv);
-  });
-
-  it("returns 1 when maxDelta is 0 (no temporal spread)", () => {
-    expect(getTimeWeight("lin", 0, 0)).toBe(1);
-    expect(getTimeWeight("inv", 0, 0)).toBe(1);
-    expect(getTimeWeight("invquad", 0, 0)).toBe(1);
+  describe("edge cases", () => {
+    it("returns 1 when maxDelta is 0 (no temporal spread)", () => {
+      expect(getTimeWeight("lin", 0, 0)).toBe(1);
+      expect(getTimeWeight("inv", 0, 0)).toBe(1);
+      expect(getTimeWeight("invquad", 0, 0)).toBe(1);
+    });
+    it("output is always in [0, 1]", () => {
+      for (const type of ["lin", "inv", "invquad"] as const) {
+        for (const delta of [0, 5, 10, 20]) {
+          const w = getTimeWeight(type, delta, 10, 0.5);
+          expect(w).toBeGreaterThanOrEqual(0);
+          expect(w).toBeLessThanOrEqual(1);
+        }
+      }
+    });
   });
 });

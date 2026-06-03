@@ -12,28 +12,15 @@ export interface HeatDataResult {
 export function getTimeWeight(
   type: "lin" | "inv" | "invquad",
   delta: number,
-  maxDelta: number
+  maxDelta: number,
+  k: number = 1.0
 ): number {
-  // console.log(type, delta, maxDelta);
-  if (type !== "lin" && type !== "inv" && type !== "invquad") {
-    throw new Error(`Invalid time weighting type: ${type}`);
-  }
-
-  if (maxDelta === 0) {
-    return 1;
-  }
-
-  if (type === "lin") {
-    return Math.max(0, -(delta / maxDelta) + 1);
-  }
-  if (type === "inv") {
-    return 1 / (delta / maxDelta + 1);
-  }
-  if (type === "invquad") {
-    return 1 / (delta ** 2 / maxDelta + 1);
-  } else {
-    return 1;
-  }
+  if (maxDelta === 0) return 1;
+  const t = delta / maxDelta;
+  if (type === "lin") return Math.max(0, 1 - t);
+  if (type === "inv") return k / (t + k);
+  if (type === "invquad") return k / (t * t + k);
+  return 1;
 }
 
 export function buildHeatDataFromRows(
