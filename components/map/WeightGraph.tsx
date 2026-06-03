@@ -8,12 +8,14 @@ interface WeightGraphProps {
   onKChange: (k: number) => void;
 }
 
-const X0 = 36,
-  X1 = 218,
-  Y0 = 100,
-  Y1 = 14;
+// X0/X1/Y0/Y1 snap to the dot grid (dots at multiples of 12, offset 6)
+// dots at x: 6,18,30,42,54,...,210  y: 6,18,30,...,102
+const X0 = 42,
+  X1 = 210,
+  Y0 = 102,
+  Y1 = 18;
 const VW = 240,
-  VH = 118;
+  VH = 116;
 
 const PW = 8,
   PH = 20;
