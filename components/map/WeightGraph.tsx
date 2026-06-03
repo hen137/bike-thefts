@@ -8,7 +8,7 @@ interface WeightGraphProps {
   onKChange: (k: number) => void;
 }
 
-const X0 = 30,
+const X0 = 36,
   X1 = 218,
   Y0 = 100,
   Y1 = 14;
@@ -17,6 +17,9 @@ const VW = 240,
 
 const PW = 8,
   PH = 20;
+
+const AXIS_COLOR = "#64748b";
+const LABEL_COLOR = "#94a3b8";
 
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
@@ -108,6 +111,7 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
           aria-label="Time weighting curve"
         >
           <defs>
+            {/* Dot centered in each 12×12 tile */}
             <pattern
               id="wg-dots"
               x="0"
@@ -116,8 +120,26 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
               height="12"
               patternUnits="userSpaceOnUse"
             >
-              <circle cx="1" cy="1" r="0.85" fill="#94a3b8" opacity="0.22" />
+              <circle cx="6" cy="6" r="0.85" fill="#94a3b8" opacity="0.22" />
             </pattern>
+            {/* Open chevron arrowhead for x-axis */}
+            <marker
+              id="wg-arrow"
+              markerWidth="8"
+              markerHeight="8"
+              refX="6"
+              refY="3.5"
+              orient="auto"
+            >
+              <path
+                d="M1,1 L6,3.5 L1,6"
+                fill="none"
+                stroke={AXIS_COLOR}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </marker>
             <clipPath id="wg-clip">
               <rect x={X0} y={Y1 - 4} width={X1 - X0} height={Y0 - Y1 + 4} />
             </clipPath>
@@ -126,52 +148,89 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
           {/* Full-area dot grid */}
           <rect x={0} y={0} width={VW} height={VH} fill="url(#wg-dots)" />
 
-          {/* Axes */}
+          {/* Y axis */}
           <line
             x1={X0}
-            y1={Y1 - 4}
+            y1={Y1 - 6}
             x2={X0}
             y2={Y0}
-            stroke="#64748b"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-          />
-          <line
-            x1={X0}
-            y1={Y0}
-            x2={X1 + 4}
-            y2={Y0}
-            stroke="#64748b"
+            stroke={AXIS_COLOR}
             strokeWidth={1.5}
             strokeLinecap="round"
           />
 
-          {/* Y-axis tick labels */}
+          {/* X axis with arrowhead */}
+          <line
+            x1={X0}
+            y1={Y0}
+            x2={X1 + 10}
+            y2={Y0}
+            stroke={AXIS_COLOR}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            markerEnd="url(#wg-arrow)"
+          />
+
+          {/* Y-axis ticks */}
+          <line
+            x1={X0 - 4}
+            y1={Y1}
+            x2={X0}
+            y2={Y1}
+            stroke={AXIS_COLOR}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+          />
+          <line
+            x1={X0 - 4}
+            y1={Y0}
+            x2={X0}
+            y2={Y0}
+            stroke={AXIS_COLOR}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+          />
+
+          {/* Y-axis label (rotated) */}
           <text
-            x={X0 - 4}
-            y={Y1 + 8}
+            x={9}
+            y={(Y0 + Y1) / 2}
             fontSize={9}
-            fill="#94a3b8"
+            fill={LABEL_COLOR}
+            textAnchor="middle"
+            transform={`rotate(-90,9,${(Y0 + Y1) / 2})`}
+          >
+            weight
+          </text>
+
+          {/* Y-axis tick values */}
+          <text
+            x={X0 - 7}
+            y={Y1 + 4}
+            fontSize={8}
+            fill={LABEL_COLOR}
             textAnchor="end"
+            dominantBaseline="middle"
           >
             1
           </text>
           <text
-            x={X0 - 4}
-            y={Y0 - 2}
-            fontSize={9}
-            fill="#94a3b8"
+            x={X0 - 7}
+            y={Y0}
+            fontSize={8}
+            fill={LABEL_COLOR}
             textAnchor="end"
+            dominantBaseline="middle"
           >
             0
           </text>
 
           {/* X-axis label */}
           <text
-            x={X1 + 4}
+            x={X1 + 14}
             y={Y0 + 11}
             fontSize={9}
-            fill="#94a3b8"
+            fill={LABEL_COLOR}
             textAnchor="end"
           >
             Δt
@@ -199,7 +258,7 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
                 y1={Y1 - 4}
                 x2={hx}
                 y2={hy - PH / 2 - 2}
-                stroke="#64748b"
+                stroke={AXIS_COLOR}
                 strokeWidth={1}
                 strokeDasharray="3,2"
                 opacity={0.5}
@@ -210,7 +269,7 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
                 y1={hy + PH / 2 + 2}
                 x2={hx}
                 y2={Y0}
-                stroke="#64748b"
+                stroke={AXIS_COLOR}
                 strokeWidth={1}
                 strokeDasharray="3,2"
                 opacity={0.5}
