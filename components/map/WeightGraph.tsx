@@ -58,7 +58,6 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
   const hasHandle = mode === "Inv" || mode === "InvQuad";
 
   const curvePath = visible ? buildCurvePath(mode, k) : "";
-  const fillPath = visible ? `${curvePath} L ${X1},${Y0} L ${X0},${Y0} Z` : "";
 
   const ht = halfT(mode, k);
   const hx = toSVGX(ht);
@@ -92,109 +91,131 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
   return (
     <div
       className="overflow-hidden transition-all duration-300 ease-in-out"
-      style={{ maxHeight: visible ? "120px" : "0px", opacity: visible ? 1 : 0 }}
+      style={{ maxHeight: visible ? "130px" : "0px", opacity: visible ? 1 : 0 }}
     >
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${VW} ${VH}`}
-        className="w-full"
-        style={{ height: "90px" }}
-        aria-label="Time weighting curve"
+      <div
+        className="rounded-lg mx-1 mt-1 overflow-hidden"
+        style={{ background: "#0d1117" }}
       >
-        <defs>
-          <linearGradient id="wg-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.22} />
-            <stop offset="100%" stopColor="#60a5fa" stopOpacity={0} />
-          </linearGradient>
-          <clipPath id="wg-clip">
-            <rect x={X0} y={Y1} width={X1 - X0} height={Y0 - Y1} />
-          </clipPath>
-        </defs>
-
-        {/* Axes */}
-        <line
-          x1={X0}
-          y1={Y1 - 2}
-          x2={X0}
-          y2={Y0}
-          stroke="#475569"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-        <line
-          x1={X0}
-          y1={Y0}
-          x2={X1 + 4}
-          y2={Y0}
-          stroke="#475569"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-
-        {/* Axis labels */}
-        <text
-          x={12}
-          y={(Y0 + Y1) / 2}
-          fontSize={8}
-          fill="#64748b"
-          textAnchor="middle"
-          transform={`rotate(-90,12,${(Y0 + Y1) / 2})`}
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${VW} ${VH}`}
+          className="w-full"
+          style={{ height: "100px", display: "block" }}
+          aria-label="Time weighting curve"
         >
-          weight
-        </text>
-        <text
-          x={X1 + 4}
-          y={Y0 + 10}
-          fontSize={8}
-          fill="#64748b"
-          textAnchor="end"
-        >
-          Δt
-        </text>
+          <defs>
+            <pattern
+              id="wg-dots"
+              x="0"
+              y="0"
+              width="12"
+              height="12"
+              patternUnits="userSpaceOnUse"
+            >
+              <circle cx="1" cy="1" r="0.8" fill="#f59e0b" opacity="0.2" />
+            </pattern>
+            <clipPath id="wg-clip">
+              <rect x={X0} y={Y1} width={X1 - X0} height={Y0 - Y1} />
+            </clipPath>
+          </defs>
 
-        {/* Curve fill + line */}
-        {visible && (
-          <>
-            <path d={fillPath} fill="url(#wg-fill)" clipPath="url(#wg-clip)" />
+          {/* Dot grid */}
+          <rect
+            x={X0}
+            y={Y1}
+            width={X1 - X0}
+            height={Y0 - Y1}
+            fill="url(#wg-dots)"
+          />
+
+          {/* Axes */}
+          <line
+            x1={X0}
+            y1={Y1 - 2}
+            x2={X0}
+            y2={Y0}
+            stroke="#f59e0b"
+            strokeWidth={1}
+            strokeOpacity={0.45}
+            strokeLinecap="round"
+          />
+          <line
+            x1={X0}
+            y1={Y0}
+            x2={X1 + 4}
+            y2={Y0}
+            stroke="#f59e0b"
+            strokeWidth={1}
+            strokeOpacity={0.45}
+            strokeLinecap="round"
+          />
+
+          {/* Axis labels */}
+          <text
+            x={12}
+            y={(Y0 + Y1) / 2}
+            fontSize={7}
+            fill="#f59e0b"
+            fillOpacity={0.45}
+            textAnchor="middle"
+            transform={`rotate(-90,12,${(Y0 + Y1) / 2})`}
+          >
+            weight
+          </text>
+          <text
+            x={X1 + 4}
+            y={Y0 + 9}
+            fontSize={7}
+            fill="#f59e0b"
+            fillOpacity={0.45}
+            textAnchor="end"
+          >
+            Δt
+          </text>
+
+          {/* Curve */}
+          {visible && (
             <path
               d={curvePath}
               fill="none"
-              stroke="#60a5fa"
+              stroke="#f59e0b"
               strokeWidth={2.5}
               strokeLinecap="round"
+              strokeLinejoin="round"
               clipPath="url(#wg-clip)"
             />
-          </>
-        )}
+          )}
 
-        {/* Drag handle (Inv / InvQuad only) */}
-        {hasHandle && (
-          <>
-            <line
-              x1={hx}
-              y1={hy + 6}
-              x2={hx}
-              y2={Y0}
-              stroke="#f59e0b"
-              strokeWidth={1}
-              strokeDasharray="3,2"
-              opacity={0.5}
-            />
-            <circle
-              cx={hx}
-              cy={hy}
-              r={5.5}
-              fill="#f59e0b"
-              stroke="#0f172a"
-              strokeWidth={1.5}
-              style={{ cursor: "ew-resize" }}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={onPointerUp}
-            />
-          </>
-        )}
-      </svg>
+          {/* Drag handle (Inv / InvQuad only) */}
+          {hasHandle && (
+            <>
+              <line
+                x1={hx}
+                y1={hy + 6}
+                x2={hx}
+                y2={Y0}
+                stroke="#f59e0b"
+                strokeWidth={1}
+                strokeDasharray="3,2"
+                opacity={0.35}
+              />
+              <circle
+                cx={hx}
+                cy={hy}
+                r={5}
+                fill="#f59e0b"
+                stroke="#0d1117"
+                strokeWidth={1.5}
+                style={{ cursor: "ew-resize" }}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+              />
+            </>
+          )}
+        </svg>
+      </div>
     </div>
   );
 }
