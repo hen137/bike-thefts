@@ -62,6 +62,22 @@ vi.mock("@/components/map/HeatSlider", () => ({
   )
 }));
 
+vi.mock("@/components/map/WeightGraph", () => ({
+  WeightGraph: ({
+    mode,
+    k,
+    onKChange
+  }: {
+    mode: string;
+    k: number;
+    onKChange: (k: number) => void;
+  }) => (
+    <div data-testid="weight-graph" data-mode={mode} data-k={String(k)}>
+      <button onClick={() => onKChange(0.5)}>change-k</button>
+    </div>
+  )
+}));
+
 import { DrawerPanel } from "@/components/map/DrawerPanel";
 
 const defaultProps = {
@@ -73,7 +89,9 @@ const defaultProps = {
   byHood: false,
   setByHood: vi.fn(),
   timeWeighting: "None",
-  setTimeWeighting: vi.fn()
+  setTimeWeighting: vi.fn(),
+  weightK: 1.0,
+  setWeightK: vi.fn()
 };
 
 describe("DrawerPanel", () => {
@@ -282,6 +300,31 @@ describe("DrawerPanel", () => {
       );
       fireEvent.click(screen.getByText("hs-commit"));
       expect(commitSliderValues).toHaveBeenCalledWith([30, 40]);
+    });
+  });
+
+  describe("WeightGraph integration", () => {
+    it("renders WeightGraph with current timeWeighting and weightK", () => {
+      render(
+        <DrawerPanel {...defaultProps} timeWeighting="Inv" weightK={0.8} />
+      );
+      const graph = screen.getByTestId("weight-graph");
+      expect(graph).toBeInTheDocument();
+      expect(graph.dataset.mode).toBe("Inv");
+      expect(graph.dataset.k).toBe("0.8");
+    });
+
+    it("calls setWeightK when WeightGraph fires onKChange", () => {
+      const setWeightK = vi.fn();
+      render(
+        <DrawerPanel
+          {...defaultProps}
+          timeWeighting="Inv"
+          setWeightK={setWeightK}
+        />
+      );
+      fireEvent.click(screen.getByRole("button", { name: "change-k" }));
+      expect(setWeightK).toHaveBeenCalledWith(0.5);
     });
   });
 });

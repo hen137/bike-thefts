@@ -6,6 +6,7 @@ import { DateRangePicker } from "./DateRangePicker";
 import { HeatSlider } from "./HeatSlider";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { SegmentedToggle } from "./SegmentedToggle";
+import { WeightGraph } from "./WeightGraph";
 
 type SectionId = "reported" | "predict";
 
@@ -19,6 +20,8 @@ interface DrawerPanelProps {
   setByHood: (val: boolean) => void;
   timeWeighting: string;
   setTimeWeighting: (val: string) => void;
+  weightK: number;
+  setWeightK: (k: number) => void;
 }
 
 export function DrawerPanel({
@@ -30,7 +33,9 @@ export function DrawerPanel({
   byHood,
   setByHood,
   timeWeighting,
-  setTimeWeighting
+  setTimeWeighting,
+  weightK,
+  setWeightK
 }: DrawerPanelProps) {
   const [openSection, setOpenSection] = useState<SectionId | null>("reported");
   const [poissonIndex, setPoissonIndex] = useState(0);
@@ -105,6 +110,13 @@ export function DrawerPanel({
                         )}
                         onChange={(val) => setTimeWeighting(val)}
                       />
+                      <div className="col-span-2">
+                        <WeightGraph
+                          mode={timeWeighting}
+                          k={weightK}
+                          onKChange={setWeightK}
+                        />
+                      </div>
                     </div>
                   </CollapsibleSection>
                   <CollapsibleSection
