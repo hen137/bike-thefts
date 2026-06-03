@@ -61,8 +61,13 @@ export function DrawerPanel({
               <div className="border-t-2 p-4">
                 {/* Footer */}
                 <div className="flex flex-col justify-center items-center">
-                  <p>About</p>
-                  <div>Contribute • Github</div>
+                  <p>
+                    <a href="/about">About</a>
+                  </p>
+                  <div>
+                    <a href="/contribute">Contribute</a> •{" "}
+                    <a href="https://github.com/hen137/bike-thefts">Github</a>
+                  </div>
                 </div>
               </div>
             </Drawer.Content>

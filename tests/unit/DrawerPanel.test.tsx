@@ -92,14 +92,22 @@ describe("DrawerPanel", () => {
       expect(screen.getByText("Modes")).toBeInTheDocument();
     });
 
-    it("renders footer About text", () => {
+    it("renders footer About link", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("About")).toBeInTheDocument();
+      const link = screen.getByText("About");
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute("href", "/about");
     });
 
-    it("renders footer contribute links", () => {
+    it("renders footer Contribute and Github links", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Contribute • Github")).toBeInTheDocument();
+      const contribute = screen.getByText("Contribute");
+      expect(contribute).toHaveAttribute("href", "/contribute");
+      const github = screen.getByText("Github");
+      expect(github).toHaveAttribute(
+        "href",
+        "https://github.com/hen137/bike-thefts"
+      );
     });
   });
 
