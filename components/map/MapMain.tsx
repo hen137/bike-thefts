@@ -138,9 +138,6 @@ export function MapMain() {
         onClose={closeContextMenu}
         onStartMeasurement={handleContextMenuMeasurement}
       />
-
-      {/* Info Menu */}
-      {/* <MapInfo /> */}
     </div>
   );
 }

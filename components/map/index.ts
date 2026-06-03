@@ -13,7 +13,6 @@ export { MapTopBar } from "./MapTopBar";
 export { MapTileSwitcher } from "./MapTileSwitcher";
 export { MapControls } from "./MapControls";
 export { MapThemeSwitcher } from "./MapThemeSwitcher";
-export { MapInfo } from "./MapInfo";
 export { MapMeasurementPanel } from "./MapMeasurementPanel";
 export { MapContextMenu } from "./MapContextMenu";
 export { HeatmapSlider } from "./HeatmapSlider";
