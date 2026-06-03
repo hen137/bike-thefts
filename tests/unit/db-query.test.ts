@@ -125,7 +125,8 @@ describe("queryHeatmap", () => {
       hood_158: "123",
       lat: 43.65,
       lng: -79.38,
-      count: 1
+      count: 1,
+      occ_date: "2021-03-10"
     });
   });
 

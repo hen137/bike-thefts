@@ -69,7 +69,11 @@ const defaultProps = {
   onOpenChange: vi.fn(),
   sliderValues: [250, 750],
   setSliderValue: vi.fn(),
-  commitSliderValues: vi.fn()
+  commitSliderValues: vi.fn(),
+  byHood: false,
+  setByHood: vi.fn(),
+  timeWeighting: "None",
+  setTimeWeighting: vi.fn()
 };
 
 describe("DrawerPanel", () => {
@@ -87,9 +91,14 @@ describe("DrawerPanel", () => {
       expect(screen.getByText("Toronto Bike Thefts")).toBeInTheDocument();
     });
 
-    it("renders Modes section", () => {
+    it("renders Reported Thefts section", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Modes")).toBeInTheDocument();
+      expect(screen.getByText("Reported Thefts")).toBeInTheDocument();
+    });
+
+    it("renders Predict Future Thefts section", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      expect(screen.getByText("Predict Future Thefts")).toBeInTheDocument();
     });
 
     it("renders footer About link", () => {
@@ -164,6 +173,84 @@ describe("DrawerPanel", () => {
       );
       fireEvent.click(screen.getByText("drp-commit"));
       expect(commitSliderValues).toHaveBeenCalledWith([10, 20]);
+    });
+  });
+
+  describe("collapsible sections — accordion behaviour", () => {
+    it("opens Reported Thefts by default", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      expect(screen.getByText("Scaling")).toBeInTheDocument();
+      expect(screen.getByText("Time Weighting")).toBeInTheDocument();
+    });
+
+    it("hides Predict Future Thefts body by default", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      expect(screen.queryByText("Poisson")).not.toBeInTheDocument();
+    });
+
+    it("opens Predict Future Thefts and closes Reported Thefts on click", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      fireEvent.click(
+        screen.getByRole("button", { name: /Predict Future Thefts/i })
+      );
+      expect(screen.getByText("Poisson")).toBeInTheDocument();
+      expect(screen.queryByText("Scaling")).not.toBeInTheDocument();
+    });
+
+    it("closes the open section when its header is clicked again", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      fireEvent.click(screen.getByRole("button", { name: /Reported Thefts/i }));
+      expect(screen.queryByText("Scaling")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Scaling toggle — byHood wiring", () => {
+    it("highlights Municipal when byHood=false", () => {
+      render(<DrawerPanel {...defaultProps} byHood={false} />);
+      expect(
+        screen.getByRole("button", { name: "Municipal" }).className
+      ).toContain("bg-slate-800");
+    });
+
+    it("highlights Neighbourhood when byHood=true", () => {
+      render(<DrawerPanel {...defaultProps} byHood={true} />);
+      expect(
+        screen.getByRole("button", { name: "Neighbourhood" }).className
+      ).toContain("bg-slate-800");
+    });
+
+    it("calls setByHood(true) when Neighbourhood clicked", () => {
+      const setByHood = vi.fn();
+      render(<DrawerPanel {...defaultProps} setByHood={setByHood} />);
+      fireEvent.click(screen.getByRole("button", { name: "Neighbourhood" }));
+      expect(setByHood).toHaveBeenCalledWith(true);
+    });
+
+    it("calls setByHood(false) when Municipal clicked", () => {
+      const setByHood = vi.fn();
+      render(
+        <DrawerPanel {...defaultProps} byHood={true} setByHood={setByHood} />
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Municipal" }));
+      expect(setByHood).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe("Time Weighting toggle — wiring", () => {
+    it("highlights the option matching timeWeighting prop", () => {
+      render(<DrawerPanel {...defaultProps} timeWeighting="Lin" />);
+      expect(screen.getByRole("button", { name: "Lin" }).className).toContain(
+        "bg-slate-800"
+      );
+    });
+
+    it("calls setTimeWeighting with selected value", () => {
+      const setTimeWeighting = vi.fn();
+      render(
+        <DrawerPanel {...defaultProps} setTimeWeighting={setTimeWeighting} />
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Inv" }));
+      expect(setTimeWeighting).toHaveBeenCalledWith("Inv");
     });
   });
 

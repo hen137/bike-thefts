@@ -105,6 +105,8 @@ describe("MapControls — DB query integration", () => {
         setStartDate={() => {}}
         endDate={null}
         setEndDate={() => {}}
+        byHood={false}
+        timeWeighting="none"
       />
     );
 
@@ -151,6 +153,8 @@ describe("MapControls — DB query integration", () => {
         setStartDate={() => {}}
         endDate={null}
         setEndDate={() => {}}
+        byHood={false}
+        timeWeighting="none"
       />
     );
 
@@ -185,6 +189,8 @@ describe("MapControls — DB query integration", () => {
         setStartDate={() => {}}
         endDate={null}
         setEndDate={() => {}}
+        byHood={false}
+        timeWeighting="none"
       />
     );
 
@@ -222,9 +228,66 @@ describe("MapControls — DB query integration", () => {
           setStartDate={() => {}}
           endDate={null}
           setEndDate={() => {}}
+          byHood={false}
+          timeWeighting="none"
         />
       )
     ).not.toThrow();
+  });
+
+  it("re-queries the heatmap when byHood prop changes", async () => {
+    const mockQueryHeatmap = vi.fn().mockResolvedValue(sampleRows);
+
+    mockUseDbContext.mockReturnValue({
+      isReady: true,
+      worker: { queryHeatmap: mockQueryHeatmap } as unknown as ReturnType<
+        typeof useDbContext
+      >["worker"],
+      progress: null,
+      initResult: {
+        status: "cached",
+        recordCount: 1000,
+        lastFetched: null,
+        minDate: "2014-01-01",
+        maxDate: "2026-11-30"
+      },
+      error: null,
+      refresh: vi.fn()
+    } as unknown as ReturnType<typeof useDbContext>);
+
+    const { rerender } = render(
+      <MapControls
+        drawerOpen={false}
+        onDrawerToggle={() => {}}
+        sliderValues={[750, 1000]}
+        committedSliderValues={[750, 1000]}
+        startDate={null}
+        setStartDate={() => {}}
+        endDate={null}
+        setEndDate={() => {}}
+        byHood={false}
+        timeWeighting="none"
+      />
+    );
+
+    await waitFor(() => expect(mockQueryHeatmap).toHaveBeenCalledTimes(1));
+
+    rerender(
+      <MapControls
+        drawerOpen={false}
+        onDrawerToggle={() => {}}
+        sliderValues={[750, 1000]}
+        committedSliderValues={[750, 1000]}
+        startDate={null}
+        setStartDate={() => {}}
+        endDate={null}
+        setEndDate={() => {}}
+        byHood={true}
+        timeWeighting="none"
+      />
+    );
+
+    await waitFor(() => expect(mockQueryHeatmap).toHaveBeenCalledTimes(2));
   });
 });
 
@@ -262,7 +325,9 @@ describe("MapControls — right-side control stack layout", () => {
     startDate: null,
     setStartDate: vi.fn(),
     endDate: null,
-    setEndDate: vi.fn()
+    setEndDate: vi.fn(),
+    byHood: false as boolean,
+    timeWeighting: "none" as "none" | "linear" | "exponential"
   };
 
   beforeEach(() => {
