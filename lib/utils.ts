@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { MonthYear } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -9,6 +10,24 @@ export function calcNormalDistribution(x: number, mean: number, std: number) {
   const z = (x - mean) / std;
   const coeff = 1 / (std * Math.sqrt(2 * Math.PI));
   return coeff * Math.exp(-(z ** 2 / 2));
+}
+
+export function calcDatesToRawSlider(
+  monthYear: MonthYear,
+  sliderRange: number,
+  dateBounds: { lowerBound: Date; upperBound: Date }
+): number {
+  const { lowerBound, upperBound } = dateBounds;
+  const yearDelta = upperBound.getFullYear() - lowerBound.getFullYear();
+  const totalMonths =
+    upperBound.getMonth() - lowerBound.getMonth() + 12 * yearDelta;
+  const targetYearDelta = monthYear.year - lowerBound.getFullYear();
+  const targetMonths =
+    monthYear.month - lowerBound.getMonth() + 12 * targetYearDelta;
+  return Math.min(
+    Math.max(Math.round((targetMonths / totalMonths) * sliderRange), 0),
+    sliderRange
+  );
 }
 
 export function calcRawSliderToDates(

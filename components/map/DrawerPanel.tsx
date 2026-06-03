@@ -1,6 +1,7 @@
 "use client";
 
 import { Drawer } from "@base-ui/react";
+import { DateRangePicker } from "./DateRangePicker";
 import { HeatSlider } from "./HeatSlider";
 
 interface DrawerPanelProps {
@@ -39,12 +40,19 @@ export function DrawerPanel({
                   <Drawer.Description>Panel Description</Drawer.Description>
                 </div>
                 {/* Range Settings */}
-                <div className="border-b-2 p-4">
-                  <HeatSlider
-                    initialValues={sliderValues}
-                    updateValues={setSliderValue}
-                    commitValues={commitSliderValues}
+                <div className="flex min-h-[120px] flex-col items-center justify-center gap-4 border-b-2 px-4 py-6">
+                  <DateRangePicker
+                    sliderValues={sliderValues}
+                    setSliderValue={setSliderValue}
+                    commitSliderValues={commitSliderValues}
                   />
+                  <div className="w-full">
+                    <HeatSlider
+                      initialValues={sliderValues}
+                      updateValues={setSliderValue}
+                      commitValues={commitSliderValues}
+                    />
+                  </div>
                 </div>
                 {/* Reported Thefts */}
                 <div className="border-b-2 p-4">Modes</div>
