@@ -82,7 +82,7 @@ describe("WeightGraph", () => {
       const { container } = render(
         <WeightGraph mode="Inv" k={1} onKChange={noop} />
       );
-      const handle = container.querySelector("circle[style*='ew-resize']");
+      const handle = container.querySelector("rect[style*='ew-resize']");
       expect(handle).toBeTruthy();
     });
 
@@ -90,7 +90,7 @@ describe("WeightGraph", () => {
       const { container } = render(
         <WeightGraph mode="InvQuad" k={1} onKChange={noop} />
       );
-      const handle = container.querySelector("circle[style*='ew-resize']");
+      const handle = container.querySelector("rect[style*='ew-resize']");
       expect(handle).toBeTruthy();
     });
 
@@ -98,7 +98,7 @@ describe("WeightGraph", () => {
       const { container } = render(
         <WeightGraph mode="Lin" k={1} onKChange={noop} />
       );
-      const handle = container.querySelector("circle[style*='ew-resize']");
+      const handle = container.querySelector("rect[style*='ew-resize']");
       expect(handle).toBeNull();
     });
 
@@ -106,7 +106,7 @@ describe("WeightGraph", () => {
       const { container } = render(
         <WeightGraph mode="None" k={1} onKChange={noop} />
       );
-      const handle = container.querySelector("circle[style*='ew-resize']");
+      const handle = container.querySelector("rect[style*='ew-resize']");
       expect(handle).toBeNull();
     });
   });
@@ -118,8 +118,8 @@ describe("WeightGraph", () => {
         <WeightGraph mode="Inv" k={1} onKChange={onKChange} />
       );
       const handle = container.querySelector(
-        "circle[style*='ew-resize']"
-      ) as SVGCircleElement;
+        "rect[style*='ew-resize']"
+      ) as SVGRectElement;
       const svg = container.querySelector("svg") as SVGSVGElement;
 
       svg.getBoundingClientRect = () => ({
@@ -148,8 +148,8 @@ describe("WeightGraph", () => {
         <WeightGraph mode="Inv" k={1} onKChange={onKChange} />
       );
       const handle = container.querySelector(
-        "circle[style*='ew-resize']"
-      ) as SVGCircleElement;
+        "rect[style*='ew-resize']"
+      ) as SVGRectElement;
       fireEvent.pointerMove(handle, { clientX: 150 });
       expect(onKChange).not.toHaveBeenCalled();
     });

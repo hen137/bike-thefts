@@ -15,6 +15,10 @@ const X0 = 24,
 const VW = 240,
   VH = 100;
 
+// pill dimensions
+const PW = 8,
+  PH = 20;
+
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
@@ -74,12 +78,12 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
     return clamp(raw, 0.05, 2.0);
   }
 
-  function onPointerDown(e: React.PointerEvent<SVGCircleElement>) {
+  function onPointerDown(e: React.PointerEvent<SVGRectElement>) {
     dragging.current = true;
     e.currentTarget.setPointerCapture(e.pointerId);
   }
 
-  function onPointerMove(e: React.PointerEvent<SVGCircleElement>) {
+  function onPointerMove(e: React.PointerEvent<SVGRectElement>) {
     if (!dragging.current) return;
     onKChange(getKFromPointer(e));
   }
@@ -93,101 +97,129 @@ export function WeightGraph({ mode, k, onKChange }: WeightGraphProps) {
       className="overflow-hidden transition-all duration-300 ease-in-out"
       style={{ maxHeight: visible ? "130px" : "0px", opacity: visible ? 1 : 0 }}
     >
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${VW} ${VH}`}
-        className="w-full mt-1"
-        style={{ height: "100px", display: "block" }}
-        aria-label="Time weighting curve"
+      <div
+        className="rounded-lg mx-1 mt-1 overflow-hidden"
+        style={{ background: "#0d1117" }}
       >
-        <defs>
-          <clipPath id="wg-clip">
-            <rect x={X0} y={Y1 - 4} width={X1 - X0} height={Y0 - Y1 + 4} />
-          </clipPath>
-        </defs>
-
-        {/* Axes */}
-        <line
-          x1={X0}
-          y1={Y1 - 4}
-          x2={X0}
-          y2={Y0}
-          stroke="#94a3b8"
-          strokeWidth={1}
-          strokeLinecap="round"
-        />
-        <line
-          x1={X0}
-          y1={Y0}
-          x2={X1 + 4}
-          y2={Y0}
-          stroke="#94a3b8"
-          strokeWidth={1}
-          strokeLinecap="round"
-        />
-
-        {/* Axis labels */}
-        <text
-          x={12}
-          y={(Y0 + Y1) / 2}
-          fontSize={9}
-          fill="#94a3b8"
-          textAnchor="middle"
-          transform={`rotate(-90,12,${(Y0 + Y1) / 2})`}
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${VW} ${VH}`}
+          className="w-full"
+          style={{ height: "100px", display: "block" }}
+          aria-label="Time weighting curve"
         >
-          weight
-        </text>
-        <text
-          x={X1 + 4}
-          y={Y0 + 10}
-          fontSize={9}
-          fill="#94a3b8"
-          textAnchor="end"
-        >
-          Δt
-        </text>
+          <defs>
+            <pattern
+              id="wg-dots"
+              x="0"
+              y="0"
+              width="12"
+              height="12"
+              patternUnits="userSpaceOnUse"
+            >
+              <circle cx="1" cy="1" r="0.8" fill="#94a3b8" opacity="0.2" />
+            </pattern>
+            <clipPath id="wg-clip">
+              <rect x={X0} y={Y1 - 4} width={X1 - X0} height={Y0 - Y1 + 4} />
+            </clipPath>
+          </defs>
 
-        {/* Curve */}
-        {visible && (
-          <path
-            d={curvePath}
-            fill="none"
-            stroke="#3b82f6"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            clipPath="url(#wg-clip)"
+          {/* Dot grid */}
+          <rect
+            x={X0}
+            y={Y1 - 4}
+            width={X1 - X0}
+            height={Y0 - Y1 + 4}
+            fill="url(#wg-dots)"
           />
-        )}
 
-        {/* Drag handle (Inv / InvQuad only) */}
-        {hasHandle && (
-          <>
-            <line
-              x1={hx}
-              y1={hy + 6}
-              x2={hx}
-              y2={Y0}
-              stroke="#f59e0b"
-              strokeWidth={1}
-              strokeDasharray="3,2"
-              opacity={0.5}
+          {/* Axes */}
+          <line
+            x1={X0}
+            y1={Y1 - 4}
+            x2={X0}
+            y2={Y0}
+            stroke="#94a3b8"
+            strokeWidth={1}
+            strokeOpacity={0.5}
+            strokeLinecap="round"
+          />
+          <line
+            x1={X0}
+            y1={Y0}
+            x2={X1 + 4}
+            y2={Y0}
+            stroke="#94a3b8"
+            strokeWidth={1}
+            strokeOpacity={0.5}
+            strokeLinecap="round"
+          />
+
+          {/* Axis labels */}
+          <text
+            x={12}
+            y={(Y0 + Y1) / 2}
+            fontSize={9}
+            fill="#94a3b8"
+            textAnchor="middle"
+            transform={`rotate(-90,12,${(Y0 + Y1) / 2})`}
+          >
+            weight
+          </text>
+          <text
+            x={X1 + 4}
+            y={Y0 + 10}
+            fontSize={9}
+            fill="#94a3b8"
+            textAnchor="end"
+          >
+            Δt
+          </text>
+
+          {/* Curve */}
+          {visible && (
+            <path
+              d={curvePath}
+              fill="none"
+              stroke="#3b82f6"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              clipPath="url(#wg-clip)"
             />
-            <circle
-              cx={hx}
-              cy={hy}
-              r={5}
-              fill="#f59e0b"
-              stroke="white"
-              strokeWidth={1.5}
-              style={{ cursor: "ew-resize" }}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={onPointerUp}
-            />
-          </>
-        )}
-      </svg>
+          )}
+
+          {/* Drag handle pill (Inv / InvQuad only) */}
+          {hasHandle && (
+            <>
+              <line
+                x1={hx}
+                y1={hy + PH / 2 + 2}
+                x2={hx}
+                y2={Y0}
+                stroke="#64748b"
+                strokeWidth={1}
+                strokeDasharray="3,2"
+                opacity={0.5}
+              />
+              <rect
+                x={hx - PW / 2}
+                y={hy - PH / 2}
+                width={PW}
+                height={PH}
+                rx={PW / 2}
+                fill="#1e293b"
+                stroke="#3b82f6"
+                strokeWidth={1.5}
+                style={{ cursor: "ew-resize" }}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+              />
+            </>
+          )}
+        </svg>
+      </div>
     </div>
   );
 }
