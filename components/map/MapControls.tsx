@@ -16,11 +16,8 @@ import { DebugHUD } from "@/components/debug";
 import { HeatLegend } from "./HeatLegend";
 import { MapThemeSwitcher } from "./MapThemeSwitcher";
 import { MapTileSwitcher } from "./MapTileSwitcher";
-// import { HeatmapSlider } from "./HeatmapSlider";
 
 const MAX_SLIDER_RANGE = 1000;
-// const endThumb = 1000;
-// const startThumb = 750;
 
 /**
  * MapControls - Map control buttons at bottom right
@@ -38,6 +35,8 @@ interface MapControlsProps {
   setStartDate: (val: MonthYear) => void;
   endDate: MonthYear | null;
   setEndDate: (val: MonthYear) => void;
+  byHood: boolean;
+  timeWeighting: "None" | "Lin" | "Inv" | "InvQuad";
 }
 
 export const MapControls = memo(function MapControls({
@@ -48,7 +47,9 @@ export const MapControls = memo(function MapControls({
   startDate,
   setStartDate,
   endDate,
-  setEndDate
+  setEndDate,
+  byHood,
+  timeWeighting
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
     useMapControls();
@@ -62,15 +63,6 @@ export const MapControls = memo(function MapControls({
     setHeatOptions
   } = useLeafletHeatLayer();
   const { isReady, worker, initResult, refresh } = useDbContext();
-
-  // const [sliderValues, setSliderValue] = useState<number[]>([
-  //   startThumb,
-  //   endThumb
-  // ]);
-  // const [commitedSliderValues, commitSliderValues] = useState(sliderValues);
-
-  // const [startDate, setStartDate] = useState<MonthYear | null>(null);
-  // const [endDate, setEndDate] = useState<MonthYear | null>(null);
 
   const [blur, setBlur] = useState<number>(DEFAULT_HEATMAP_CONFIG.blur!);
   const [radius, setRadius] = useState<number>(DEFAULT_HEATMAP_CONFIG.radius!);
@@ -154,13 +146,30 @@ export const MapControls = memo(function MapControls({
         .split("T")[0];
 
       worker.queryHeatmap(startISO, endISO).then((rows) => {
-        const { values, avgIntensity } = buildHeatDataFromRows(rows, true);
+        const { values, avgIntensity } = buildHeatDataFromRows(
+          rows,
+          byHood,
+          timeWeighting.toLocaleLowerCase() as
+            | "none"
+            | "lin"
+            | "inv"
+            | "invquad",
+          endDate
+        );
         setHeatValues(values);
         setAvgIntensity(avgIntensity);
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
       });
     }
-  }, [committedSliderValues, isReady, worker, initResult, setHeatValues]);
+  }, [
+    committedSliderValues,
+    isReady,
+    worker,
+    initResult,
+    setHeatValues,
+    byHood,
+    timeWeighting
+  ]);
 
   return (
     <div>

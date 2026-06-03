@@ -36,6 +36,8 @@ export function MapMain() {
     useState<number[]>(initialSliderValues);
   const [startDate, setStartDate] = useState<MonthYear | null>(null);
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
+  const [byHood, setByHood] = useState(false);
+  const [timeWeighting, setTimeWeighting] = useState("None");
 
   const tileContext = useContext(TileContext);
 
@@ -110,6 +112,8 @@ export function MapMain() {
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
+          byHood={byHood}
+          timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
         />
 
         {/* Side Drawer */}
@@ -119,6 +123,10 @@ export function MapMain() {
           sliderValues={sliderValues}
           setSliderValue={setSliderValue}
           commitSliderValues={commitSliderValues}
+          byHood={byHood}
+          setByHood={setByHood}
+          timeWeighting={timeWeighting}
+          setTimeWeighting={setTimeWeighting}
         />
       </HeatProvider>
 

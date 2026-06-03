@@ -1,8 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Drawer } from "@base-ui/react";
 import { DateRangePicker } from "./DateRangePicker";
 import { HeatSlider } from "./HeatSlider";
+import { CollapsibleSection } from "./CollapsibleSection";
+import { SegmentedToggle } from "./SegmentedToggle";
+
+type SectionId = "reported" | "predict";
 
 interface DrawerPanelProps {
   open: boolean;
@@ -10,6 +15,10 @@ interface DrawerPanelProps {
   sliderValues: number[];
   setSliderValue: (values: number[]) => void;
   commitSliderValues: (values: number[]) => void;
+  byHood: boolean;
+  setByHood: (val: boolean) => void;
+  timeWeighting: string;
+  setTimeWeighting: (val: string) => void;
 }
 
 export function DrawerPanel({
@@ -17,8 +26,18 @@ export function DrawerPanel({
   onOpenChange,
   sliderValues,
   setSliderValue,
-  commitSliderValues
+  commitSliderValues,
+  byHood,
+  setByHood,
+  timeWeighting,
+  setTimeWeighting
 }: DrawerPanelProps) {
+  const [openSection, setOpenSection] = useState<SectionId | null>("reported");
+  const [poissonIndex, setPoissonIndex] = useState(0);
+
+  const toggle = (id: SectionId) =>
+    setOpenSection((prev) => (prev === id ? null : id));
+
   return (
     <Drawer.Root
       open={open}
@@ -60,7 +79,51 @@ export function DrawerPanel({
                   </div>
                 </div>
                 {/* Data Modes */}
-                <div className="border-b-2 p-4">Modes</div>
+                <div className="overflow-y-auto border-b-2">
+                  <CollapsibleSection
+                    title="Reported Thefts"
+                    open={openSection === "reported"}
+                    onToggle={() => toggle("reported")}
+                  >
+                    <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                        Scaling
+                      </p>
+                      <SegmentedToggle
+                        options={["Municipal", "Neighbourhood"]}
+                        activeIndex={byHood ? 1 : 0}
+                        onChange={(_, i) => setByHood(i === 1)}
+                      />
+                      <div className="col-span-2 border-t border-slate-200 dark:border-slate-600" />
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                        Time Weighting
+                      </p>
+                      <SegmentedToggle
+                        options={["None", "Lin", "Inv", "InvQuad"]}
+                        activeIndex={["None", "Lin", "Inv", "InvQuad"].indexOf(
+                          timeWeighting
+                        )}
+                        onChange={(val) => setTimeWeighting(val)}
+                      />
+                    </div>
+                  </CollapsibleSection>
+                  <CollapsibleSection
+                    title="Predict Future Thefts"
+                    open={openSection === "predict"}
+                    onToggle={() => toggle("predict")}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                        Poisson
+                      </p>
+                      <SegmentedToggle
+                        options={["Frequentist", "Bayesian"]}
+                        activeIndex={poissonIndex}
+                        onChange={(_, i) => setPoissonIndex(i)}
+                      />
+                    </div>
+                  </CollapsibleSection>
+                </div>
               </div>
               <div className="border-t-2 p-4">
                 {/* Footer */}
