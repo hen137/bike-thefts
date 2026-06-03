@@ -12,7 +12,7 @@ export interface HeatDataResult {
 export function getTimeWeight(
   type: "lin" | "inv" | "invquad",
   delta: number,
-  maxDelta: number = 1
+  maxDelta: number
 ): number {
   // console.log(type, delta, maxDelta);
   if (type !== "lin" && type !== "inv" && type !== "invquad") {
