@@ -88,6 +88,21 @@ describe("buildHeatDataFromRows", () => {
     expect(result.values[0][0]).toBe(43.7);
     expect(result.values[0][1]).toBe(-79.4);
   });
+
+  it("passes k to getTimeWeight — larger k gives higher weight for older rows", () => {
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 43.7, lng: -79.4, count: 1, occ_date: "2020-01-01" },
+      { hood_158: 1, lat: 43.8, lng: -79.5, count: 1, occ_date: "2026-01-01" }
+    ];
+    const ref: MonthYear = { year: 2026, month: 0 };
+    const lowK = buildHeatDataFromRows(rows, false, "inv", ref, 0.1);
+    const highK = buildHeatDataFromRows(rows, false, "inv", ref, 2.0);
+    // older row (2020) should get higher weight with larger k
+    const oldLat = 43.7;
+    const oldIntLowK = lowK.values.find((v) => v[0] === oldLat)![2];
+    const oldIntHighK = highK.values.find((v) => v[0] === oldLat)![2];
+    expect(oldIntHighK).toBeGreaterThan(oldIntLowK);
+  });
 });
 
 describe("buildHeatDataFromRows — byHood=true (stratified)", () => {

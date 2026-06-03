@@ -27,7 +27,8 @@ export function buildHeatDataFromRows(
   rows: HeatRow[],
   byHood: boolean = false,
   timeWeighting: TimeWeightingType,
-  refDate: MonthYear
+  refDate: MonthYear,
+  k: number = 1.0
 ): HeatDataResult {
   if (rows.length === 0) {
     return { values: [], avgIntensity: 0 };
@@ -76,7 +77,8 @@ export function buildHeatDataFromRows(
                 timeWeighting,
                 (refDate.year - rowDate.getFullYear()) * 12 +
                   (refDate.month - rowDate.getMonth()),
-                maxDelta
+                maxDelta,
+                k
               );
         const int = (r.count / maxCount) * timeWeight;
         avgIntensities.push(int);
@@ -104,7 +106,8 @@ export function buildHeatDataFromRows(
               timeWeighting,
               (refDate.year - rowDate.getFullYear()) * 12 +
                 (refDate.month - rowDate.getMonth()),
-              maxDelta
+              maxDelta,
+              k
             );
 
       const int = (row.count / maxCount) * timeWeight;
