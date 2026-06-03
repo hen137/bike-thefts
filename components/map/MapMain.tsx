@@ -38,8 +38,8 @@ export function MapMain() {
   const [endDate, setEndDate] = useState<MonthYear | null>(null);
   const [byHood, setByHood] = useState(false);
   const [timeWeighting, setTimeWeighting] = useState("None");
-  const [weightKInv, setWeightKInv] = useState(1.0);
-  const [weightKInvQuad, setWeightKInvQuad] = useState(1.0);
+  const [weightKInv, setWeightKInv] = useState(0.5);
+  const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
   const [histBins, setHistBins] = useState<number[]>([]);
 
   const tileContext = useContext(TileContext);
