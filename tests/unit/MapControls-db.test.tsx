@@ -333,8 +333,8 @@ describe("MapControls — right-side control stack layout", () => {
     setEndDate: vi.fn(),
     byHood: false as boolean,
     timeWeighting: "None" as "None" | "Lin" | "Inv" | "InvQuad",
-    weightKInv: 1.0,
-    weightKInvQuad: 1.0,
+    weightKInv: 0.5,
+    weightKInvQuad: 0.25,
     onHistBins: vi.fn()
   };
 

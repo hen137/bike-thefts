@@ -90,9 +90,9 @@ const defaultProps = {
   setByHood: vi.fn(),
   timeWeighting: "None",
   setTimeWeighting: vi.fn(),
-  weightKInv: 1.0,
+  weightKInv: 0.5,
   setWeightKInv: vi.fn(),
-  weightKInvQuad: 1.0,
+  weightKInvQuad: 0.25,
   setWeightKInvQuad: vi.fn()
 };
 
