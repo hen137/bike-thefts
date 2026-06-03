@@ -220,7 +220,36 @@ const worker: DbWorker = {
     await db.exec("DELETE FROM bike_thefts");
     await db.exec("DELETE FROM meta");
     await fetchAndStore(db, onProgress);
+
+    const countRow = await db
+      .prepare<{ count: number }>("SELECT COUNT(*) as count FROM bike_thefts")
+      .get();
+    const recordCount = countRow?.count ?? 0;
+
+    const minRow = await db
+      .prepare<{
+        v: string;
+      }>("SELECT MIN(occ_date) as v FROM bike_thefts WHERE occ_date != ''")
+      .get();
+    const maxRow = await db
+      .prepare<{
+        v: string;
+      }>("SELECT MAX(occ_date) as v FROM bike_thefts WHERE occ_date != ''")
+      .get();
+
+    const minDate = minRow?.v ?? null;
+    const maxDate = maxRow?.v ?? null;
+    if (minDate) await writeMeta(db, "min_date", minDate);
+    if (maxDate) await writeMeta(db, "max_date", maxDate);
+
     onProgress({ type: "ready" });
+    return {
+      status: "fresh",
+      recordCount,
+      lastFetched: await readMeta(db, "last_fetched"),
+      minDate,
+      maxDate
+    } satisfies DbInitResult;
   }
 };
 

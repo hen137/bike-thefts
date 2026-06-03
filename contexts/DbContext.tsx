@@ -48,9 +48,10 @@ export function DbProvider({ children }: { children: React.ReactNode }) {
     setIsReady(false);
     setError(null);
     try {
-      await workerRef.current.refresh(
+      const result = await workerRef.current.refresh(
         Comlink.proxy((event) => setProgress(event))
       );
+      setInitResult(result);
       setIsReady(true);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));

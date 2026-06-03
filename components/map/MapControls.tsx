@@ -61,7 +61,7 @@ export const MapControls = memo(function MapControls({
     heatLayer,
     setHeatOptions
   } = useLeafletHeatLayer();
-  const { isReady, worker, initResult } = useDbContext();
+  const { isReady, worker, initResult, refresh } = useDbContext();
 
   // const [sliderValues, setSliderValue] = useState<number[]>([
   //   startThumb,
@@ -298,6 +298,7 @@ export const MapControls = memo(function MapControls({
         currentQueryCount={currentQueryCount}
         dbMinDate={initResult?.minDate ?? null}
         dbMaxDate={initResult?.maxDate ?? null}
+        onRefreshDb={refresh}
       />
     </div>
   );

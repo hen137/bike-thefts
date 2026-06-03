@@ -29,6 +29,7 @@ export interface DebugHUDProps {
   currentQueryCount: number | null;
   dbMinDate: string | null;
   dbMaxDate: string | null;
+  onRefreshDb: () => void;
 }
 
 /**

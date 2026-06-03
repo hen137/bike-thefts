@@ -85,7 +85,8 @@ describe("DebugHUD", () => {
     totalRecords: 1234,
     currentQueryCount: 56,
     dbMinDate: "2014-01-01",
-    dbMaxDate: "2026-11-30"
+    dbMaxDate: "2026-11-30",
+    onRefreshDb: vi.fn()
   };
 
   it("renders raw slider values and DB stats", () => {

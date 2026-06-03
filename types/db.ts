@@ -50,7 +50,7 @@ export type DbInitResult = {
 export interface DbWorker {
   init(onProgress: (event: DbProgress) => void): Promise<DbInitResult>;
   queryHeatmap(startDate: string, endDate: string): Promise<HeatRow[]>;
-  refresh(onProgress: (event: DbProgress) => void): Promise<void>;
+  refresh(onProgress: (event: DbProgress) => void): Promise<DbInitResult>;
 }
 
 // Represents one raw ArcGIS bike theft record (matches BikeData properties shape)

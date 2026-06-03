@@ -115,7 +115,13 @@ describe("DbContext", () => {
       minDate: null,
       maxDate: null
     });
-    mockRefresh.mockResolvedValue(undefined);
+    mockRefresh.mockResolvedValue({
+      status: "fresh",
+      recordCount: 99,
+      lastFetched: "2026-01-01T00:00:00.000Z",
+      minDate: "2010-01-15",
+      maxDate: "2025-12-31"
+    });
 
     const { result } = renderHook(() => useDbContext(), { wrapper });
     await waitFor(() => expect(result.current.isReady).toBe(true));
@@ -126,6 +132,12 @@ describe("DbContext", () => {
 
     expect(mockRefresh).toHaveBeenCalledWith(expect.any(Function));
     expect(result.current.isReady).toBe(true);
+    expect(result.current.initResult).toMatchObject({
+      status: "fresh",
+      recordCount: 99,
+      minDate: "2010-01-15",
+      maxDate: "2025-12-31"
+    });
   });
 
   it("refresh() sets error state when the worker rejects", async () => {
