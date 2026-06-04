@@ -60,19 +60,24 @@ export function DrawerPanel({
       <Drawer.Portal>
         <Drawer.Viewport>
           <Drawer.Popup className="fixed inset-y-0 right-0 w-80 z-1200 bg-white dark:bg-slate-800 shadow-xl transition-transform duration-300 ease-in-out data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full">
-            <Drawer.Content className="h-full flex flex-col justify-between">
+            <Drawer.Content className="h-full flex flex-col justify-between select-none">
               <div>
                 {/* Header */}
-                <div className="border-b-2 p-4">
-                  <Drawer.Title className="text-lg font-bold">
-                    Toronto Bike Thefts
-                  </Drawer.Title>
-                  <Drawer.Description>
-                    <a href="https://data.tps.ca/datasets/TorontoPS::bicycle-thefts-open-data/about">
-                      Bike Thefts Open Data from{" "}
-                    </a>
-                    Toronto Police Service
-                  </Drawer.Description>
+                <div className="border-b-2 p-2">
+                  <div className=" rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                    <Drawer.Title className="text-2xl font-bold">
+                      TObikethefts
+                    </Drawer.Title>
+                    <Drawer.Description className="text-sm text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+                      <span className="group-hover:hidden">
+                        for Toronto&apos;s bikers and commuters, because bike
+                        thefts suck
+                      </span>
+                      <span className="hidden group-hover:inline ">
+                        version: 1.0.0
+                      </span>
+                    </Drawer.Description>
+                  </div>
                 </div>
                 {/* Range Settings */}
                 <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 pb-4 pt-2">
@@ -150,16 +155,21 @@ export function DrawerPanel({
                   </CollapsibleSection>
                 </div>
               </div>
-              <div className="border-t-2 p-4">
-                {/* Footer */}
-                <div className="flex flex-col justify-center items-center">
-                  <p>
-                    <a href="/about">About</a>
+              {/* Footer */}
+              <div className="border-t-2 p-2">
+                <div className="rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                  <p>Less guessing. More Riding.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Contains information licensed under the{" "}
+                    <a
+                      href="https://www.ontario.ca/page/open-government-licence-ontario"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-slate-700 dark:hover:text-slate-300"
+                    >
+                      Open Government Licence - Ontario
+                    </a>
                   </p>
-                  <div>
-                    <a href="/contribute">Contribute</a> •{" "}
-                    <a href="https://github.com/hen137/bike-thefts">Github</a>
-                  </div>
                 </div>
               </div>
             </Drawer.Content>

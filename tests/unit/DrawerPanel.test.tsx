@@ -108,7 +108,7 @@ describe("DrawerPanel", () => {
   describe("static content", () => {
     it("renders the panel title", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Toronto Bike Thefts")).toBeInTheDocument();
+      expect(screen.getByText("TObikethefts")).toBeInTheDocument();
     });
 
     it("renders Reported Thefts section", () => {
@@ -121,22 +121,39 @@ describe("DrawerPanel", () => {
       expect(screen.getByText("Predict Future Thefts")).toBeInTheDocument();
     });
 
-    it("renders footer About link", () => {
+    it("renders header default description text", () => {
       render(<DrawerPanel {...defaultProps} />);
-      const link = screen.getByText("About");
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", "/about");
+      expect(
+        screen.getByText(/for Toronto's bikers and commuters/i)
+      ).toBeInTheDocument();
     });
 
-    it("renders footer Contribute and Github links", () => {
+    it("renders header version text in DOM", () => {
       render(<DrawerPanel {...defaultProps} />);
-      const contribute = screen.getByText("Contribute");
-      expect(contribute).toHaveAttribute("href", "/contribute");
-      const github = screen.getByText("Github");
-      expect(github).toHaveAttribute(
+      expect(screen.getByText(/version: 1\.0\.0/i)).toBeInTheDocument();
+    });
+
+    it("renders footer tagline", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      expect(
+        screen.getByText("Less guessing. More Riding.")
+      ).toBeInTheDocument();
+    });
+
+    it("renders Open Government Licence link with correct href", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      const link = screen.getByText("Open Government Licence - Ontario");
+      expect(link).toHaveAttribute(
         "href",
-        "https://github.com/hen137/bike-thefts"
+        "https://www.ontario.ca/page/open-government-licence-ontario"
       );
+    });
+
+    it("Open Government Licence link opens in new tab with noopener", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      const link = screen.getByText("Open Government Licence - Ontario");
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
     });
   });
 
