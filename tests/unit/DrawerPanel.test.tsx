@@ -197,30 +197,44 @@ describe("DrawerPanel", () => {
   });
 
   describe("collapsible sections — accordion behaviour", () => {
+    function getCollapseGrid(name: RegExp): HTMLElement {
+      const btn = screen.getByRole("button", { name });
+      return btn.nextElementSibling as HTMLElement;
+    }
+
     it("opens Reported Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
       expect(screen.getByText("Local Scaling")).toBeInTheDocument();
       expect(screen.getByText("Time Weighting")).toBeInTheDocument();
     });
 
-    it("hides Predict Future Thefts body by default", () => {
+    it("collapses Predict Future Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.queryByText("Poisson")).not.toBeInTheDocument();
+      expect(screen.getByText("Poisson")).toBeInTheDocument();
+      expect(
+        getCollapseGrid(/Predict Future Thefts/i).style.gridTemplateRows
+      ).toBe("0fr");
     });
 
-    it("opens Predict Future Thefts and closes Reported Thefts on click", () => {
+    it("opens Predict Future Thefts and collapses Reported Thefts on click", () => {
       render(<DrawerPanel {...defaultProps} />);
       fireEvent.click(
         screen.getByRole("button", { name: /Predict Future Thefts/i })
       );
-      expect(screen.getByText("Poisson")).toBeInTheDocument();
-      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
+      expect(
+        getCollapseGrid(/Predict Future Thefts/i).style.gridTemplateRows
+      ).toBe("1fr");
+      expect(getCollapseGrid(/Reported Thefts/i).style.gridTemplateRows).toBe(
+        "0fr"
+      );
     });
 
-    it("closes the open section when its header is clicked again", () => {
+    it("collapses the open section when its header is clicked again", () => {
       render(<DrawerPanel {...defaultProps} />);
       fireEvent.click(screen.getByRole("button", { name: /Reported Thefts/i }));
-      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
+      expect(getCollapseGrid(/Reported Thefts/i).style.gridTemplateRows).toBe(
+        "0fr"
+      );
     });
   });
 

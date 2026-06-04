@@ -35,11 +35,19 @@ export function CollapsibleSection({
         </svg>
         <span className="font-medium text-sm">{title}</span>
       </button>
-      {open && (
-        <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300">
-          {children}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: open ? "1fr" : "0fr",
+          transition: "grid-template-rows 300ms ease"
+        }}
+      >
+        <div style={{ overflow: "hidden", minHeight: 0 }}>
+          <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300">
+            {children}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
