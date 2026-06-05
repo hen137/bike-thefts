@@ -7,6 +7,7 @@ import { HeatSlider } from "./HeatSlider";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { SegmentedToggle } from "./SegmentedToggle";
 import { WeightGraph } from "./WeightGraph";
+import { MapThemeSwitcher } from "./MapThemeSwitcher";
 
 type SectionId = "reported" | "predict";
 
@@ -63,20 +64,12 @@ export function DrawerPanel({
             <Drawer.Content className="h-full flex flex-col justify-between select-none">
               <div>
                 {/* Header */}
-                <div className="border-b-2 p-2">
-                  <div className=" rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                <div className="relative border-b-2 p-2">
+                  <MapThemeSwitcher className="absolute top-1/2 right-6 -translate-y-1/2 flex size-7 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
+                  <div className=" rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                     <Drawer.Title className="text-2xl font-bold">
                       biketheftsTO
                     </Drawer.Title>
-                    <Drawer.Description className="text-sm text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
-                      <span className="group-hover:hidden">
-                        statistal analysis for Toronto&apos;s bikers and
-                        commuters, because bike thefts suck
-                      </span>
-                      <span className="hidden group-hover:inline ">
-                        version: 1.0.0
-                      </span>
-                    </Drawer.Description>
                   </div>
                 </div>
                 {/* Range Settings */}
@@ -94,7 +87,7 @@ export function DrawerPanel({
                     />
                   </div>
                 </div>
-                {/* Data Modes */}
+
                 <div className="overflow-y-auto border-b-2">
                   <CollapsibleSection
                     title="Reported Thefts"

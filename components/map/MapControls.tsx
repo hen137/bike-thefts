@@ -14,7 +14,6 @@ import { buildHeatDataFromRows, computeHistBins } from "@/lib/utils/heatmap";
 import { MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
 import { HeatLegend } from "./HeatLegend";
-import { MapThemeSwitcher } from "./MapThemeSwitcher";
 import { MapTileSwitcher } from "./MapTileSwitcher";
 
 const MAX_SLIDER_RANGE = 1000;
@@ -207,7 +206,6 @@ export const MapControls = memo(function MapControls({
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <MapThemeSwitcher className="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
         <MapTileSwitcher buttonClassName="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
       </div>
 

@@ -16,9 +16,6 @@ vi.mock("@/components/map/HeatmapSlider", () => ({
 }));
 vi.mock("@/components/map/HeatLegend", () => ({ HeatLegend: () => null }));
 vi.mock("@/components/debug", () => ({ DebugHUD: () => null }));
-vi.mock("@/components/map/MapThemeSwitcher", () => ({
-  MapThemeSwitcher: () => null
-}));
 vi.mock("@/components/map/MapTileSwitcher", () => ({
   MapTileSwitcher: () => null
 }));

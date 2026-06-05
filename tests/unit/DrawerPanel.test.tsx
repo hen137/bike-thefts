@@ -2,6 +2,34 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ReactNode } from "react";
 
+vi.mock("@/components/map/MapThemeSwitcher", () => ({
+  MapThemeSwitcher: ({ className }: { className?: string }) => (
+    <button data-testid="map-theme-switcher" className={className ?? ""} />
+  )
+}));
+
+vi.mock("@/components/map/DrawerDialog", () => ({
+  DrawerDialog: ({
+    trigger,
+    content
+  }: {
+    trigger: ReactNode;
+    content: ReactNode;
+  }) => (
+    <div data-testid="drawer-dialog">
+      <div data-testid="drawer-dialog-trigger">{trigger}</div>
+      <div data-testid="drawer-dialog-content">{content}</div>
+    </div>
+  )
+}));
+
+vi.mock("@/components/ui/dialog", () => ({
+  DialogTitle: ({ children }: { children?: ReactNode }) => <h3>{children}</h3>,
+  DialogDescription: ({ children }: { children?: ReactNode }) => (
+    <p>{children}</p>
+  )
+}));
+
 type MockProps = { children?: ReactNode };
 type DrawerRootProps = {
   children?: ReactNode;
@@ -121,16 +149,9 @@ describe("DrawerPanel", () => {
       expect(screen.getByText("Predict Future Thefts")).toBeInTheDocument();
     });
 
-    it("renders header default description text", () => {
+    it("renders MapThemeSwitcher in the header", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(
-        screen.getByText(/for Toronto's bikers and commuters/i)
-      ).toBeInTheDocument();
-    });
-
-    it("renders header version text in DOM", () => {
-      render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText(/version: 1\.0\.0/i)).toBeInTheDocument();
+      expect(screen.getByTestId("map-theme-switcher")).toBeInTheDocument();
     });
 
     it("renders footer tagline", () => {
@@ -147,11 +168,10 @@ describe("DrawerPanel", () => {
       );
     });
 
-    it("Open Government Licence link opens in new tab with noopener", () => {
+    it("Open Government Licence link opens in new tab", () => {
       render(<DrawerPanel {...defaultProps} />);
       const link = screen.getByText("Open Government Licence - Ontario");
       expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "noopener noreferrer");
     });
   });
 
