@@ -66,12 +66,12 @@ export function DrawerPanel({
                 <div className="border-b-2 p-2">
                   <div className=" rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                     <Drawer.Title className="text-2xl font-bold">
-                      TObikethefts
+                      biketheftsTO
                     </Drawer.Title>
                     <Drawer.Description className="text-sm text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
                       <span className="group-hover:hidden">
-                        for Toronto&apos;s bikers and commuters, because bike
-                        thefts suck
+                        statistal analysis for Toronto&apos;s bikers and
+                        commuters, because bike thefts suck
                       </span>
                       <span className="hidden group-hover:inline ">
                         version: 1.0.0
@@ -158,7 +158,9 @@ export function DrawerPanel({
               {/* Footer */}
               <div className="border-t-2 p-2">
                 <div className="rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                  <p>Less guessing. More Riding.</p>
+                  <p className="text-md font-semibold text-slate-700 dark:text-slate-300">
+                    worry less, ride more.
+                  </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     Contains information licensed under the{" "}
                     <a
