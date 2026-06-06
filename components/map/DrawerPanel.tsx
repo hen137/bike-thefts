@@ -7,6 +7,8 @@ import { HeatSlider } from "./HeatSlider";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { SegmentedToggle } from "./SegmentedToggle";
 import { WeightGraph } from "./WeightGraph";
+import { DrawerDialog } from "./DrawerDialog";
+import { DialogDescription, DialogTitle } from "../ui/dialog";
 import { MapThemeSwitcher } from "./MapThemeSwitcher";
 
 type SectionId = "reported" | "predict";
@@ -66,12 +68,65 @@ export function DrawerPanel({
                 {/* Header */}
                 <div className="relative border-b-2 p-2">
                   <MapThemeSwitcher className="absolute top-1/2 right-6 -translate-y-1/2 flex size-7 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
-                  <div className=" rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    <Drawer.Title className="text-2xl font-bold">
-                      biketheftsTO
-                    </Drawer.Title>
-                  </div>
+                  <DrawerDialog
+                    trigger={
+                      <div className=" rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                        <Drawer.Title className="text-2xl font-bold">
+                          biketheftsTO
+                        </Drawer.Title>
+                      </div>
+                    }
+                    content={
+                      <div className="flex flex-col gap-2">
+                        {/* About */}
+                        <DialogTitle className="px-2">
+                          About biketheftsTO
+                        </DialogTitle>
+                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                          <p>
+                            biketheftsTO is a tool for analyzing bike theft data
+                            in Toronto.
+                          </p>
+                        </DialogDescription>
+
+                        <div className="border-t-2" />
+
+                        {/* Statistics Disclosure */}
+                        <DialogTitle className="px-2">
+                          Responsible Statistics
+                        </DialogTitle>
+                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                          <p>something</p>
+                        </DialogDescription>
+
+                        <div className="border-t-2" />
+
+                        {/* Data Sources */}
+                        <DialogTitle className="px-2">Data Sources</DialogTitle>
+                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                          <p>
+                            The data used in this tool is sourced from the City
+                            of Toronto&apos;s open data portal.
+                          </p>
+                        </DialogDescription>
+                        <DialogDescription className="text-center text-xs text-slate-500 dark:text-slate-400">
+                          <p>
+                            Contains information licensed under the{" "}
+                            <a
+                              href="https://www.ontario.ca/page/open-government-licence-ontario"
+                              target="_blank"
+                              rel="liscense noreferrer"
+                              className="underline hover:text-slate-700 dark:hover:text-slate-300"
+                            >
+                              Open Government Licence - Ontario
+                            </a>
+                          </p>
+                        </DialogDescription>
+                      </div>
+                    }
+                  />
                 </div>
+
                 {/* Range Settings */}
                 <div className="flex min-h-[120px] flex-col items-center justify-around gap-2 border-b-2 px-4 pb-4 pt-2">
                   <DateRangePicker
@@ -88,6 +143,7 @@ export function DrawerPanel({
                   </div>
                 </div>
 
+                {/* Report Thefts */}
                 <div className="overflow-y-auto border-b-2">
                   <CollapsibleSection
                     title="Reported Thefts"
@@ -130,6 +186,8 @@ export function DrawerPanel({
                       histBins={histBins}
                     />
                   </CollapsibleSection>
+
+                  {/* Predict Thefts */}
                   <CollapsibleSection
                     title="Predict Future Thefts"
                     open={openSection === "predict"}
@@ -148,24 +206,100 @@ export function DrawerPanel({
                   </CollapsibleSection>
                 </div>
               </div>
+
               {/* Footer */}
               <div className="border-t-2 p-2">
-                <div className="rounded-lg p-2 group hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                  <p className="text-md font-semibold text-slate-700 dark:text-slate-300">
-                    worry less, ride more.
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Contains information licensed under the{" "}
-                    <a
-                      href="https://www.ontario.ca/page/open-government-licence-ontario"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline hover:text-slate-700 dark:hover:text-slate-300"
-                    >
-                      Open Government Licence - Ontario
-                    </a>
-                  </p>
-                </div>
+                <DrawerDialog
+                  trigger={
+                    <div className="rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                      <p className="text-md font-semibold text-slate-700 dark:text-slate-300">
+                        worry less, ride more.
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        statistical analysis tools for Toronto&apos;s bikers and
+                        commuters, because bike thefts suck
+                      </p>
+                    </div>
+                  }
+                  content={
+                    <div className="flex flex-col gap-2">
+                      {/* Community */}
+                      <DialogTitle className="px-2">
+                        Toronto&apos;s Bike Community
+                      </DialogTitle>
+                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <ul className="list-disc list-inside">
+                          <li>The Bike Lawyer</li>
+                          <li>Bike Pirates</li>
+                          <li>Bike Brigade</li>
+                        </ul>
+                      </DialogDescription>
+
+                      <div className="border-t-2" />
+
+                      {/* Contributors */}
+                      <DialogTitle className="px-2">Contributors</DialogTitle>
+                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <ul className="list-disc list-inside">
+                          <li>Henry Abramovich</li>
+                          <li>Claude</li>
+                        </ul>
+                      </DialogDescription>
+
+                      <div className="border-t-2" />
+
+                      {/* Special Thanks */}
+                      <DialogTitle className="px-2">Special Thanks</DialogTitle>
+                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <ul className="list-disc list-inside">
+                          <li>Haya Mohammed - Muse</li>
+                        </ul>
+                      </DialogDescription>
+
+                      <div className="border-t-2" />
+
+                      {/* Source and Version */}
+                      <div className="flex flex-row gap-4">
+                        <div>
+                          <DialogTitle className="px-2">Source</DialogTitle>
+                          <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                            hen137/biketheftsTO
+                          </DialogDescription>
+                        </div>
+                        <div>
+                          <DialogTitle className="px-2">Version</DialogTitle>
+                          <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                            COMMIT HASH
+                          </DialogDescription>
+                        </div>
+                      </div>
+
+                      <div className="border-t-2" />
+
+                      {/* Tech Stack */}
+                      <DialogTitle className="px-2">Built With</DialogTitle>
+                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <div className="flex flex-row gap-4">
+                          <ul>
+                            <li>NextJS</li>
+                            <li>React</li>
+                            <li>Tailwind CSS</li>
+                          </ul>
+                          <ul>
+                            <li>Leaflet</li>
+                            <li>Leaflet.heat</li>
+                          </ul>
+                          <ul>
+                            <li>Radix UI</li>
+                            <li>Base UI</li>
+                            <li>shadcn/ui</li>
+                            <li>Lucide</li>
+                          </ul>
+                        </div>
+                      </DialogDescription>
+                    </div>
+                  }
+                />
               </div>
             </Drawer.Content>
           </Drawer.Popup>
