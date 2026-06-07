@@ -85,10 +85,8 @@ export function DrawerPanel({
                           About biketheftsTO
                         </DialogTitle>
                         <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                          <p>
-                            biketheftsTO is a tool for analyzing bike theft data
-                            in Toronto.
-                          </p>
+                          biketheftsTO is a tool for analyzing bike theft data
+                          in Toronto.
                         </DialogDescription>
 
                         <div className="border-t-2" />
@@ -98,7 +96,7 @@ export function DrawerPanel({
                           Responsible Statistics
                         </DialogTitle>
                         <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                          <p>something</p>
+                          something
                         </DialogDescription>
 
                         <div className="border-t-2" />
@@ -106,12 +104,13 @@ export function DrawerPanel({
                         {/* Data Sources */}
                         <DialogTitle className="px-2">Data Sources</DialogTitle>
                         <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                          <p>
-                            The data used in this tool is sourced from the City
-                            of Toronto&apos;s open data portal.
-                          </p>
+                          The data used in this tool is sourced from the City of
+                          Toronto&apos;s open data portal.
                         </DialogDescription>
-                        <DialogDescription className="text-center text-xs text-slate-500 dark:text-slate-400">
+                        <DialogDescription
+                          asChild
+                          className="text-center text-xs text-slate-500 dark:text-slate-400"
+                        >
                           <p>
                             Contains information licensed under the{" "}
                             <a
@@ -219,7 +218,7 @@ export function DrawerPanel({
                       </p>
                       <p className="text-sm text-slate-500 dark:text-slate-400">
                         statistical analysis tools for Toronto&apos;s bikers and
-                        commuters, because bike thefts suck
+                        commuters because bike thefts suck
                       </p>
                     </div>
                   }
@@ -227,7 +226,7 @@ export function DrawerPanel({
                     <div className="flex flex-col gap-2">
                       {/* Community */}
                       <DialogTitle className="px-2">
-                        Toronto&apos;s Bike Community
+                        Toronto Biking Community
                       </DialogTitle>
                       <DialogDescription
                         asChild
