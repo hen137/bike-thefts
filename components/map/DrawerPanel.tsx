@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Drawer } from "@base-ui/react";
+import StackIcon from "tech-stack-icons";
 import { DateRangePicker } from "./DateRangePicker";
 import { HeatSlider } from "./HeatSlider";
 import { CollapsibleSection } from "./CollapsibleSection";
@@ -10,6 +11,7 @@ import { WeightGraph } from "./WeightGraph";
 import { DrawerDialog } from "./DrawerDialog";
 import { DialogDescription, DialogTitle } from "../ui/dialog";
 import { MapThemeSwitcher } from "./MapThemeSwitcher";
+import { TechButton } from "./TechButton";
 
 type SectionId = "reported" | "predict";
 
@@ -298,21 +300,86 @@ export function DrawerPanel({
                         className="text-sm px-2 text-slate-500 dark:text-slate-400"
                       >
                         <div className="flex flex-row gap-4">
-                          <ul>
-                            <li>NextJS</li>
-                            <li>React</li>
-                            <li>Tailwind CSS</li>
-                          </ul>
-                          <ul>
-                            <li>Leaflet</li>
-                            <li>Leaflet.heat</li>
-                          </ul>
-                          <ul>
-                            <li>Radix UI</li>
-                            <li>Base UI</li>
-                            <li>shadcn/ui</li>
-                            <li>Lucide</li>
-                          </ul>
+                          <div className="flex flex-col gap-1">
+                            <TechButton
+                              title="NextJS"
+                              icon={
+                                <StackIcon name="nextjs2" className="w-3 h-3" />
+                              }
+                              link="https://nextjs.org/"
+                            />
+                            <TechButton
+                              title="React"
+                              icon={
+                                <StackIcon name="react" className="w-3 h-3" />
+                              }
+                              link="https://reactjs.org/"
+                            />
+                            <TechButton
+                              title="Tailwind CSS"
+                              icon={
+                                <StackIcon
+                                  name="tailwindcss"
+                                  className="w-3 h-3"
+                                />
+                              }
+                              link="https://tailwindcss.com/"
+                            />
+                            <TechButton
+                              title="SQLite"
+                              icon={
+                                <StackIcon name="sqlite" className="w-3 h-3" />
+                              }
+                              link="https://www.sqlite.org/index.html"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <TechButton
+                              title="Leaflet"
+                              icon={
+                                "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
+                              }
+                              link="https://leafletjs.com/"
+                            />
+                            <TechButton
+                              title="Leaflet.heat"
+                              icon={
+                                "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
+                              }
+                              link="https://github.com/Leaflet/Leaflet.heat"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <TechButton
+                              title="Radix UI"
+                              icon={
+                                <StackIcon name="radixui" className="w-3 h-3" />
+                              }
+                              link="https://www.radix-ui.com/"
+                            />
+                            <TechButton
+                              title="Base UI"
+                              icon={
+                                <StackIcon name="baseui" className="w-3 h-3" />
+                              }
+                              link="https://baseui.com/"
+                            />
+                            <TechButton
+                              title="shadcn/ui"
+                              icon={
+                                <StackIcon
+                                  name="shadcnui"
+                                  className="w-3 h-3"
+                                />
+                              }
+                              link="https://ui.shadcn.com/"
+                            />
+                            <TechButton
+                              title="Lucide"
+                              icon="https://raw.githubusercontent.com/lucide-icons/lucide/423afc6d03c1fb1b86090aa14b13f7f2fa6296e4/docs/public/logo-icon.svg"
+                              link="https://lucide.dev/"
+                            />
+                          </div>
                         </div>
                       </DialogDescription>
                     </div>

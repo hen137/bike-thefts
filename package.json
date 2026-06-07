@@ -34,6 +34,7 @@
     "simple-statistics": "^7.9.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
+    "tech-stack-icons": "^3.7.1",
     "vaul": "^1.1.2",
     "wa-sqlite": "^1.0.0"
   },

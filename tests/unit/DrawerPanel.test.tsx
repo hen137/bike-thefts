@@ -2,6 +2,20 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ReactNode } from "react";
 
+vi.mock("tech-stack-icons", () => ({
+  default: ({ name }: { name: string }) => (
+    <span data-testid={`stack-icon-${name}`} />
+  )
+}));
+
+vi.mock("@/components/map/TechButton", () => ({
+  TechButton: ({ title, link }: { title: string; link?: string }) => (
+    <a data-testid="tech-button" data-title={title} href={link}>
+      {title}
+    </a>
+  )
+}));
+
 vi.mock("@/components/map/MapThemeSwitcher", () => ({
   MapThemeSwitcher: ({ className }: { className?: string }) => (
     <button data-testid="map-theme-switcher" className={className ?? ""} />
@@ -172,6 +186,33 @@ describe("DrawerPanel", () => {
       render(<DrawerPanel {...defaultProps} />);
       const link = screen.getByText("Open Government Licence - Ontario");
       expect(link).toHaveAttribute("target", "_blank");
+    });
+  });
+
+  describe("Tech Stack section", () => {
+    const expectedStack: Record<string, string | undefined> = {
+      NextJS: "https://nextjs.org/",
+      React: "https://reactjs.org/",
+      "Tailwind CSS": "https://tailwindcss.com/",
+      SQLite: "https://www.sqlite.org/index.html",
+      Leaflet: "https://leafletjs.com/",
+      "Leaflet.heat": "https://github.com/Leaflet/Leaflet.heat",
+      "Radix UI": "https://www.radix-ui.com/",
+      "Base UI": "https://baseui.com/",
+      "shadcn/ui": "https://ui.shadcn.com/",
+      Lucide: "https://lucide.dev/"
+    };
+
+    it("renders a TechButton for every tech with the correct link", () => {
+      render(<DrawerPanel {...defaultProps} />);
+      const buttons = screen.getAllByTestId("tech-button");
+      const byTitle = new Map(
+        buttons.map((b) => [b.dataset.title, b.getAttribute("href")])
+      );
+      expect(byTitle.size).toBe(Object.keys(expectedStack).length);
+      for (const [title, link] of Object.entries(expectedStack)) {
+        expect(byTitle.get(title)).toBe(link);
+      }
     });
   });
 
