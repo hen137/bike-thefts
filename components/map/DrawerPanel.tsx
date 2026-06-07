@@ -227,7 +227,10 @@ export function DrawerPanel({
                       <DialogTitle className="px-2">
                         Toronto&apos;s Bike Community
                       </DialogTitle>
-                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                      <DialogDescription
+                        asChild
+                        className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                      >
                         <ul className="list-disc list-inside">
                           <li>The Bike Lawyer</li>
                           <li>Bike Pirates</li>
@@ -239,7 +242,10 @@ export function DrawerPanel({
 
                       {/* Contributors */}
                       <DialogTitle className="px-2">Contributors</DialogTitle>
-                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                      <DialogDescription
+                        asChild
+                        className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                      >
                         <ul className="list-disc list-inside">
                           <li>Henry Abramovich</li>
                           <li>Claude</li>
@@ -250,7 +256,10 @@ export function DrawerPanel({
 
                       {/* Special Thanks */}
                       <DialogTitle className="px-2">Special Thanks</DialogTitle>
-                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                      <DialogDescription
+                        asChild
+                        className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                      >
                         <ul className="list-disc list-inside">
                           <li>Haya Mohammed - Muse</li>
                         </ul>
@@ -262,14 +271,20 @@ export function DrawerPanel({
                       <div className="flex flex-row gap-4">
                         <div>
                           <DialogTitle className="px-2">Source</DialogTitle>
-                          <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                            hen137/biketheftsTO
+                          <DialogDescription
+                            asChild
+                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <p>hen137/biketheftsTO</p>
                           </DialogDescription>
                         </div>
                         <div>
                           <DialogTitle className="px-2">Version</DialogTitle>
-                          <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                            COMMIT HASH
+                          <DialogDescription
+                            asChild
+                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <p>COMMIT HASH</p>
                           </DialogDescription>
                         </div>
                       </div>
@@ -278,7 +293,10 @@ export function DrawerPanel({
 
                       {/* Tech Stack */}
                       <DialogTitle className="px-2">Built With</DialogTitle>
-                      <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                      <DialogDescription
+                        asChild
+                        className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                      >
                         <div className="flex flex-row gap-4">
                           <ul>
                             <li>NextJS</li>
