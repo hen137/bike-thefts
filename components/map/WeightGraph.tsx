@@ -17,8 +17,13 @@ const X0 = 42,
   X1 = 210,
   Y0 = 102,
   Y1 = 18;
+
+// Consistent gap between the x-axis line, the range labels, and the chart border —
+// keeping both offsets equal to LABEL_PAD gives the labels even breathing room.
+const LABEL_PAD = 14;
+const LABEL_Y = Y0 + LABEL_PAD;
 const VW = 240,
-  VH = 116;
+  VH = LABEL_Y + LABEL_PAD;
 
 const PW = 8,
   PH = 20;
@@ -259,23 +264,23 @@ export function WeightGraph({
             {/* X-axis range labels — reflect the selected date range's actual ends */}
             <text
               x={X0}
-              y={Y0 + 10}
+              y={LABEL_Y}
               fontSize={9}
               fill={LABEL}
               textAnchor="start"
               dominantBaseline="middle"
             >
-              {flipped ? "start" : "end"}
+              {flipped ? "START" : "END"}
             </text>
             <text
               x={X1 + 8}
-              y={Y0 + 10}
+              y={LABEL_Y}
               fontSize={9}
               fill={LABEL}
               textAnchor="end"
               dominantBaseline="middle"
             >
-              {flipped ? "end" : "start"}
+              {flipped ? "END" : "START"}
             </text>
 
             {/* Flip-direction button — placeholder glyph, exact design TBD */}
@@ -287,8 +292,8 @@ export function WeightGraph({
             >
               <text
                 x={(X0 + X1) / 2}
-                y={Y0 + 10}
-                fontSize={9}
+                y={LABEL_Y}
+                fontSize={14}
                 fill={LABEL}
                 textAnchor="middle"
                 dominantBaseline="middle"

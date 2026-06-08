@@ -159,26 +159,26 @@ describe("WeightGraph", () => {
   });
 
   describe("direction labels & flip button", () => {
-    it("shows 'end' at the left edge and 'start' at the right edge by default", () => {
+    it("shows 'END' at the left edge and 'START' at the right edge by default", () => {
       const { container } = render(
         <WeightGraph mode="Lin" k={1} onKChange={noop} />
       );
       // X0 = 42 is the left plot edge in WeightGraph.tsx
       const leftLabel = container.querySelector('text[x="42"]');
-      expect(leftLabel?.textContent).toBe("end");
+      expect(leftLabel?.textContent).toBe("END");
       const texts = Array.from(container.querySelectorAll("text")).map(
         (el) => el.textContent
       );
-      expect(texts).toContain("start");
+      expect(texts).toContain("START");
     });
 
-    it("swaps to 'start' at the left edge when flipped", () => {
+    it("swaps to 'START' at the left edge when flipped", () => {
       const { container } = render(
         <WeightGraph mode="Lin" k={1} onKChange={noop} flipped />
       );
       // X0 = 42 is the left plot edge in WeightGraph.tsx
       const leftLabel = container.querySelector('text[x="42"]');
-      expect(leftLabel?.textContent).toBe("start");
+      expect(leftLabel?.textContent).toBe("START");
     });
 
     it("calls onFlipToggle when the flip button is clicked", () => {
