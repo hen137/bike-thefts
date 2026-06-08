@@ -108,14 +108,24 @@ vi.mock("@/components/map/WeightGraph", () => ({
   WeightGraph: ({
     mode,
     k,
-    onKChange
+    onKChange,
+    flipped,
+    onFlipToggle
   }: {
     mode: string;
     k: number;
     onKChange: (k: number) => void;
+    flipped?: boolean;
+    onFlipToggle?: () => void;
   }) => (
-    <div data-testid="weight-graph" data-mode={mode} data-k={String(k)}>
+    <div
+      data-testid="weight-graph"
+      data-mode={mode}
+      data-k={String(k)}
+      data-flipped={String(flipped)}
+    >
       <button onClick={() => onKChange(0.5)}>change-k</button>
+      <button onClick={() => onFlipToggle?.()}>toggle-flip</button>
     </div>
   )
 }));
@@ -135,7 +145,9 @@ const defaultProps = {
   weightKInv: 0.5,
   setWeightKInv: vi.fn(),
   weightKInvQuad: 0.25,
-  setWeightKInvQuad: vi.fn()
+  setWeightKInvQuad: vi.fn(),
+  weightFlipped: false,
+  onWeightFlipToggle: vi.fn()
 };
 
 describe("DrawerPanel", () => {
@@ -430,6 +442,24 @@ describe("DrawerPanel", () => {
       );
       fireEvent.click(screen.getByRole("button", { name: "change-k" }));
       expect(setWeightKInvQuad).toHaveBeenCalledWith(0.5);
+    });
+
+    it("passes weightFlipped to WeightGraph as 'flipped'", () => {
+      render(<DrawerPanel {...defaultProps} weightFlipped={true} />);
+      const graph = screen.getByTestId("weight-graph");
+      expect(graph.dataset.flipped).toBe("true");
+    });
+
+    it("calls onWeightFlipToggle when WeightGraph fires onFlipToggle", () => {
+      const onWeightFlipToggle = vi.fn();
+      render(
+        <DrawerPanel
+          {...defaultProps}
+          onWeightFlipToggle={onWeightFlipToggle}
+        />
+      );
+      fireEvent.click(screen.getByRole("button", { name: "toggle-flip" }));
+      expect(onWeightFlipToggle).toHaveBeenCalledTimes(1);
     });
   });
 });
