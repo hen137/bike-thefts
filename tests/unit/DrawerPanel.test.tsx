@@ -153,9 +153,9 @@ describe("DrawerPanel", () => {
       expect(screen.getByText("biketheftsTO")).toBeInTheDocument();
     });
 
-    it("renders Reported Thefts section", () => {
+    it("renders Visualize Reported Thefts section", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Reported Thefts")).toBeInTheDocument();
+      expect(screen.getByText("Visualize Reported Thefts")).toBeInTheDocument();
     });
 
     it("renders Predict Future Thefts section", () => {
@@ -273,7 +273,7 @@ describe("DrawerPanel", () => {
   });
 
   describe("collapsible sections — accordion behaviour", () => {
-    it("opens Reported Thefts by default", () => {
+    it("opens Visualize Reported Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
       expect(screen.getByText("Local Scaling")).toBeInTheDocument();
       expect(screen.getByText("Time Weighting")).toBeInTheDocument();
@@ -284,7 +284,7 @@ describe("DrawerPanel", () => {
       expect(screen.queryByText("Poisson")).not.toBeInTheDocument();
     });
 
-    it("opens Predict Future Thefts and collapses Reported Thefts on click", () => {
+    it("opens Predict Future Thefts and collapses Visualize Reported Thefts on click", () => {
       render(<DrawerPanel {...defaultProps} />);
       fireEvent.click(
         screen.getByRole("button", { name: /Predict Future Thefts/i })
@@ -295,7 +295,9 @@ describe("DrawerPanel", () => {
 
     it("collapses the open section when its header is clicked again", () => {
       render(<DrawerPanel {...defaultProps} />);
-      fireEvent.click(screen.getByRole("button", { name: /Reported Thefts/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: /Visualize Reported Thefts/i })
+      );
       expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
     });
   });

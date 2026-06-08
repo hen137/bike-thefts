@@ -166,7 +166,7 @@ export function DrawerPanel({
 
                 {/* Report Thefts */}
                 <CollapsibleSection
-                  title="Reported Thefts"
+                  title="Visualize Reported Thefts"
                   open={openSection === "reported"}
                   onToggle={() => toggle("reported")}
                 >
