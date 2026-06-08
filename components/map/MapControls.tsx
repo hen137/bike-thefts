@@ -38,6 +38,7 @@ interface MapControlsProps {
   timeWeighting: "None" | "Lin" | "Inv" | "InvQuad";
   weightKInv: number;
   weightKInvQuad: number;
+  weightFlipped: boolean;
   onHistBins: (bins: number[]) => void;
 }
 
@@ -54,6 +55,7 @@ export const MapControls = memo(function MapControls({
   timeWeighting,
   weightKInv,
   weightKInvQuad,
+  weightFlipped,
   onHistBins
 }: MapControlsProps) {
   const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
@@ -153,6 +155,7 @@ export const MapControls = memo(function MapControls({
       worker.queryHeatmap(startISO, endISO).then((rows) => {
         const activeK =
           timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
+        const refDate = weightFlipped ? startDate : endDate;
         const { values, avgIntensity } = buildHeatDataFromRows(
           rows,
           byHood,
@@ -161,13 +164,13 @@ export const MapControls = memo(function MapControls({
             | "lin"
             | "inv"
             | "invquad",
-          endDate,
+          refDate,
           activeK
         );
         setHeatValues(values);
         setAvgIntensity(avgIntensity);
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
-        onHistBins(computeHistBins(rows, endDate));
+        onHistBins(computeHistBins(rows, refDate));
       });
     }
   }, [
@@ -179,7 +182,8 @@ export const MapControls = memo(function MapControls({
     byHood,
     timeWeighting,
     weightKInv,
-    weightKInvQuad
+    weightKInvQuad,
+    weightFlipped
   ]);
 
   return (
