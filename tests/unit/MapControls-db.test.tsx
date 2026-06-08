@@ -235,7 +235,11 @@ describe("MapControls — DB query integration", () => {
     ).not.toThrow();
   });
 
-  it("re-queries the heatmap when byHood prop changes", async () => {
+  it("recomputes heat values without re-querying when byHood prop changes", async () => {
+    const heatLayerHook = setHeatLayerMock();
+    mockUseLeafletHeatLayer.mockReturnValue(
+      heatLayerHook as unknown as ReturnType<typeof useLeafletHeatLayer>
+    );
     const mockQueryHeatmap = vi.fn().mockResolvedValue(sampleRows);
 
     mockUseDbContext.mockReturnValue({
@@ -255,12 +259,17 @@ describe("MapControls — DB query integration", () => {
       refresh: vi.fn()
     } as unknown as ReturnType<typeof useDbContext>);
 
+    // Shared array reference across both renders — a fresh literal on each JSX
+    // render would itself trigger the query effect (it depends on
+    // committedSliderValues by reference), masking what we're testing here.
+    const committedSliderValues = [750, 1000];
+
     const { rerender } = render(
       <MapControls
         drawerOpen={false}
         onDrawerToggle={() => {}}
         sliderValues={[750, 1000]}
-        committedSliderValues={[750, 1000]}
+        committedSliderValues={committedSliderValues}
         startDate={null}
         setStartDate={() => {}}
         endDate={null}
@@ -271,14 +280,17 @@ describe("MapControls — DB query integration", () => {
       />
     );
 
-    await waitFor(() => expect(mockQueryHeatmap).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(heatLayerHook.setHeatValues).toHaveBeenCalledTimes(1)
+    );
+    expect(mockQueryHeatmap).toHaveBeenCalledTimes(1);
 
     rerender(
       <MapControls
         drawerOpen={false}
         onDrawerToggle={() => {}}
         sliderValues={[750, 1000]}
-        committedSliderValues={[750, 1000]}
+        committedSliderValues={committedSliderValues}
         startDate={null}
         setStartDate={() => {}}
         endDate={null}
@@ -289,7 +301,12 @@ describe("MapControls — DB query integration", () => {
       />
     );
 
-    await waitFor(() => expect(mockQueryHeatmap).toHaveBeenCalledTimes(2));
+    // byHood only changes how cached rows are aggregated — the underlying query
+    // for the date range doesn't need to run again.
+    await waitFor(() =>
+      expect(heatLayerHook.setHeatValues).toHaveBeenCalledTimes(2)
+    );
+    expect(mockQueryHeatmap).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -53,14 +53,14 @@ describe("WeightGraph", () => {
       expect(container.querySelector("svg")).toBeTruthy();
     });
 
-    it("renders axis labels 'weight', '1' and '0'", () => {
+    it("renders axis labels 'WEIGHT', '1' and '0'", () => {
       const { container } = render(
         <WeightGraph mode="Inv" k={1} onKChange={noop} />
       );
       const texts = Array.from(container.querySelectorAll("text")).map(
         (el) => el.textContent
       );
-      expect(texts).toContain("weight");
+      expect(texts).toContain("WEIGHT");
       expect(texts).toContain("1");
       expect(texts).toContain("0");
     });

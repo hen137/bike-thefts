@@ -11,7 +11,7 @@ import {
 import { DEFAULT_HEATMAP_CONFIG } from "@/constants/map-config";
 import { calcRawSliderToDates } from "@/lib/utils";
 import { buildHeatDataFromRows, computeHistBins } from "@/lib/utils/heatmap";
-import { MonthYear } from "@/types";
+import { HeatRow, MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
 import { HeatLegend } from "./HeatLegend";
 import { MapTileSwitcher } from "./MapTileSwitcher";
@@ -129,6 +129,16 @@ export const MapControls = memo(function MapControls({
     }
   }, [sliderValues, isReady, initResult]);
 
+  const [rows, setRows] = useState<HeatRow[]>([]);
+  const [queryRange, setQueryRange] = useState<{
+    start: MonthYear;
+    end: MonthYear;
+  } | null>(null);
+
+  // Fetches rows for the committed date range from the worker — the only effect that
+  // hits the DB. Weighting/aggregation params (byHood, timeWeighting, weightK*,
+  // weightFlipped) don't change which rows are needed, so they're handled by the
+  // recompute effect below using these cached rows — no DB round-trip on toggle.
   useEffect(() => {
     if (isReady && worker) {
       const { startDate, endDate } = calcRawSliderToDates(
@@ -153,37 +163,42 @@ export const MapControls = memo(function MapControls({
         .split("T")[0];
 
       worker.queryHeatmap(startISO, endISO).then((rows) => {
-        const activeK =
-          timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
-        const refDate = weightFlipped ? startDate : endDate;
-        const { values, avgIntensity } = buildHeatDataFromRows(
-          rows,
-          byHood,
-          timeWeighting.toLocaleLowerCase() as
-            | "none"
-            | "lin"
-            | "inv"
-            | "invquad",
-          refDate,
-          activeK
-        );
-        setHeatValues(values);
-        setAvgIntensity(avgIntensity);
+        // Set together so the recompute effect runs once per query, not once
+        // for the range change and again when rows arrive.
+        setRows(rows);
+        setQueryRange({ start: startDate, end: endDate });
         setCurrentQueryCount(rows.reduce((acc, r) => acc + r.count, 0));
-        onHistBins(computeHistBins(rows, refDate));
       });
     }
+  }, [committedSliderValues, isReady, worker, initResult]);
+
+  // Derives heat values + histogram from the cached rows — runs on every weighting/
+  // aggregation change (including flip) without re-querying the DB, so toggling is instant.
+  useEffect(() => {
+    if (!queryRange) return;
+
+    const activeK = timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
+    const refDate = weightFlipped ? queryRange.start : queryRange.end;
+    const { values, avgIntensity } = buildHeatDataFromRows(
+      rows,
+      byHood,
+      timeWeighting.toLocaleLowerCase() as "none" | "lin" | "inv" | "invquad",
+      refDate,
+      activeK
+    );
+    setHeatValues(values);
+    setAvgIntensity(avgIntensity);
+    onHistBins(computeHistBins(rows, refDate));
   }, [
-    committedSliderValues,
-    isReady,
-    worker,
-    initResult,
-    setHeatValues,
+    rows,
+    queryRange,
     byHood,
     timeWeighting,
     weightKInv,
     weightKInvQuad,
-    weightFlipped
+    weightFlipped,
+    setHeatValues,
+    onHistBins
   ]);
 
   return (

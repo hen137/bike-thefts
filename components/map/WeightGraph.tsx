@@ -22,7 +22,9 @@ const X0 = 42,
 // keeping both offsets equal to LABEL_PAD gives the labels even breathing room.
 const LABEL_PAD = 14;
 const LABEL_Y = Y0 + LABEL_PAD;
-const VW = 240,
+// VW = X0 + X1 gives the plot rectangle equal left/right margins, centering
+// the chart inside the viewBox.
+const VW = X0 + X1,
   VH = LABEL_Y + LABEL_PAD;
 
 const PW = 8,
@@ -229,14 +231,14 @@ export function WeightGraph({
 
             {/* Y-axis "weight" label — snug to the axis */}
             <text
-              x={20}
+              x={26}
               y={midY}
               fontSize={9}
               fill={LABEL}
               textAnchor="middle"
-              transform={`rotate(-90,20,${midY})`}
+              transform={`rotate(-90,26,${midY})`}
             >
-              weight
+              WEIGHT
             </text>
 
             {/* Y-axis tick values */}
