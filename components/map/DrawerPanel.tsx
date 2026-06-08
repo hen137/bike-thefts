@@ -236,248 +236,254 @@ export function DrawerPanel({
               </div>
 
               {/* Footer */}
-              <div className="border-t p-2">
-                <DrawerDialog
-                  trigger={
-                    <div className="rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                      <p className="text-md font-semibold text-slate-700 dark:text-slate-300">
-                        worry less, ride more.
-                      </p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
-                        statistical analysis tools for Toronto&apos;s bikers and
-                        commuters because bike thefts suck
-                      </p>
-                    </div>
-                  }
-                  content={
-                    <div className="flex flex-col gap-2 select-none">
-                      {/* Community */}
-                      <DrawerSection
-                        title={
-                          <DialogTitle className="px-2 text-base">
-                            Toronto Biking Community
-                          </DialogTitle>
-                        }
-                      >
-                        <DialogDescription
-                          asChild
-                          className="text-sm px-2 text-slate-500 dark:text-slate-400"
-                        >
-                          <ul className="list-disc list-inside">
-                            <li>The Bike Lawyer</li>
-                            <li>Bike Pirates</li>
-                            <li>Bike Brigade</li>
-                          </ul>
-                        </DialogDescription>
-                      </DrawerSection>
-
-                      {/* Contributors */}
-                      <DrawerSection
-                        title={
-                          <DialogTitle className="px-2 text-base">
-                            Contributors
-                          </DialogTitle>
-                        }
-                      >
-                        <DialogDescription
-                          // asChild
-                          className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
-                        >
-                          <a
-                            href="https://www.linkedin.com/in/henry-abramovich/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
-                          >
-                            Henry Abramovich
-                          </a>
-                          <a
-                            href=""
-                            className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
-                          >
-                            Claude
-                          </a>
-                        </DialogDescription>
-                      </DrawerSection>
-
-                      {/* Special Thanks */}
-                      <DrawerSection
-                        title={
-                          <DialogTitle className="px-2 text-base">
-                            Special Thanks
-                          </DialogTitle>
-                        }
-                      >
-                        <DialogDescription
-                          // asChild
-                          className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
-                        >
-                          <a
-                            href="https://www.linkedin.com/in/mhaya/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
-                          >
-                            Haya Mohamed
-                          </a>
-                        </DialogDescription>
-                      </DrawerSection>
-
-                      {/* Source and Version */}
-                      <div className="flex gap-5 text-nowrap">
-                        <div>
-                          <DrawerSection
-                            title={
-                              <DialogTitle className="px-2 text-base">
-                                Source
-                              </DialogTitle>
-                            }
-                          >
-                            <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
-                              <a
-                                href="https://github.com/hen137/bike-thefts"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-slate-700 dark:hover:text-slate-300"
-                              >
-                                hen137/biketheftsTO
-                              </a>
-                            </DialogDescription>
-                          </DrawerSection>
-                        </div>
-                        <div className="w-full">
-                          <DrawerSection
-                            title={
-                              <DialogTitle className="px-2 text-base">
-                                Version
-                              </DialogTitle>
-                            }
-                          >
-                            <DialogDescription className="flex gap-2 items-center text-sm px-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
-                              <GitCommitHorizontal className="size-5" />
-                              <a
-                                href=""
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                COMMIT HASH
-                              </a>
-                            </DialogDescription>
-                          </DrawerSection>
-                        </div>
+              <div className="py-2">
+                <div className="mx-2 border-t" />
+                <div className="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                  <DrawerDialog
+                    trigger={
+                      <div className=" ">
+                        <p className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+                          worry less, ride more.
+                        </p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          statistical analysis tools for Toronto&apos;s bikers
+                          and commuters because bike thefts suck
+                        </p>
                       </div>
-
-                      {/* Tech Stack */}
-                      <DrawerSection
-                        title={
-                          <DialogTitle className="px-2 text-base">
-                            Built With
-                          </DialogTitle>
-                        }
-                      >
-                        <DialogDescription
-                          asChild
-                          className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                    }
+                    content={
+                      <div className="flex flex-col gap-2 select-none">
+                        {/* Community */}
+                        <DrawerSection
+                          title={
+                            <DialogTitle className="px-2 text-base">
+                              Toronto Biking Community
+                            </DialogTitle>
+                          }
                         >
-                          <div className="flex flex-row gap-4">
-                            <div className="flex flex-col gap-1">
-                              <TechButton
-                                title="NextJS"
-                                icon={
-                                  <StackIcon
-                                    name="nextjs2"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://nextjs.org/"
-                              />
-                              <TechButton
-                                title="React"
-                                icon={
-                                  <StackIcon name="react" className="w-3 h-3" />
-                                }
-                                link="https://reactjs.org/"
-                              />
-                              <TechButton
-                                title="Tailwind CSS"
-                                icon={
-                                  <StackIcon
-                                    name="tailwindcss"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://tailwindcss.com/"
-                              />
-                              <TechButton
-                                title="SQLite"
-                                icon={
-                                  <StackIcon
-                                    name="sqlite"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://www.sqlite.org/index.html"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <TechButton
-                                title="Leaflet"
-                                icon={
-                                  "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
-                                }
-                                link="https://leafletjs.com/"
-                              />
-                              <TechButton
-                                title="Leaflet.heat"
-                                icon={
-                                  "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
-                                }
-                                link="https://github.com/Leaflet/Leaflet.heat"
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <TechButton
-                                title="Radix UI"
-                                icon={
-                                  <StackIcon
-                                    name="radixui"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://www.radix-ui.com/"
-                              />
-                              <TechButton
-                                title="Base UI"
-                                icon={
-                                  <StackIcon
-                                    name="baseui"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://baseui.com/"
-                              />
-                              <TechButton
-                                title="shadcn/ui"
-                                icon={
-                                  <StackIcon
-                                    name="shadcnui"
-                                    className="w-3 h-3"
-                                  />
-                                }
-                                link="https://ui.shadcn.com/"
-                              />
-                              <TechButton
-                                title="Lucide"
-                                icon="https://raw.githubusercontent.com/lucide-icons/lucide/423afc6d03c1fb1b86090aa14b13f7f2fa6296e4/docs/public/logo-icon.svg"
-                                link="https://lucide.dev/"
-                              />
-                            </div>
+                          <DialogDescription
+                            asChild
+                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <ul className="list-disc list-inside">
+                              <li>The Bike Lawyer</li>
+                              <li>Bike Pirates</li>
+                              <li>Bike Brigade</li>
+                            </ul>
+                          </DialogDescription>
+                        </DrawerSection>
+
+                        {/* Contributors */}
+                        <DrawerSection
+                          title={
+                            <DialogTitle className="px-2 text-base">
+                              Contributors
+                            </DialogTitle>
+                          }
+                        >
+                          <DialogDescription
+                            // asChild
+                            className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <a
+                              href="https://www.linkedin.com/in/henry-abramovich/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                            >
+                              Henry Abramovich
+                            </a>
+                            <a
+                              href=""
+                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                            >
+                              Claude
+                            </a>
+                          </DialogDescription>
+                        </DrawerSection>
+
+                        {/* Special Thanks */}
+                        <DrawerSection
+                          title={
+                            <DialogTitle className="px-2 text-base">
+                              Special Thanks
+                            </DialogTitle>
+                          }
+                        >
+                          <DialogDescription
+                            // asChild
+                            className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <a
+                              href="https://www.linkedin.com/in/mhaya/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                            >
+                              Haya Mohamed
+                            </a>
+                          </DialogDescription>
+                        </DrawerSection>
+
+                        {/* Source and Version */}
+                        <div className="flex gap-5 text-nowrap">
+                          <div>
+                            <DrawerSection
+                              title={
+                                <DialogTitle className="px-2 text-base">
+                                  Source
+                                </DialogTitle>
+                              }
+                            >
+                              <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                                <a
+                                  href="https://github.com/hen137/bike-thefts"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:text-slate-700 dark:hover:text-slate-300"
+                                >
+                                  hen137/biketheftsTO
+                                </a>
+                              </DialogDescription>
+                            </DrawerSection>
                           </div>
-                        </DialogDescription>
-                      </DrawerSection>
-                    </div>
-                  }
-                />
+                          <div className="w-full">
+                            <DrawerSection
+                              title={
+                                <DialogTitle className="px-2 text-base">
+                                  Version
+                                </DialogTitle>
+                              }
+                            >
+                              <DialogDescription className="flex gap-2 items-center text-sm px-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+                                <GitCommitHorizontal className="size-5" />
+                                <a
+                                  href=""
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  COMMIT HASH
+                                </a>
+                              </DialogDescription>
+                            </DrawerSection>
+                          </div>
+                        </div>
+
+                        {/* Tech Stack */}
+                        <DrawerSection
+                          title={
+                            <DialogTitle className="px-2 text-base">
+                              Built With
+                            </DialogTitle>
+                          }
+                        >
+                          <DialogDescription
+                            asChild
+                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                          >
+                            <div className="flex flex-row gap-4">
+                              <div className="flex flex-col gap-1">
+                                <TechButton
+                                  title="NextJS"
+                                  icon={
+                                    <StackIcon
+                                      name="nextjs2"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://nextjs.org/"
+                                />
+                                <TechButton
+                                  title="React"
+                                  icon={
+                                    <StackIcon
+                                      name="react"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://reactjs.org/"
+                                />
+                                <TechButton
+                                  title="Tailwind CSS"
+                                  icon={
+                                    <StackIcon
+                                      name="tailwindcss"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://tailwindcss.com/"
+                                />
+                                <TechButton
+                                  title="SQLite"
+                                  icon={
+                                    <StackIcon
+                                      name="sqlite"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://www.sqlite.org/index.html"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <TechButton
+                                  title="Leaflet"
+                                  icon={
+                                    "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
+                                  }
+                                  link="https://leafletjs.com/"
+                                />
+                                <TechButton
+                                  title="Leaflet.heat"
+                                  icon={
+                                    "https://raw.githubusercontent.com/Leaflet/Leaflet/refs/heads/main/docs/docs/images/favicon.ico"
+                                  }
+                                  link="https://github.com/Leaflet/Leaflet.heat"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <TechButton
+                                  title="Radix UI"
+                                  icon={
+                                    <StackIcon
+                                      name="radixui"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://www.radix-ui.com/"
+                                />
+                                <TechButton
+                                  title="Base UI"
+                                  icon={
+                                    <StackIcon
+                                      name="baseui"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://baseui.com/"
+                                />
+                                <TechButton
+                                  title="shadcn/ui"
+                                  icon={
+                                    <StackIcon
+                                      name="shadcnui"
+                                      className="w-3 h-3"
+                                    />
+                                  }
+                                  link="https://ui.shadcn.com/"
+                                />
+                                <TechButton
+                                  title="Lucide"
+                                  icon="https://raw.githubusercontent.com/lucide-icons/lucide/423afc6d03c1fb1b86090aa14b13f7f2fa6296e4/docs/public/logo-icon.svg"
+                                  link="https://lucide.dev/"
+                                />
+                              </div>
+                            </div>
+                          </DialogDescription>
+                        </DrawerSection>
+                      </div>
+                    }
+                  />
+                </div>
               </div>
             </Drawer.Content>
           </Drawer.Popup>
