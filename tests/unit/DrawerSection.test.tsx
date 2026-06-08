@@ -27,10 +27,19 @@ describe("DrawerSection", () => {
     expect(screen.getByText("Settings")).toBeInTheDocument();
   });
 
-  it("applies className to wrapper", () => {
+  it("renders title row and children as siblings without a wrapper element", () => {
     const { container } = render(
-      <DrawerSection title="Settings" className="custom-class" />
+      <DrawerSection title="Settings">
+        <p>section body</p>
+      </DrawerSection>
     );
-    expect(container.firstElementChild).toHaveClass("custom-class");
+    expect(container.children).toHaveLength(2);
+    expect(container.children[0]).toHaveClass(
+      "flex",
+      "items-center",
+      "py-2",
+      "gap-2"
+    );
+    expect(container.children[1].textContent).toBe("section body");
   });
 });

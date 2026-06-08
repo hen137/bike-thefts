@@ -143,9 +143,9 @@ export function DrawerPanel({
                 />
               </div>
 
-              <div className="flex-1 overflow-y-auto px-2">
+              <div className="flex-1 overflow-y-auto">
                 {/* Range Settings */}
-                <div>
+                <div className="px-2">
                   <DrawerSection title="Date Range">
                     <div className="flex min-h-30 flex-col items-center justify-around px-2 border-t">
                       <DateRangePicker
@@ -165,6 +165,7 @@ export function DrawerPanel({
                 </div>
 
                 {/* Report Thefts */}
+                {/* <div className="px-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"> */}
                 <CollapsibleSection
                   title="Visualize Reported Thefts"
                   open={openSection === "reported"}
@@ -212,6 +213,7 @@ export function DrawerPanel({
                     />
                   </div>
                 </CollapsibleSection>
+                {/* </div> */}
 
                 {/* Predict Thefts */}
                 <CollapsibleSection

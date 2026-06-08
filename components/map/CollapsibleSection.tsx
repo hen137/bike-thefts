@@ -15,9 +15,10 @@ export function CollapsibleSection({
 }: CollapsibleSectionProps) {
   return (
     <div className="gap-1">
+      {/* <div className="px-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"> */}
       <button
         onClick={onToggle}
-        className={`flex w-full items-center gap-2 mb-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors`}
+        className={`flex w-full items-center gap-2 py-2 text-left px-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors`}
         aria-expanded={open}
       >
         <svg
@@ -34,11 +35,12 @@ export function CollapsibleSection({
           <polyline points="9 18 15 12 9 6" />
         </svg>
         <span className="font-medium text-sm text-nowrap">{title}</span>
-        <div className="h-px bg-gray-200 w-full translate-y-0.5" />
+        <div className="h-px bg-gray-200 w-full " />
       </button>
+      {/* </div> */}
 
       {open && (
-        <div className="flex flex-col items-center gap-y-2 pb-2 text-sm text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col items-center gap-y-2 px-2 text-sm text-slate-700 dark:text-slate-300">
           {children}
         </div>
       )}
