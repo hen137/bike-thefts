@@ -7,6 +7,8 @@ interface WeightGraphProps {
   k: number;
   onKChange: (k: number) => void;
   histBins?: number[];
+  flipped?: boolean;
+  onFlipToggle?: () => void;
 }
 
 // X0/X1/Y0/Y1 snap to the dot grid (dots at multiples of 12, offset 6)
@@ -63,7 +65,9 @@ export function WeightGraph({
   mode,
   k,
   onKChange,
-  histBins
+  histBins,
+  flipped = false,
+  onFlipToggle = () => {}
 }: WeightGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragging = useRef(false);
@@ -252,17 +256,46 @@ export function WeightGraph({
               0
             </text>
 
-            {/* X-axis label — starts just right of the arrowhead */}
+            {/* X-axis range labels — reflect the selected date range's actual ends */}
             <text
-              x={X1 + 14}
-              y={Y0}
+              x={X0}
+              y={Y0 + 10}
               fontSize={9}
               fill={LABEL}
               textAnchor="start"
               dominantBaseline="middle"
             >
-              Δt
+              {flipped ? "start" : "end"}
             </text>
+            <text
+              x={X1 + 8}
+              y={Y0 + 10}
+              fontSize={9}
+              fill={LABEL}
+              textAnchor="end"
+              dominantBaseline="middle"
+            >
+              {flipped ? "end" : "start"}
+            </text>
+
+            {/* Flip-direction button — placeholder glyph, exact design TBD */}
+            <g
+              role="button"
+              aria-label="Flip weighting direction"
+              onClick={onFlipToggle}
+              style={{ cursor: "pointer" }}
+            >
+              <text
+                x={(X0 + X1) / 2}
+                y={Y0 + 10}
+                fontSize={9}
+                fill={LABEL}
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                ⇄
+              </text>
+            </g>
 
             {/* Time-delta histogram — dim bars behind the curve */}
             {histBins && histBins.length > 0 && (

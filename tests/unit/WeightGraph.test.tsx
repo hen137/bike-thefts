@@ -53,7 +53,7 @@ describe("WeightGraph", () => {
       expect(container.querySelector("svg")).toBeTruthy();
     });
 
-    it("renders axis labels 'weight', '1', '0' and 'Δt'", () => {
+    it("renders axis labels 'weight', '1' and '0'", () => {
       const { container } = render(
         <WeightGraph mode="Inv" k={1} onKChange={noop} />
       );
@@ -63,7 +63,6 @@ describe("WeightGraph", () => {
       expect(texts).toContain("weight");
       expect(texts).toContain("1");
       expect(texts).toContain("0");
-      expect(texts).toContain("Δt");
     });
 
     it("renders a curve path when mode is not None", () => {
@@ -156,6 +155,46 @@ describe("WeightGraph", () => {
       ) as SVGRectElement;
       fireEvent.pointerMove(handle, { clientX: 150 });
       expect(onKChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("direction labels & flip button", () => {
+    it("shows 'end' at the left edge and 'start' at the right edge by default", () => {
+      const { container } = render(
+        <WeightGraph mode="Lin" k={1} onKChange={noop} />
+      );
+      // X0 = 42 is the left plot edge in WeightGraph.tsx
+      const leftLabel = container.querySelector('text[x="42"]');
+      expect(leftLabel?.textContent).toBe("end");
+      const texts = Array.from(container.querySelectorAll("text")).map(
+        (el) => el.textContent
+      );
+      expect(texts).toContain("start");
+    });
+
+    it("swaps to 'start' at the left edge when flipped", () => {
+      const { container } = render(
+        <WeightGraph mode="Lin" k={1} onKChange={noop} flipped />
+      );
+      // X0 = 42 is the left plot edge in WeightGraph.tsx
+      const leftLabel = container.querySelector('text[x="42"]');
+      expect(leftLabel?.textContent).toBe("start");
+    });
+
+    it("calls onFlipToggle when the flip button is clicked", () => {
+      const onFlipToggle = vi.fn();
+      const { getByRole } = render(
+        <WeightGraph
+          mode="Lin"
+          k={1}
+          onKChange={noop}
+          onFlipToggle={onFlipToggle}
+        />
+      );
+      fireEvent.click(
+        getByRole("button", { name: "Flip weighting direction" })
+      );
+      expect(onFlipToggle).toHaveBeenCalledTimes(1);
     });
   });
 });
