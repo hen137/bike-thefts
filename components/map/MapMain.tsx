@@ -40,6 +40,7 @@ export function MapMain() {
   const [timeWeighting, setTimeWeighting] = useState("None");
   const [weightKInv, setWeightKInv] = useState(0.5);
   const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
+  const [weightFlipped, setWeightFlipped] = useState(false);
   const [histBins, setHistBins] = useState<number[]>([]);
 
   const tileContext = useContext(TileContext);
@@ -119,6 +120,7 @@ export function MapMain() {
           timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
           weightKInv={weightKInv}
           weightKInvQuad={weightKInvQuad}
+          weightFlipped={weightFlipped}
           onHistBins={setHistBins}
         />
 
@@ -137,6 +139,8 @@ export function MapMain() {
           setWeightKInv={setWeightKInv}
           weightKInvQuad={weightKInvQuad}
           setWeightKInvQuad={setWeightKInvQuad}
+          weightFlipped={weightFlipped}
+          onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
           histBins={histBins}
         />
       </HeatProvider>
