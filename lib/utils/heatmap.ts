@@ -23,6 +23,13 @@ export function getTimeWeight(
   return 1;
 }
 
+function monthsDelta(refDate: MonthYear, rowDate: Date): number {
+  return Math.abs(
+    (refDate.year - rowDate.getFullYear()) * 12 +
+      (refDate.month - rowDate.getMonth())
+  );
+}
+
 export function computeHistBins(
   rows: HeatRow[],
   refDate: MonthYear,
@@ -34,11 +41,7 @@ export function computeHistBins(
   const deltas: number[] = [];
   for (const r of rows) {
     const rowDate = new Date(r.occ_date);
-    const delta = Math.max(
-      0,
-      (refDate.year - rowDate.getFullYear()) * 12 +
-        (refDate.month - rowDate.getMonth())
-    );
+    const delta = monthsDelta(refDate, rowDate);
     deltas.push(delta);
     if (delta > maxDelta) maxDelta = delta;
   }
@@ -95,13 +98,7 @@ export function buildHeatDataFromRows(
     for (const value of Object.values(hoods)) {
       const maxCount = Math.max(...value.map((r) => r.count));
       const maxDelta = Math.max(
-        ...value.map((r) => {
-          const rowDate = new Date(r.occ_date);
-          return (
-            (refDate.year - rowDate.getFullYear()) * 12 +
-            (refDate.month - rowDate.getMonth())
-          );
-        })
+        ...value.map((r) => monthsDelta(refDate, new Date(r.occ_date)))
       );
 
       value.map((r) => {
@@ -111,8 +108,7 @@ export function buildHeatDataFromRows(
             ? 1
             : getTimeWeight(
                 timeWeighting,
-                (refDate.year - rowDate.getFullYear()) * 12 +
-                  (refDate.month - rowDate.getMonth()),
+                monthsDelta(refDate, rowDate),
                 maxDelta,
                 k
               );
@@ -124,13 +120,7 @@ export function buildHeatDataFromRows(
   } else {
     const maxCount = Math.max(...rows.map((r) => r.count));
     const maxDelta = Math.max(
-      ...rows.map((r) => {
-        const rowDate = new Date(r.occ_date);
-        return (
-          (refDate.year - rowDate.getFullYear()) * 12 +
-          (refDate.month - rowDate.getMonth())
-        );
-      })
+      ...rows.map((r) => monthsDelta(refDate, new Date(r.occ_date)))
     );
 
     rows.forEach((row) => {
@@ -140,8 +130,7 @@ export function buildHeatDataFromRows(
           ? 1
           : getTimeWeight(
               timeWeighting,
-              (refDate.year - rowDate.getFullYear()) * 12 +
-                (refDate.month - rowDate.getMonth()),
+              monthsDelta(refDate, rowDate),
               maxDelta,
               k
             );

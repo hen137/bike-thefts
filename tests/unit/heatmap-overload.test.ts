@@ -107,6 +107,18 @@ describe("buildHeatDataFromRows", () => {
     const oldIntHighK = highK.values.find((v) => v[0] === oldLat)![2];
     expect(oldIntHighK).toBeGreaterThan(oldIntLowK);
   });
+
+  it("with an early refDate, the oldest row gets a higher time-weight than the most recent row (direction inverted)", () => {
+    const earlyRef: MonthYear = { year: 2014, month: 0 };
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2014-01-15" },
+      { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2025-12-15" }
+    ];
+    const result = buildHeatDataFromRows(rows, false, "lin", earlyRef);
+    const [, , oldestIntensity] = result.values[0];
+    const [, , recentIntensity] = result.values[1];
+    expect(oldestIntensity).toBeGreaterThan(recentIntensity);
+  });
 });
 
 describe("buildHeatDataFromRows — byHood=true (stratified)", () => {
@@ -216,6 +228,20 @@ describe("computeHistBins", () => {
     const oldBin =
       bins.length - 1 - [...bins].reverse().findIndex((b) => b > 0);
     expect(oldBin).toBeGreaterThan(recentBin);
+  });
+
+  it("with an early refDate, oldest rows land in lower-index bins than recent rows", () => {
+    // ref: Jan 2014; oldest = Jan 2014 (delta ~0mo); recent = Dec 2025 (delta ~143mo)
+    const earlyRef: MonthYear = { year: 2014, month: 0 };
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2014-01-15" },
+      { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2025-12-15" }
+    ];
+    const bins = computeHistBins(rows, earlyRef);
+    const oldBin = bins.findIndex((b) => b > 0);
+    const recentBin =
+      bins.length - 1 - [...bins].reverse().findIndex((b) => b > 0);
+    expect(recentBin).toBeGreaterThan(oldBin);
   });
 
   it("respects custom nBins", () => {
