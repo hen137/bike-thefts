@@ -332,6 +332,7 @@ describe("MapControls — right-side control stack layout", () => {
     timeWeighting: "None" as "None" | "Lin" | "Inv" | "InvQuad",
     weightKInv: 0.5,
     weightKInvQuad: 0.25,
+    weightFlipped: false,
     onHistBins: vi.fn()
   };
 
