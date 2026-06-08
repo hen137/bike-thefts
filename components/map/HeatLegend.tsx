@@ -1,5 +1,4 @@
 import Lock from "@/assets/lock.svg";
-// const LEGEND_DIVISION = 3;
 
 export function HeatLegend() {
   return (

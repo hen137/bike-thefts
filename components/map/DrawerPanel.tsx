@@ -74,7 +74,6 @@ export function DrawerPanel({
                 <DrawerDialog
                   trigger={
                     <div className="rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700  transition-colors">
-                      {/* <span className="absolute -inset-0.5 block -skew-y-3 bg-pink-500" /> */}
                       <Drawer.Title className="text-2xl font-bold">
                         biketheftsTO
                       </Drawer.Title>
@@ -85,7 +84,7 @@ export function DrawerPanel({
                       {/* About */}
                       <DrawerSection
                         title={
-                          <DialogTitle className="px-2  text-base">
+                          <DialogTitle className="px-2 text-base">
                             About biketheftsTO
                           </DialogTitle>
                         }
@@ -165,7 +164,6 @@ export function DrawerPanel({
                 </div>
 
                 {/* Report Thefts */}
-                {/* <div className="px-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"> */}
                 <CollapsibleSection
                   title="Visualize Reported Thefts"
                   open={openSection === "reported"}
@@ -281,10 +279,7 @@ export function DrawerPanel({
                             </DialogTitle>
                           }
                         >
-                          <DialogDescription
-                            // asChild
-                            className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
-                          >
+                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400">
                             <a
                               href="https://www.linkedin.com/in/henry-abramovich/"
                               target="_blank"
@@ -310,10 +305,7 @@ export function DrawerPanel({
                             </DialogTitle>
                           }
                         >
-                          <DialogDescription
-                            // asChild
-                            className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400"
-                          >
+                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400">
                             <a
                               href="https://www.linkedin.com/in/mhaya/"
                               target="_blank"
