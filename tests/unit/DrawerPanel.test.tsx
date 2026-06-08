@@ -273,11 +273,6 @@ describe("DrawerPanel", () => {
   });
 
   describe("collapsible sections — accordion behaviour", () => {
-    function getCollapseGrid(name: RegExp): HTMLElement {
-      const btn = screen.getByRole("button", { name });
-      return btn.nextElementSibling as HTMLElement;
-    }
-
     it("opens Reported Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
       expect(screen.getByText("Local Scaling")).toBeInTheDocument();
@@ -286,10 +281,7 @@ describe("DrawerPanel", () => {
 
     it("collapses Predict Future Thefts by default", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("Poisson")).toBeInTheDocument();
-      expect(
-        getCollapseGrid(/Predict Future Thefts/i).style.gridTemplateRows
-      ).toBe("0fr");
+      expect(screen.queryByText("Poisson")).not.toBeInTheDocument();
     });
 
     it("opens Predict Future Thefts and collapses Reported Thefts on click", () => {
@@ -297,20 +289,14 @@ describe("DrawerPanel", () => {
       fireEvent.click(
         screen.getByRole("button", { name: /Predict Future Thefts/i })
       );
-      expect(
-        getCollapseGrid(/Predict Future Thefts/i).style.gridTemplateRows
-      ).toBe("1fr");
-      expect(getCollapseGrid(/Reported Thefts/i).style.gridTemplateRows).toBe(
-        "0fr"
-      );
+      expect(screen.getByText("Poisson")).toBeInTheDocument();
+      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
     });
 
     it("collapses the open section when its header is clicked again", () => {
       render(<DrawerPanel {...defaultProps} />);
       fireEvent.click(screen.getByRole("button", { name: /Reported Thefts/i }));
-      expect(getCollapseGrid(/Reported Thefts/i).style.gridTemplateRows).toBe(
-        "0fr"
-      );
+      expect(screen.queryByText("Local Scaling")).not.toBeInTheDocument();
     });
   });
 

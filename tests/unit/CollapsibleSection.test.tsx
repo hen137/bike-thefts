@@ -11,13 +11,13 @@ describe("CollapsibleSection", () => {
   });
 
   describe("body visibility", () => {
-    it("keeps body content in DOM when closed (CSS collapse)", () => {
+    it("removes body content from DOM when closed", () => {
       render(
         <CollapsibleSection title="S" open={false} onToggle={vi.fn()}>
           <span>secret content</span>
         </CollapsibleSection>
       );
-      expect(screen.getByText("secret content")).toBeInTheDocument();
+      expect(screen.queryByText("secret content")).not.toBeInTheDocument();
     });
 
     it("shows body content when open", () => {
@@ -27,56 +27,6 @@ describe("CollapsibleSection", () => {
         </CollapsibleSection>
       );
       expect(screen.getByText("visible content")).toBeInTheDocument();
-    });
-  });
-
-  describe("collapse animation styles", () => {
-    it("collapses grid row to 0fr when closed", () => {
-      const { container } = render(
-        <CollapsibleSection title="S" open={false} onToggle={vi.fn()}>
-          <span>content</span>
-        </CollapsibleSection>
-      );
-      const grid = container.querySelector<HTMLElement>(
-        '[style*="grid-template-rows"]'
-      );
-      expect(grid).not.toBeNull();
-      expect(grid!.style.gridTemplateRows).toBe("0fr");
-    });
-
-    it("expands grid row to 1fr when open", () => {
-      const { container } = render(
-        <CollapsibleSection title="S" open={true} onToggle={vi.fn()}>
-          <span>content</span>
-        </CollapsibleSection>
-      );
-      const grid = container.querySelector<HTMLElement>(
-        '[style*="grid-template-rows"]'
-      );
-      expect(grid).not.toBeNull();
-      expect(grid!.style.gridTemplateRows).toBe("1fr");
-    });
-
-    it("applies CSS transition to collapse wrapper", () => {
-      const { container } = render(
-        <CollapsibleSection title="S" open={false} onToggle={vi.fn()} />
-      );
-      const grid = container.querySelector<HTMLElement>(
-        '[style*="grid-template-rows"]'
-      );
-      expect(grid!.style.transition).toContain("grid-template-rows");
-    });
-
-    it("inner wrapper has overflow hidden", () => {
-      const { container } = render(
-        <CollapsibleSection title="S" open={false} onToggle={vi.fn()}>
-          <span>content</span>
-        </CollapsibleSection>
-      );
-      const inner = container.querySelector<HTMLElement>(
-        '[style*="overflow: hidden"]'
-      );
-      expect(inner).not.toBeNull();
     });
   });
 

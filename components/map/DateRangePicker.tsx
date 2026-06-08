@@ -191,11 +191,11 @@ export function DateRangePicker({
   if (!isReady || !initResult?.minDate || !initResult?.maxDate) {
     return (
       <div className="flex items-center justify-center gap-2">
-        <div className="rounded border border-gray-200 px-3 py-1 text-sm text-gray-400 dark:border-slate-600">
+        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400 dark:border-slate-600">
           —
         </div>
         <span className="select-none text-gray-400 dark:text-slate-500">–</span>
-        <div className="rounded border border-gray-200 px-3 py-1 text-sm text-gray-400 dark:border-slate-600">
+        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400 dark:border-slate-600">
           —
         </div>
       </div>
@@ -250,7 +250,9 @@ export function DateRangePicker({
       </div>
       <div className="flex flex-col items-center gap-1">
         <div className="invisible text-xs leading-none">X</div>
-        <span className="select-none text-gray-400 dark:text-slate-500">–</span>
+        <span className="select-none text-xs text-gray-400 dark:text-slate-500">
+          –
+        </span>
       </div>
       <div className="flex flex-col items-center gap-1">
         <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">

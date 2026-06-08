@@ -36,7 +36,7 @@ export function HeatSlider({
       value={values}
       step={1}
     >
-      <SliderTrack className="relative h-1 w-full grow rounded-full bg-gray-600 dark:bg-gray-100">
+      <SliderTrack className="relative h-0.5 w-full grow rounded-full bg-gray-600 dark:bg-gray-100">
         <SliderRange className="absolute h-full rounded-full bg-blue-600 dark:bg-blue-400" />
       </SliderTrack>
       <SliderThumb className={thumbStyles} />
