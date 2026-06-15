@@ -162,7 +162,7 @@ describe("DrawerPanel", () => {
   describe("static content", () => {
     it("renders the panel title", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("biketheftsTO")).toBeInTheDocument();
+      expect(screen.getByText("TObikethefts")).toBeInTheDocument();
     });
 
     it("renders Visualize Reported Thefts section", () => {
@@ -182,7 +182,7 @@ describe("DrawerPanel", () => {
 
     it("renders footer tagline", () => {
       render(<DrawerPanel {...defaultProps} />);
-      expect(screen.getByText("worry less, ride more.")).toBeInTheDocument();
+      expect(screen.getByText("Worry less, ride more.")).toBeInTheDocument();
     });
 
     it("renders Open Government Licence link with correct href", () => {

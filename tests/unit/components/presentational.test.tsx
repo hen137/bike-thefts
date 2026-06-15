@@ -31,6 +31,11 @@ import type { MapContextValue } from "@/types/map";
 import type { DebugHUDProps } from "@/types/components";
 
 describe("HeatLegend", () => {
+  it("applies a custom className to the outer container", () => {
+    const { container } = render(<HeatLegend className="custom-class" />);
+    expect(container.firstElementChild).toHaveClass("custom-class");
+  });
+
   it("renders a single lock for the low end and a group of three for the high end", () => {
     render(<HeatLegend />);
     const locks = screen.getAllByTestId("lock-icon");

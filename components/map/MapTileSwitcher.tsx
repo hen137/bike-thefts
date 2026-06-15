@@ -47,7 +47,7 @@ export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
 
   return (
     <div className="relative">
-      {/* Slide-out panel — opens below, right-aligned */}
+      {/* Slide-out panel */}
       <div
         className={`absolute top-full right-0 mt-2 transition-all duration-300 ease-out ${
           isOpen
