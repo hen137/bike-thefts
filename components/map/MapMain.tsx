@@ -10,10 +10,11 @@ import {
   LeafletTileLayer,
   MapContextMenu,
   MapControls,
-  MapMeasurementPanel,
-  MapTopBar
+  MapMeasurementPanel
+  // MapTopBar
 } from "@/components/map";
 import { MonthYear } from "@/types/map";
+import { MapDashboard } from "./MapDashboard";
 
 const initialSliderValues = [750, 1000];
 
@@ -88,7 +89,7 @@ export function MapMain() {
   );
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative sm:rounded-2xl h-full w-full overflow-hidden">
       <HeatProvider>
         {/* Map */}
         <LeafletMap
@@ -107,6 +108,11 @@ export function MapMain() {
         </LeafletMap>
 
         {/* Map Controls */}
+        <MapDashboard
+          sliderValues={sliderValues}
+          setSliderValue={setSliderValue}
+          commitSliderValues={commitSliderValues}
+        />
         <MapControls
           drawerOpen={drawerOpen}
           onDrawerToggle={() => setDrawerOpen((prev) => !prev)}
@@ -146,7 +152,7 @@ export function MapMain() {
       </HeatProvider>
 
       {/* Top Bar */}
-      <MapTopBar />
+      {/* <MapTopBar /> */}
 
       {/* Measurement Panel */}
       <MapMeasurementPanel

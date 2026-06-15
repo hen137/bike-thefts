@@ -1,10 +1,10 @@
 "use client";
 
 import { memo, useState, useEffect } from "react";
-import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
+// import { Plus, Minus, Maximize2, Minimize2 } from "lucide-react";
 import {
-  useMapControls,
-  useGeolocation,
+  // useMapControls,
+  // useGeolocation,
   useDbContext,
   useLeafletHeatLayer
 } from "@/hooks";
@@ -13,8 +13,8 @@ import { calcRawSliderToDates } from "@/lib/utils";
 import { buildHeatDataFromRows, computeHistBins } from "@/lib/utils/heatmap";
 import { HeatRow, MonthYear } from "@/types";
 import { DebugHUD } from "@/components/debug";
-import { HeatLegend } from "./HeatLegend";
-import { MapTileSwitcher } from "./MapTileSwitcher";
+// import { HeatLegend } from "./HeatLegend";
+// import { MapTileSwitcher } from "./MapTileSwitcher";
 
 const MAX_SLIDER_RANGE = 1000;
 
@@ -58,10 +58,10 @@ export const MapControls = memo(function MapControls({
   weightFlipped,
   onHistBins
 }: MapControlsProps) {
-  const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
-    useMapControls();
-  const { locateUser, isLocating, isAvailable } = useGeolocation();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  // const { map, zoomIn, zoomOut, toggleFullscreen, resetView } =
+  //   useMapControls();
+  // const { locateUser, isLocating, isAvailable } = useGeolocation();
+  // const [isFullscreen, setIsFullscreen] = useState(false);
   const {
     registerZoomRadiusHandler,
     registerZoomBlurHandler,
@@ -86,16 +86,16 @@ export const MapControls = memo(function MapControls({
   const [avgIntensity, setAvgIntensity] = useState<number | null>(null);
 
   // Listen for fullscreen changes
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
+  // useEffect(() => {
+  //   const handleFullscreenChange = () => {
+  //     setIsFullscreen(!!document.fullscreenElement);
+  //   };
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, []);
+  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
+  //   return () => {
+  //     document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     registerZoomRadiusHandler(setRadius);
@@ -205,7 +205,7 @@ export const MapControls = memo(function MapControls({
     <div>
       {/* Right-side control stack — drawer trigger + theme + tile switchers */}
       <div
-        className={`fixed top-3 z-[2000] flex flex-col gap-2 transition-[right] duration-300 ease-in-out ${drawerOpen ? "right-[336px]" : "right-4"}`}
+        className={`fixed top-20 z-[2000] flex flex-col gap-2 transition-[right] duration-300 ease-in-out ${drawerOpen ? "right-[336px]" : "right-4"}`}
       >
         <button
           onClick={onDrawerToggle}
@@ -225,18 +225,18 @@ export const MapControls = memo(function MapControls({
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <MapTileSwitcher buttonClassName="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
+        {/* <MapTileSwitcher buttonClassName="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" /> */}
       </div>
 
-      <div className="absolute w-screen flex justify-center bottom-3 z-1000">
+      {/* <div className="absolute w-screen flex justify-center bottom-3 z-1000">
         <HeatLegend />
-      </div>
+      </div> */}
       <div className="absolute bottom-24 sm:bottom-8 left-4 flex flex-col items-center gap-2 z-1000">
         {/* Time Range Slider */}
-        <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg"></div>
+        {/* <div className=" flex flex-col justify-center h-150 rounded-lg bg-white dark:bg-slate-700 shadow-lg"></div> */}
 
         {/* Location Button */}
-        <button
+        {/* <button
           onClick={locateUser}
           disabled={!isAvailable || isLocating}
           className={`flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 ${
@@ -259,10 +259,10 @@ export const MapControls = memo(function MapControls({
             <circle cx="12" cy="12" r="3" />
             <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
           </svg>
-        </button>
+        </button> */}
 
         {/* Zoom Controls */}
-        <div className="flex flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-700 shadow-lg">
+        {/* <div className="flex flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-700 shadow-lg">
           <button
             onClick={zoomIn}
             disabled={!map}
@@ -281,10 +281,10 @@ export const MapControls = memo(function MapControls({
           >
             <Minus className="h-5 w-5 text-gray-600 dark:text-gray-100" />
           </button>
-        </div>
+        </div> */}
 
         {/* Reset View Button */}
-        <button
+        {/* <button
           onClick={resetView}
           disabled={!map}
           className="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -303,10 +303,10 @@ export const MapControls = memo(function MapControls({
             <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
             <path d="M3 21v-5h5" />
           </svg>
-        </button>
+        </button> */}
 
         {/* Fullscreen Button */}
-        <button
+        {/* <button
           onClick={toggleFullscreen}
           className="flex h-9 w-9 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600"
           title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
@@ -317,7 +317,7 @@ export const MapControls = memo(function MapControls({
           ) : (
             <Maximize2 className="h-5 w-5 text-gray-600 dark:text-gray-100" />
           )}
-        </button>
+        </button> */}
       </div>
 
       <DebugHUD
