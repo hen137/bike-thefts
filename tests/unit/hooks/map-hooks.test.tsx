@@ -66,7 +66,7 @@ describe("useMapControls", () => {
       wrapper: wrapperFor(map)
     });
     act(() => result.current.resetView());
-    expect(map.setView).toHaveBeenCalledWith([43.70643, -79.39864], 12);
+    expect(map.setView).toHaveBeenCalledWith([43.670177, -79.386741], 12);
   });
 
   it("is a no-op (no throw) when map is null", () => {

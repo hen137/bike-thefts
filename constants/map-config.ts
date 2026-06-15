@@ -10,7 +10,7 @@ import { HeatMapOptions } from "leaflet";
  * Center: Toronto coordinates
  */
 export const DEFAULT_MAP_CONFIG: MapConfig = {
-  defaultCenter: [43.70643, -79.39864],
+  defaultCenter: [43.670177, -79.386741],
   defaultZoom: 12,
   minZoom: 9,
   maxZoom: 16,
