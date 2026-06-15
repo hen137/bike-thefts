@@ -43,6 +43,7 @@ export function MapMain() {
   const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
   const [weightFlipped, setWeightFlipped] = useState(false);
   const [histBins, setHistBins] = useState<number[]>([]);
+  const [poissonIndex, setPoissonIndex] = useState(0);
 
   const tileContext = useContext(TileContext);
 
@@ -112,6 +113,19 @@ export function MapMain() {
           sliderValues={sliderValues}
           setSliderValue={setSliderValue}
           commitSliderValues={commitSliderValues}
+          byHood={byHood}
+          setByHood={setByHood}
+          timeWeighting={timeWeighting}
+          setTimeWeighting={setTimeWeighting}
+          weightKInv={weightKInv}
+          setWeightKInv={setWeightKInv}
+          weightKInvQuad={weightKInvQuad}
+          setWeightKInvQuad={setWeightKInvQuad}
+          weightFlipped={weightFlipped}
+          onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
+          histBins={histBins}
+          poissonIndex={poissonIndex}
+          setPoissonIndex={setPoissonIndex}
         />
         <MapControls
           drawerOpen={drawerOpen}
@@ -148,6 +162,8 @@ export function MapMain() {
           weightFlipped={weightFlipped}
           onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
           histBins={histBins}
+          poissonIndex={poissonIndex}
+          setPoissonIndex={setPoissonIndex}
         />
       </HeatProvider>
 

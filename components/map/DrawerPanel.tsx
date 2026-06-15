@@ -34,6 +34,8 @@ interface DrawerPanelProps {
   weightFlipped: boolean;
   onWeightFlipToggle: () => void;
   histBins?: number[];
+  poissonIndex: number;
+  setPoissonIndex: (i: number) => void;
 }
 
 export function DrawerPanel({
@@ -52,10 +54,11 @@ export function DrawerPanel({
   setWeightKInvQuad,
   weightFlipped,
   onWeightFlipToggle,
-  histBins
+  histBins,
+  poissonIndex,
+  setPoissonIndex
 }: DrawerPanelProps) {
   const [openSection, setOpenSection] = useState<SectionId | null>("reported");
-  const [poissonIndex, setPoissonIndex] = useState(0);
 
   const toggle = (id: SectionId) =>
     setOpenSection((prev) => (prev === id ? null : id));

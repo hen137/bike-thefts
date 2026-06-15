@@ -9,16 +9,43 @@ interface MapDashboardProps {
   sliderValues: number[];
   setSliderValue: (values: number[]) => void;
   commitSliderValues: (values: number[]) => void;
+  byHood: boolean;
+  setByHood: (val: boolean) => void;
+  timeWeighting: string;
+  setTimeWeighting: (val: string) => void;
+  weightKInv: number;
+  setWeightKInv: (k: number) => void;
+  weightKInvQuad: number;
+  setWeightKInvQuad: (k: number) => void;
+  weightFlipped: boolean;
+  onWeightFlipToggle: () => void;
+  histBins?: number[];
+  poissonIndex: number;
+  setPoissonIndex: (i: number) => void;
 }
 
 export function MapDashboard({
   sliderValues,
   setSliderValue,
-  commitSliderValues
+  commitSliderValues,
+  byHood,
+  setByHood,
+  timeWeighting,
+  setTimeWeighting,
+  weightKInv,
+  setWeightKInv,
+  weightKInvQuad,
+  setWeightKInvQuad,
+  weightFlipped,
+  onWeightFlipToggle,
+  histBins,
+  poissonIndex,
+  setPoissonIndex
 }: MapDashboardProps) {
   return (
-    <div className="absolute w-full h-1/4 p-3 bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-1000 pointer-events-none">
-      <div className="gap-2 flex flex-col basis-1/47">
+    <div className="absolute sm:w-full sm:mion-h-45 p-2 bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-1000 pointer-events-none">
+      {/* Map Controls */}
+      <div className="gap-2 flex flex-col sm:min-w-8">
         {/* Dashboard Toggle */}
         <DashboardToggle className="bg-white grow pointer-events-auto rounded" />
 
@@ -26,31 +53,46 @@ export function MapDashboard({
         <MapTools className="gap-2 flex flex-col pointer-events-auto" />
       </div>
 
-      {/* Visualization Mode */}
-      <DashboardVisualizationMode className="bg-white basis-3/8 pointer-events-auto rounded" />
+      {/* Widgets */}
+      <div className="sm:overflow-x-scroll flex gap-2">
+        {/* Visualization Mode */}
+        <DashboardVisualizationMode
+          className="bg-white sm:min-w-130 pointer-events-auto rounded"
+          byHood={byHood}
+          setByHood={setByHood}
+          timeWeighting={timeWeighting}
+          setTimeWeighting={setTimeWeighting}
+          weightKInv={weightKInv}
+          setWeightKInv={setWeightKInv}
+          weightKInvQuad={weightKInvQuad}
+          setWeightKInvQuad={setWeightKInvQuad}
+          weightFlipped={weightFlipped}
+          onWeightFlipToggle={onWeightFlipToggle}
+          histBins={histBins}
+          poissonIndex={poissonIndex}
+          setPoissonIndex={setPoissonIndex}
+        />
 
-      <div className="flex flex-col gap-2 basis-3/7 pointer-events-auto">
-        <div className="flex gap-2 h-10">
-          {/* Tile Menu */}
-          {/* <MapTileSwitcher buttonClassName="flex h-full aspect-square items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" /> */}
+        <div className="flex flex-col gap-2 sm:w-fit pointer-events-auto">
+          {/* Top Row */}
+          <div className="flex gap-2 sm:min-h-8">
+            {/* Heat Legend */}
+            <HeatLegend className="grow pointer-events-auto rounded" />
+          </div>
 
-          {/* Search Bar */}
-          {/* <div className="bg-white basis-1/3" /> */}
+          {/* Bottom Row */}
+          <div className="flex gap-2 sm:w-fit sm:h-full">
+            {/* Tile Menu */}
+            <div className="bg-white sm:min-w-30 rounded" />
 
-          {/* Heat Legend */}
-          <HeatLegend className="grow pointer-events-auto rounded" />
-        </div>
-        <div className="flex gap-2 basis-4/5">
-          <div className="bg-white basis-2/8" />
-
-          {/* Date Range */}
-          <DashboardDateRange
-            className="bg-white rounded grow pointer-events-auto"
-            sliderValues={sliderValues}
-            setSliderValue={setSliderValue}
-            commitSliderValues={commitSliderValues}
-          />
-          {/* <div className="bg-white h-full grow" /> */}
+            {/* Date Range */}
+            <DashboardDateRange
+              className="bg-white rounded sm:min-w-90 pointer-events-auto"
+              sliderValues={sliderValues}
+              setSliderValue={setSliderValue}
+              commitSliderValues={commitSliderValues}
+            />
+          </div>
         </div>
       </div>
     </div>

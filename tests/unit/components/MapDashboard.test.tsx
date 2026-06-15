@@ -29,7 +29,19 @@ import { MapDashboard } from "@/components/map/MapDashboard";
 const defaultProps = {
   sliderValues: [250, 750],
   setSliderValue: vi.fn(),
-  commitSliderValues: vi.fn()
+  commitSliderValues: vi.fn(),
+  byHood: true,
+  setByHood: vi.fn(),
+  timeWeighting: "None",
+  setTimeWeighting: vi.fn(),
+  weightKInv: 0.5,
+  setWeightKInv: vi.fn(),
+  weightKInvQuad: 0.25,
+  setWeightKInvQuad: vi.fn(),
+  weightFlipped: false,
+  onWeightFlipToggle: vi.fn(),
+  poissonIndex: 0,
+  setPoissonIndex: vi.fn()
 };
 
 describe("MapDashboard", () => {

@@ -147,7 +147,9 @@ const defaultProps = {
   weightKInvQuad: 0.25,
   setWeightKInvQuad: vi.fn(),
   weightFlipped: false,
-  onWeightFlipToggle: vi.fn()
+  onWeightFlipToggle: vi.fn(),
+  poissonIndex: 0,
+  setPoissonIndex: vi.fn()
 };
 
 describe("DrawerPanel", () => {

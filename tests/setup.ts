@@ -19,6 +19,12 @@ if (!("ResizeObserver" in globalThis)) {
     ResizeObserver as unknown as typeof globalThis.ResizeObserver;
 }
 
+// jsdom lacks scrollIntoView, which Radix Select calls when an item becomes
+// highlighted.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 // jsdom lacks matchMedia, which next-themes queries on mount.
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
