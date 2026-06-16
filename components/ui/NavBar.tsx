@@ -1,4 +1,5 @@
-import { MapThemeSwitcher } from "../map/MapThemeSwitcher";
+import Link from "next/link";
+// import { MapThemeSwitcher } from "../map/MapThemeSwitcher";
 
 const nav = [
   { title: "Map", page: "/" },
@@ -18,14 +19,14 @@ export function NavBar() {
               key={page.title}
               className="group sm:w-25  flex flex-col items-center"
             >
-              <a href={page.page} className="flex justify-center">
+              <Link href={page.page} className="flex justify-center">
                 {page.title}
-              </a>
+              </Link>
               <div className="not-group-hover:border-white border-b border-black w-1/3" />
             </div>
           );
         })}
-        <MapThemeSwitcher className="h-8 aspect-square ml-4 hover:bg-slate-300 flex justify-center p-2 rounded shadow-lg" />
+        {/* <MapThemeSwitcher className="h-8 aspect-square ml-4 hover:bg-slate-300 flex justify-center p-2 rounded shadow-lg" /> */}
       </div>
     </div>
   );
