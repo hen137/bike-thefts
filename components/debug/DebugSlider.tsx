@@ -20,10 +20,10 @@ export function DebugSlider({
       step={increment}
       max={max}
     >
-      <SliderTrack className="relative grow h-1 rounded-full bg-white dark:bg-black">
+      <SliderTrack className="relative grow h-1 rounded-full bg-white ">
         <SliderRange className="absolute h-1 rounded-full w-full bg-gray-400" />
       </SliderTrack>
-      <SliderThumb className="block size-3 rounded-full bg-gray-300 dark:bg-gray-700" />
+      <SliderThumb className="block size-3 rounded-full bg-gray-300 " />
     </Slider>
   );
 }

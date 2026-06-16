@@ -79,30 +79,26 @@ export function MapMeasurementPanel({
   return (
     <div className="absolute bottom-20 sm:bottom-6 left-0 right-0 z-[1000] pointer-events-none">
       <div className="flex justify-center pb-4 px-4">
-        <div className="flex flex-col gap-1 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 pointer-events-auto">
+        <div className="flex flex-col gap-1 bg-white rounded-2xl shadow-xl border border-gray-200 pointer-events-auto">
           {/* Top: Mode Tabs */}
-          <div className="flex items-center gap-1 p-1 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-1 p-1 border-b border-gray-200 ">
             <button
               onClick={() => handleModeSelect("distance")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
                 mode === "distance"
-                  ? "bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-500 dark:ring-blue-400"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-blue-50 ring-2 ring-blue-500 "
+                  : "hover:bg-gray-50 "
               }`}
               title="Distance"
             >
               <Ruler
                 className={`h-4 w-4 ${
-                  mode === "distance"
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-400"
+                  mode === "distance" ? "text-blue-600 " : "text-gray-600 "
                 }`}
               />
               <span
                 className={`text-xs font-medium ${
-                  mode === "distance"
-                    ? "text-blue-700 dark:text-blue-300"
-                    : "text-gray-700 dark:text-gray-300"
+                  mode === "distance" ? "text-blue-700 " : "text-gray-700 "
                 }`}
               >
                 Distance
@@ -113,23 +109,19 @@ export function MapMeasurementPanel({
               onClick={() => handleModeSelect("area")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
                 mode === "area"
-                  ? "bg-green-50 dark:bg-green-900/30 ring-2 ring-green-500 dark:ring-green-400"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-green-50 ring-2 ring-green-500 "
+                  : "hover:bg-gray-50 "
               }`}
               title="Area"
             >
               <MapPin
                 className={`h-4 w-4 ${
-                  mode === "area"
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-gray-600 dark:text-gray-400"
+                  mode === "area" ? "text-green-600 " : "text-gray-600 "
                 }`}
               />
               <span
                 className={`text-xs font-medium ${
-                  mode === "area"
-                    ? "text-green-700 dark:text-green-300"
-                    : "text-gray-700 dark:text-gray-300"
+                  mode === "area" ? "text-green-700 " : "text-gray-700 "
                 }`}
               >
                 Area
@@ -141,10 +133,10 @@ export function MapMeasurementPanel({
             {/* Close button */}
             <button
               onClick={handleClose}
-              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Close measurement tools"
             >
-              <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <X className="h-4 w-4 text-gray-500 " />
             </button>
           </div>
 
@@ -157,8 +149,8 @@ export function MapMeasurementPanel({
                   <div
                     className={`flex items-center gap-2 ${
                       lastMeasurement.type === "distance"
-                        ? "text-blue-700 dark:text-blue-300"
-                        : "text-green-700 dark:text-green-300"
+                        ? "text-blue-700 "
+                        : "text-green-700 "
                     }`}
                   >
                     <span className="text-xs font-medium">
@@ -173,7 +165,7 @@ export function MapMeasurementPanel({
                     </span>
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500 ">
                     Select a measurement mode
                   </p>
                 )}
@@ -183,32 +175,26 @@ export function MapMeasurementPanel({
               <>
                 {/* Results */}
                 <div className="flex items-center gap-2">
-                  <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg px-2 py-1.5 min-w-[50px]">
-                    <p className="text-[9px] text-gray-500 dark:text-gray-400">
-                      Points
-                    </p>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white">
+                  <div className="bg-gray-50 rounded-lg px-2 py-1.5 min-w-[50px]">
+                    <p className="text-[9px] text-gray-500 ">Points</p>
+                    <p className="text-sm font-bold text-gray-900 ">
                       {pointCount}
                     </p>
                   </div>
 
                   {mode === "distance" && (
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg px-2 py-1.5 min-w-[70px]">
-                      <p className="text-[9px] text-blue-600 dark:text-blue-400">
-                        Distance
-                      </p>
-                      <p className="text-sm font-bold text-blue-900 dark:text-blue-100">
+                    <div className="bg-blue-50 rounded-lg px-2 py-1.5 min-w-[70px]">
+                      <p className="text-[9px] text-blue-600 ">Distance</p>
+                      <p className="text-sm font-bold text-blue-900 ">
                         {pointCount > 1 ? formatDistance(distance) : "—"}
                       </p>
                     </div>
                   )}
 
                   {mode === "area" && (
-                    <div className="bg-green-50 dark:bg-green-900/20 rounded-lg px-2 py-1.5 min-w-[70px]">
-                      <p className="text-[9px] text-green-600 dark:text-green-400">
-                        Area
-                      </p>
-                      <p className="text-sm font-bold text-green-900 dark:text-green-100">
+                    <div className="bg-green-50 rounded-lg px-2 py-1.5 min-w-[70px]">
+                      <p className="text-[9px] text-green-600 ">Area</p>
+                      <p className="text-sm font-bold text-green-900 ">
                         {pointCount > 2 ? formatArea(area) : "—"}
                       </p>
                     </div>
@@ -221,7 +207,7 @@ export function MapMeasurementPanel({
                 <div className="flex items-center gap-1">
                   <button
                     onClick={handleClear}
-                    className="p-1.5 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 rounded-lg transition-colors"
+                    className="p-1.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors"
                     title="Clear"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -230,7 +216,7 @@ export function MapMeasurementPanel({
                   <button
                     onClick={undoLastPoint}
                     disabled={pointCount === 0}
-                    className="p-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Undo"
                   >
                     <Undo className="h-3.5 w-3.5" />

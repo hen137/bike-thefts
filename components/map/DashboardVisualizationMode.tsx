@@ -105,17 +105,17 @@ export function DashboardVisualizationMode({
             </SelectIcon>
           </SelectTrigger>
           <SelectPortal>
-            <SelectContent className="z-1200 rounded border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg">
+            <SelectContent className="z-1200 rounded border border-slate-200 bg-white shadow-lg">
               <SelectViewport className="p-1">
                 <SelectItem
                   value="reported"
-                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
+                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600  outline-none cursor-default data-[highlighted]:bg-slate-100"
                 >
                   <SelectItemText>Reported Thefts</SelectItemText>
                 </SelectItem>
                 <SelectItem
                   value="predict"
-                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
+                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600  outline-none cursor-default data-[highlighted]:bg-slate-100"
                 >
                   <SelectItemText>Predict Thefts</SelectItemText>
                 </SelectItem>
@@ -130,7 +130,7 @@ export function DashboardVisualizationMode({
           <>
             {/* Local Scaling */}
             <div className="flex flex-row items-center w-full gap-3">
-              <p className="text-xs text-nowrap font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              <p className="text-xs text-nowrap font-semibold text-slate-500 uppercase tracking-wide">
                 Local Scaling
               </p>
               <SegmentedToggle
@@ -143,7 +143,7 @@ export function DashboardVisualizationMode({
             {/* Time Weighting */}
             <div className="flex flex-col gap-1">
               <div className="flex flex-row items-center justify-between gap-3">
-                <p className="text-xs text-nowrap font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                <p className="text-xs text-nowrap font-semibold text-slate-500 uppercase tracking-wide">
                   Time Weighting
                 </p>
                 <SegmentedToggle
@@ -171,7 +171,7 @@ export function DashboardVisualizationMode({
         ) : (
           /* Poisson */
           <div className="flex flex-row items-center w-full gap-3">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Poisson
             </p>
             <SegmentedToggle

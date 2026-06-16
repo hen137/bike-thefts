@@ -77,7 +77,7 @@ export function DebugHUD({
         </p>
         <button
           onClick={onRefreshDb}
-          className="mt-1 px-2 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded"
+          className="mt-1 px-2 py-0.5 text-xs bg-gray-200 rounded"
         >
           Refresh DB
         </button>

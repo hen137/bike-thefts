@@ -27,24 +27,24 @@ export function MapTools({ className }: MapToolsProps) {
   return (
     <div className={className}>
       {/* Zoom Controls */}
-      <div className="flex flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-700 shadow-lg">
+      <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         <button
           onClick={zoomIn}
           disabled={!map}
-          className="flex w-full aspect-square items-center justify-center border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full aspect-square items-center justify-center border-b border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Zoom in"
           aria-label="Zoom in"
         >
-          <Plus className="h-5 w-5 text-gray-600 dark:text-gray-100" />
+          <Plus className="h-5 w-5 text-gray-600" />
         </button>
         <button
           onClick={zoomOut}
           disabled={!map}
-          className="flex w-full aspect-square items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full aspect-square items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Zoom out"
           aria-label="Zoom out"
         >
-          <Minus className="h-5 w-5 text-gray-600 dark:text-gray-100" />
+          <Minus className="h-5 w-5 text-gray-600" />
         </button>
       </div>
 
@@ -52,12 +52,12 @@ export function MapTools({ className }: MapToolsProps) {
       <button
         onClick={resetView}
         disabled={!map}
-        className="flex w-full aspect-square items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex w-full aspect-square items-center justify-center rounded bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         title="Reset view"
         aria-label="Reset view to default"
       >
         <svg
-          className="h-5 w-5 text-gray-600 dark:text-gray-100"
+          className="h-5 w-5 text-gray-600"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -73,14 +73,14 @@ export function MapTools({ className }: MapToolsProps) {
       {/* Fullscreen Button */}
       <button
         onClick={toggleFullscreen}
-        className="flex w-full aspect-square items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600"
+        className="flex w-full aspect-square items-center justify-center rounded bg-white  hover:bg-gray-50"
         title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
       >
         {isFullscreen ? (
-          <Minimize2 className="h-5 w-5 text-gray-600 dark:text-gray-100" />
+          <Minimize2 className="h-5 w-5 text-gray-600" />
         ) : (
-          <Maximize2 className="h-5 w-5 text-gray-600 dark:text-gray-100" />
+          <Maximize2 className="h-5 w-5 text-gray-600" />
         )}
       </button>
     </div>

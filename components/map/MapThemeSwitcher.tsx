@@ -32,7 +32,7 @@ export function MapThemeSwitcher({ className }: MapThemeSwitcherProps) {
 
   const buttonClass =
     className ??
-    "rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors";
+    "rounded-full bg-white p-2 shadow-lg hover:bg-gray-50 transition-colors";
 
   // Prevent hydration mismatch
   if (!mounted) {

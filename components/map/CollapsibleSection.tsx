@@ -17,7 +17,7 @@ export function CollapsibleSection({
     <div className="gap-1">
       <button
         onClick={onToggle}
-        className={`flex w-full items-center gap-2 py-2 text-left px-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors`}
+        className={`flex w-full items-center gap-2 py-2 text-left px-2 rounded-md hover:bg-slate-50 transition-colors`}
         aria-expanded={open}
       >
         <svg
@@ -38,7 +38,7 @@ export function CollapsibleSection({
       </button>
 
       {open && (
-        <div className="flex flex-col items-center gap-y-2 px-2 text-sm text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col items-center gap-y-2 px-2 text-sm text-slate-700 ">
           {children}
         </div>
       )}
@@ -50,7 +50,7 @@ export function CollapsibleSection({
         }}
       >
         <div style={{ overflow: "hidden", minHeight: 0 }}>
-          <div className="py-2 text-sm text-slate-700 dark:text-slate-300">
+          <div className="py-2 text-sm text-slate-700 ">
             {children}
           </div>
         </div>

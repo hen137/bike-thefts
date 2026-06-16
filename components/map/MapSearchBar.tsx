@@ -129,7 +129,7 @@ export function MapSearchBar() {
     <div className="search-container justify-center">
       {/* Search Box - always visible */}
       <div
-        className={`flex items-center gap-2 bg-white dark:bg-gray-700/80 backdrop-blur px-4 py-2 sm:py-3.5 shadow-lg transition-all duration-50 ${
+        className={`flex items-center gap-2 bg-white backdrop-blur px-4 py-2 sm:py-3.5 shadow-lg transition-all duration-50 ${
           isExpanded ? "rounded-t-lg" : "rounded-full"
         } w-full sm:w-[360px]`}
       >
@@ -142,7 +142,7 @@ export function MapSearchBar() {
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setIsExpanded(true)}
           onKeyDown={handleKeyDown}
-          className="border-none bg-transparent text-base sm:text-sm text-gray-800 dark:text-gray-200 font-semibold outline-none placeholder:text-gray-500 dark:placeholder:text-gray-200 transition-all duration-300 w-full"
+          className="border-none bg-transparent text-base sm:text-sm text-gray-800 font-semibold outline-none placeholder:text-gray-500 transition-all duration-300 w-full"
           aria-label="Search countries"
           aria-controls="search-results"
           aria-activedescendant={
@@ -151,15 +151,15 @@ export function MapSearchBar() {
           autoComplete="off"
         />
         <Search
-          className="h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500"
+          className="h-5 w-5 flex-shrink-0 text-gray-400 "
           aria-hidden="true"
         />
-        <div className="ml-2 flex items-center gap-2 border-l border-gray-200 dark:border-gray-700 pl-3">
+        <div className="ml-2 flex items-center gap-2 border-l border-gray-200 pl-3">
           {/* Desktop: Show locate button */}
           <button
             onClick={handleLocateMe}
             disabled={!isAvailable || isLocating}
-            className={`hidden sm:block text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded transition-all ${
+            className={`hidden sm:block text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded transition-all ${
               isLocating ? "animate-pulse" : ""
             } disabled:opacity-50 disabled:cursor-not-allowed`}
             aria-label="Show current location"
@@ -176,7 +176,7 @@ export function MapSearchBar() {
         ref={resultsRef}
         id="search-results"
         role="listbox"
-        className={`overflow-hidden bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-out ${
+        className={`overflow-hidden bg-white shadow-lg transition-all duration-300 ease-out ${
           isExpanded
             ? "max-h-[500px] opacity-100 rounded-b-lg"
             : "max-h-0 opacity-0"
@@ -186,7 +186,7 @@ export function MapSearchBar() {
         <div className="overflow-y-auto max-h-[450px]">
           {loading && (
             <div
-              className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+              className="px-4 py-8 text-center text-sm text-gray-500 "
               role="status"
               aria-live="polite"
             >
@@ -196,7 +196,7 @@ export function MapSearchBar() {
 
           {!loading && searchQuery && (
             <div
-              className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+              className="px-4 py-8 text-center text-sm text-gray-500 "
               role="status"
               aria-live="polite"
             >

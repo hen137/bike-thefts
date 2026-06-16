@@ -43,7 +43,7 @@ export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
 
   const triggerClass =
     buttonClassName ??
-    "flex flex-col items-center gap-1 rounded-full bg-white dark:bg-gray-800 p-2 shadow-lg hover:bg-gray-50 transition-colors";
+    "flex flex-col items-center gap-1 rounded-full bg-white p-2 shadow-lg hover:bg-gray-50 transition-colors";
 
   return (
     <div className="relative">
@@ -55,7 +55,7 @@ export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
             : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-1 border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-2 bg-white rounded-2xl shadow-xl p-1 border border-gray-200 ">
           {layerOptions.map((layer) => (
             <button
               key={layer.id}
@@ -63,8 +63,8 @@ export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
               disabled={!layer.provider}
               className={`flex flex-col items-center gap-1.5 px-2 sm:px-3 py-2 rounded-xl transition-all ${
                 currentProviderId === layer.id
-                  ? "bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-500 dark:ring-blue-400"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-blue-50 ring-2 ring-blue-500 "
+                  : "hover:bg-gray-50 "
               } ${!layer.provider ? "opacity-50 cursor-not-allowed" : ""}`}
               title={layer.label}
             >
@@ -77,7 +77,7 @@ export function MapTileSwitcher({ buttonClassName }: MapTileSwitcherProps) {
                   className="object-cover"
                 />
               </div>
-              <span className="text-[10px] sm:text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-[10px] sm:text-xs font-medium text-gray-700 ">
                 {layer.label}
               </span>
             </button>

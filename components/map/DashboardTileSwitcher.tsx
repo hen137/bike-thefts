@@ -71,13 +71,13 @@ export function DashboardTileSwitcher({
             </SelectIcon>
           </SelectTrigger>
           <SelectPortal>
-            <SelectContent className="z-1200 rounded border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg">
+            <SelectContent className="z-1200 rounded border border-slate-200 bg-white shadow-lg">
               <SelectViewport className="p-1">
                 {tileOptions.map((layer) => (
                   <SelectItem
                     key={layer.label}
                     value={layer.label.toLowerCase()}
-                    className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
+                    className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 outline-none cursor-default data-[highlighted]:bg-slate-100 "
                   >
                     <SelectItemText>{layer.label}</SelectItemText>
                   </SelectItem>

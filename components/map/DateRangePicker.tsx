@@ -94,7 +94,7 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
   }
 
   return (
-    <div className="flex items-center rounded border border-gray-300 bg-white dark:border-slate-500 dark:bg-slate-700">
+    <div className="flex items-center rounded border border-gray-300 bg-white">
       <input
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -104,13 +104,13 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
             commitInput();
           }
         }}
-        className="w-[72px] bg-transparent px-2 py-1 text-center text-sm text-gray-700 outline-none dark:text-gray-200"
+        className="w-[72px] bg-transparent px-2 py-1 text-center text-sm text-gray-700 outline-none"
         placeholder="MM/YYYY"
         aria-label="Month and year"
       />
       <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Trigger className="flex items-center justify-center border-l border-gray-300 px-1.5 py-1 hover:bg-gray-50 dark:border-slate-500 dark:hover:bg-slate-600">
-          <CalendarDays className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
+        <Popover.Trigger className="flex items-center justify-center border-l border-gray-300 px-1.5 py-1 hover:bg-gray-50">
+          <CalendarDays className="h-3.5 w-3.5 text-gray-500" />
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Positioner
@@ -119,25 +119,25 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
             sideOffset={4}
             className="z-[3000]"
           >
-            <Popover.Popup className="w-52 rounded-lg border border-gray-200 bg-white p-3 shadow-xl dark:border-slate-600 dark:bg-slate-800">
+            <Popover.Popup className="w-52 rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
               {/* Year nav */}
               <div className="mb-3 flex items-center justify-between">
                 <button
                   onClick={() => setNavYear((y) => y - 1)}
                   disabled={navYear <= min.year}
-                  className="rounded p-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-slate-700"
+                  className="rounded p-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <ChevronLeft className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                  <ChevronLeft className="h-4 w-4 text-gray-600 " />
                 </button>
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                <span className="text-sm font-semibold text-gray-700">
                   {navYear}
                 </span>
                 <button
                   onClick={() => setNavYear((y) => y + 1)}
                   disabled={navYear >= max.year}
-                  className="rounded p-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-slate-700"
+                  className="rounded p-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <ChevronRight className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                  <ChevronRight className="h-4 w-4 text-gray-600 " />
                 </button>
               </div>
               {/* Month grid */}
@@ -158,8 +158,8 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
                         selected
                           ? "bg-blue-600 text-white"
                           : disabled
-                            ? "cursor-not-allowed text-gray-300 dark:text-slate-600"
-                            : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700"
+                            ? "cursor-not-allowed text-gray-300"
+                            : "text-gray-700 hover:bg-gray-100"
                       }`}
                     >
                       {name}
@@ -191,11 +191,11 @@ export function DateRangePicker({
   if (!isReady || !initResult?.minDate || !initResult?.maxDate) {
     return (
       <div className="flex items-center justify-center gap-2">
-        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400 dark:border-slate-600">
+        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400">
           —
         </div>
-        <span className="select-none text-gray-400 dark:text-slate-500">–</span>
-        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400 dark:border-slate-600">
+        <span className="select-none text-gray-400">–</span>
+        <div className="rounded border border-gray-200 px-3 py-1 text-xs text-gray-400">
           —
         </div>
       </div>
@@ -238,7 +238,7 @@ export function DateRangePicker({
   return (
     <div className="flex items-center justify-center gap-2">
       <div className="flex flex-col items-center gap-1">
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-slate-500  uppercase tracking-wide">
           Start
         </p>
         <MonthPicker
@@ -250,12 +250,10 @@ export function DateRangePicker({
       </div>
       <div className="flex flex-col items-center gap-1">
         <div className="invisible text-xs leading-none">X</div>
-        <span className="select-none text-xs text-gray-400 dark:text-slate-500">
-          –
-        </span>
+        <span className="select-none text-xs text-gray-400">–</span>
       </div>
       <div className="flex flex-col items-center gap-1">
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
           End
         </p>
         <MonthPicker

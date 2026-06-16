@@ -18,19 +18,17 @@ const MenuItem = memo(function MenuItem({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-3 w-full px-2 py-1 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg group"
+      className="flex items-center gap-3 w-full px-2 py-1 text-left hover:bg-gray-100 transition-colors rounded-lg group"
     >
-      <span className="flex-shrink-0 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200">
+      <span className="flex-shrink-0 text-gray-500 group-hover:text-gray-700 ">
         {showCopied ? <Check className="h-4 w-4 text-green-500" /> : icon}
       </span>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-gray-700 dark:text-gray-200">
+        <div className="text-sm font-medium text-gray-700 ">
           {showCopied ? "Copied!" : label}
         </div>
         {sublabel && !showCopied && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
-            {sublabel}
-          </div>
+          <div className="text-xs text-gray-500 truncate">{sublabel}</div>
         )}
       </div>
     </button>
@@ -195,7 +193,7 @@ export const MapContextMenu = memo(function MapContextMenu({
   return (
     <div
       ref={menuRef}
-      className="absolute z-[1100] min-w-[200px] bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1.5 px-1.5 animate-in fade-in-0 zoom-in-95 duration-150"
+      className="absolute z-[1100] min-w-[200px] bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 px-1.5 animate-in fade-in-0 zoom-in-95 duration-150"
       style={{
         left: displayPosition.x,
         top: displayPosition.y
@@ -213,7 +211,7 @@ export const MapContextMenu = memo(function MapContextMenu({
       />
 
       {/* Divider */}
-      <div className="my-1.5 border-t border-gray-200 dark:border-gray-700" />
+      <div className="my-1.5 border-t border-gray-200 " />
 
       {/* Measurement */}
       <MenuItem
@@ -224,7 +222,7 @@ export const MapContextMenu = memo(function MapContextMenu({
       />
 
       {/* Divider */}
-      <div className="my-1.5 border-t border-gray-200 dark:border-gray-700" />
+      <div className="my-1.5 border-t border-gray-200 " />
 
       {/* Share Map */}
       <MenuItem

@@ -73,14 +73,14 @@ export function DrawerPanel({
     >
       <Drawer.Portal>
         <Drawer.Viewport>
-          <Drawer.Popup className="fixed inset-y-0 right-0 w-80 z-1200 bg-white dark:bg-slate-800 shadow-xl transition-transform duration-300 ease-in-out data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full">
+          <Drawer.Popup className="fixed inset-y-0 right-0 w-80 z-1200 bg-white shadow-xl transition-transform duration-300 ease-in-out data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full">
             <Drawer.Content className="h-full flex flex-col justify-between select-none px-2">
               {/* Header */}
               <div className="relative py-2">
-                <MapThemeSwitcher className="absolute top-1/2 right-6 -translate-y-1/2 flex size-7 items-center justify-center rounded bg-white dark:bg-slate-700 shadow-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors" />
+                <MapThemeSwitcher className="absolute top-1/2 right-6 -translate-y-1/2 flex size-7 items-center justify-center rounded bg-white shadow-lg hover:bg-gray-50 transition-colors" />
                 <DrawerDialog
                   trigger={
-                    <div className="rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700  transition-colors">
+                    <div className="rounded-lg p-2 hover:bg-slate-50  transition-colors">
                       <Drawer.Title className="text-2xl font-bold">
                         TObikethefts
                       </Drawer.Title>
@@ -96,7 +96,7 @@ export function DrawerPanel({
                           </DialogTitle>
                         }
                       >
-                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <DialogDescription className="text-sm px-2 text-slate-500 ">
                           biketheftsTO is a tool for analyzing bike theft data
                           in Toronto.
                         </DialogDescription>
@@ -110,7 +110,7 @@ export function DrawerPanel({
                           </DialogTitle>
                         }
                       >
-                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <DialogDescription className="text-sm px-2 text-slate-500 ">
                           something
                         </DialogDescription>
                       </DrawerSection>
@@ -123,14 +123,14 @@ export function DrawerPanel({
                           </DialogTitle>
                         }
                       >
-                        <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                        <DialogDescription className="text-sm px-2 text-slate-500 ">
                           The data used in this tool is sourced from the City of
                           Toronto&apos;s open data portal.
                         </DialogDescription>
                       </DrawerSection>
                       <DialogDescription
                         asChild
-                        className="text-center text-xs text-slate-500 dark:text-slate-400"
+                        className="text-center text-xs text-slate-500 "
                       >
                         <p>
                           Contains information licensed under the{" "}
@@ -138,7 +138,7 @@ export function DrawerPanel({
                             href="https://www.ontario.ca/page/open-government-licence-ontario"
                             target="_blank"
                             rel="liscense noreferrer"
-                            className="underline hover:text-slate-700 dark:hover:text-slate-300"
+                            className="underline hover:text-slate-700 "
                           >
                             Open Government Licence - Ontario
                           </a>
@@ -178,7 +178,7 @@ export function DrawerPanel({
                 >
                   {/* Local Scaling */}
                   <div className="border-t flex flex-row items-center w-full gap-3 pt-2">
-                    <p className="text-xs text-nowrap font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    <p className="text-xs text-nowrap font-semibold text-slate-500 uppercase tracking-wide">
                       Local Scaling
                     </p>
                     <SegmentedToggle
@@ -191,7 +191,7 @@ export function DrawerPanel({
                   {/* Time Weighting */}
                   <div className="border-t flex flex-col gap-1 pt-2">
                     <div className="flex flex-row items-center justify-between gap-3">
-                      <p className="text-xs text-nowrap font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                      <p className="text-xs text-nowrap font-semibold text-slate-500 uppercase tracking-wide">
                         Time Weighting
                       </p>
                       <SegmentedToggle
@@ -230,7 +230,7 @@ export function DrawerPanel({
                 >
                   {/* Poisson */}
                   <div className="border-t flex flex-row items-center w-full gap-3 pt-2">
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
                       Poisson
                     </p>
                     <SegmentedToggle
@@ -245,14 +245,14 @@ export function DrawerPanel({
               {/* Footer */}
               <div className="py-2">
                 <div className="mx-2 border-t" />
-                <div className="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                <div className="p-2 rounded-lg hover:bg-slate-50 transition-colors">
                   <DrawerDialog
                     trigger={
                       <div className=" ">
-                        <p className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+                        <p className="text-lg font-semibold text-slate-700 ">
                           Worry less, ride more.
                         </p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-sm text-slate-500 ">
                           Statistical analysis tools for Toronto&apos;s bikers
                           and commuters because bike thefts suck
                         </p>
@@ -270,7 +270,7 @@ export function DrawerPanel({
                         >
                           <DialogDescription
                             asChild
-                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                            className="text-sm px-2 text-slate-500 "
                           >
                             <ul className="list-disc list-inside">
                               <li>The Bike Lawyer</li>
@@ -288,18 +288,18 @@ export function DrawerPanel({
                             </DialogTitle>
                           }
                         >
-                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400">
+                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 ">
                             <a
                               href="https://www.linkedin.com/in/henry-abramovich/"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                              className="px-2 py-1 text-slate-500 rounded bg-slate-900 hover:bg-slate-700"
                             >
                               Henry Abramovich
                             </a>
                             <a
                               href=""
-                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                              className="px-2 py-1 text-slate-500 rounded bg-slate-900 hover:bg-slate-700"
                             >
                               Claude
                             </a>
@@ -314,12 +314,12 @@ export function DrawerPanel({
                             </DialogTitle>
                           }
                         >
-                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 dark:text-slate-400">
+                          <DialogDescription className="flex text-sm px-2 gap-x-2 text-slate-500 ">
                             <a
                               href="https://www.linkedin.com/in/mhaya/"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2 py-1 text-slate-500 dark:text-slate-400 rounded bg-slate-900 hover:bg-slate-700"
+                              className="px-2 py-1 text-slate-500 rounded bg-slate-900 hover:bg-slate-700"
                             >
                               Haya Mohamed
                             </a>
@@ -336,12 +336,12 @@ export function DrawerPanel({
                                 </DialogTitle>
                               }
                             >
-                              <DialogDescription className="text-sm px-2 text-slate-500 dark:text-slate-400">
+                              <DialogDescription className="text-sm px-2 text-slate-500 ">
                                 <a
                                   href="https://github.com/hen137/bike-thefts"
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="hover:text-slate-700 dark:hover:text-slate-300"
+                                  className="hover:text-slate-700 "
                                 >
                                   hen137/biketheftsTO
                                 </a>
@@ -356,7 +356,7 @@ export function DrawerPanel({
                                 </DialogTitle>
                               }
                             >
-                              <DialogDescription className="flex gap-2 items-center text-sm px-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300">
+                              <DialogDescription className="flex gap-2 items-center text-sm px-2 text-slate-500 hover:text-slate-700 ">
                                 <GitCommitHorizontal className="size-5" />
                                 <a
                                   href=""
@@ -380,7 +380,7 @@ export function DrawerPanel({
                         >
                           <DialogDescription
                             asChild
-                            className="text-sm px-2 text-slate-500 dark:text-slate-400"
+                            className="text-sm px-2 text-slate-500 "
                           >
                             <div className="flex flex-row gap-4">
                               <div className="flex flex-col gap-1">
