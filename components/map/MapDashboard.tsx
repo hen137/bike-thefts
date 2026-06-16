@@ -78,7 +78,7 @@ export function MapDashboard({
           {/* Top Row */}
           <div className="flex gap-2 sm:h-8">
             {/* Heat Legend */}
-            <HeatLegend className="sm:h-full pointer-events-auto rounded" />
+            <HeatLegend className="sm:h-full pointer-events-auto rounded bg-white" />
           </div>
 
           {/* Bottom Row */}
