@@ -76,8 +76,14 @@ export interface HeatContextValue {
   setHeatValues: (data: (LatLng | HeatLatLngTuple)[]) => void;
   setZoomRadius: (radius: number) => void;
   setZoomBlur: (blur: number) => void;
+  setZoomMaxZoom: (maxZoom: number) => void;
   registerZoomRadiusHandler: (handler: (radius: number) => void) => void;
   registerZoomBlurHandler: (handler: (blur: number) => void) => void;
+  registerZoomMaxZoomHandler: (handler: (maxZoom: number) => void) => void;
+  registerGradientHandler: (
+    handler: (gradient: { [key: number]: string }) => void
+  ) => void;
+  setGradient: (gradient: { [key: number]: string }) => void;
 }
 
 /**

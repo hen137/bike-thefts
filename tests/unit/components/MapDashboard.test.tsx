@@ -30,9 +30,6 @@ vi.mock("@/components/map/DashboardTileSwitcher", () => ({
 import { MapDashboard } from "@/components/map/MapDashboard";
 
 const defaultProps = {
-  sliderValues: [250, 750],
-  setSliderValue: vi.fn(),
-  commitSliderValues: vi.fn(),
   byHood: true,
   setByHood: vi.fn(),
   timeWeighting: "None",
@@ -60,11 +57,11 @@ describe("MapDashboard", () => {
     expect(screen.getByTestId("dashboard-date-range")).toBeInTheDocument();
   });
 
-  it("passes sliderValues through to DashboardDateRange", () => {
+  it("passes initial slider values [750, 1000] to DashboardDateRange", () => {
     render(<MapDashboard {...defaultProps} />);
     expect(screen.getByTestId("dashboard-date-range")).toHaveAttribute(
       "data-slider-values",
-      "250,750"
+      "750,1000"
     );
   });
 });

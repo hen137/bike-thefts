@@ -11,7 +11,6 @@ export { MapMain } from "./MapMain";
 export { MapSearchBar } from "./MapSearchBar";
 export { MapTopBar } from "./MapTopBar";
 export { MapTileSwitcher } from "./MapTileSwitcher";
-export { MapControls } from "./MapControls";
 export { MapThemeSwitcher } from "./MapThemeSwitcher";
 export { MapMeasurementPanel } from "./MapMeasurementPanel";
 export { MapContextMenu } from "./MapContextMenu";

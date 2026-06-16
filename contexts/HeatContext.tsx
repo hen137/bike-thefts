@@ -37,9 +37,13 @@ export function HeatProvider({ children }: HeatProviderProps) {
     (LatLng | HeatLatLngTuple)[] | null
   >(null);
 
-  // Ref-based callback — avoids putting zoom radius in context state (prevents re-render loops)
+  // Ref-based callbacks — avoids putting zoom values in context state (prevents re-render loops)
   const zoomRadiusHandlerRef = useRef<((r: number) => void) | null>(null);
   const zoomBlurHandlerRef = useRef<((b: number) => void) | null>(null);
+  const zoomMaxZoomHandlerRef = useRef<((m: number) => void) | null>(null);
+  const gradientHandlerRef = useRef<
+    ((g: { [key: number]: string }) => void) | null
+  >(null);
 
   const registerZoomRadiusHandler = useCallback(
     (handler: (radius: number) => void) => {
@@ -55,12 +59,34 @@ export function HeatProvider({ children }: HeatProviderProps) {
     []
   );
 
+  const registerZoomMaxZoomHandler = useCallback(
+    (handler: (maxZoom: number) => void) => {
+      zoomMaxZoomHandlerRef.current = handler;
+    },
+    []
+  );
+
+  const registerGradientHandler = useCallback(
+    (handler: (gradient: { [key: number]: string }) => void) => {
+      gradientHandlerRef.current = handler;
+    },
+    []
+  );
+
   const setZoomRadius = useCallback((radius: number) => {
     zoomRadiusHandlerRef.current?.(radius);
   }, []);
 
   const setZoomBlur = useCallback((blur: number) => {
     zoomBlurHandlerRef.current?.(blur);
+  }, []);
+
+  const setZoomMaxZoom = useCallback((maxZoom: number) => {
+    zoomMaxZoomHandlerRef.current?.(maxZoom);
+  }, []);
+
+  const setGradient = useCallback((gradient: { [key: number]: string }) => {
+    gradientHandlerRef.current?.(gradient);
   }, []);
 
   // Memoized setHeat to prevent unnecessary re-renders
@@ -99,8 +125,12 @@ export function HeatProvider({ children }: HeatProviderProps) {
       setHeatValues,
       setZoomRadius,
       setZoomBlur,
+      setZoomMaxZoom,
       registerZoomRadiusHandler,
-      registerZoomBlurHandler
+      registerZoomBlurHandler,
+      registerZoomMaxZoomHandler,
+      registerGradientHandler,
+      setGradient
     }),
     [
       heatLayer,
@@ -111,8 +141,12 @@ export function HeatProvider({ children }: HeatProviderProps) {
       setHeatValues,
       setZoomRadius,
       setZoomBlur,
+      setZoomMaxZoom,
       registerZoomRadiusHandler,
-      registerZoomBlurHandler
+      registerZoomBlurHandler,
+      registerZoomMaxZoomHandler,
+      registerGradientHandler,
+      setGradient
     ]
   );
 

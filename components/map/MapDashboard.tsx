@@ -1,15 +1,13 @@
+import { useState } from "react";
 import { DashboardDateRange } from "./DashboardDateRange";
 import { DashboardTileSwitcher } from "./DashboardTileSwitcher";
 import { DashboardToggle } from "./DashboardToggle";
 import { DashboardVisualizationMode } from "./DashboardVisualizationMode";
 import { HeatLegend } from "./HeatLegend";
-// import { MapTileSwitcher } from "./MapTileSwitcher";
 import { MapTools } from "./MapTools";
+import { HeatRow, MonthYear } from "@/types";
 
 interface MapDashboardProps {
-  sliderValues: number[];
-  setSliderValue: (values: number[]) => void;
-  commitSliderValues: (values: number[]) => void;
   byHood: boolean;
   setByHood: (val: boolean) => void;
   timeWeighting: string;
@@ -20,15 +18,13 @@ interface MapDashboardProps {
   setWeightKInvQuad: (k: number) => void;
   weightFlipped: boolean;
   onWeightFlipToggle: () => void;
-  histBins?: number[];
   poissonIndex: number;
   setPoissonIndex: (i: number) => void;
 }
 
+const initialSliderValues = [750, 1000];
+
 export function MapDashboard({
-  sliderValues,
-  setSliderValue,
-  commitSliderValues,
   byHood,
   setByHood,
   timeWeighting,
@@ -39,10 +35,22 @@ export function MapDashboard({
   setWeightKInvQuad,
   weightFlipped,
   onWeightFlipToggle,
-  histBins,
   poissonIndex,
   setPoissonIndex
 }: MapDashboardProps) {
+  // Date Range variables
+  const [sliderValues, setSliderValue] =
+    useState<number[]>(initialSliderValues);
+  const [committedSliderValues, commitSliderValues] =
+    useState<number[]>(initialSliderValues);
+
+  // Visualization Mode variables
+  const [rows, setRows] = useState<HeatRow[]>([]);
+  const [queryRange, setQueryRange] = useState<{
+    start: MonthYear;
+    end: MonthYear;
+  } | null>(null);
+
   return (
     <div className="absolute sm:w-full sm:min-h-45 p-2 bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-1000 pointer-events-none">
       {/* Map Controls */}
@@ -61,6 +69,8 @@ export function MapDashboard({
           className="bg-white sm:min-w-130 pointer-events-auto rounded"
           byHood={byHood}
           setByHood={setByHood}
+          rows={rows}
+          queryRange={queryRange}
           timeWeighting={timeWeighting}
           setTimeWeighting={setTimeWeighting}
           weightKInv={weightKInv}
@@ -69,7 +79,6 @@ export function MapDashboard({
           setWeightKInvQuad={setWeightKInvQuad}
           weightFlipped={weightFlipped}
           onWeightFlipToggle={onWeightFlipToggle}
-          histBins={histBins}
           poissonIndex={poissonIndex}
           setPoissonIndex={setPoissonIndex}
         />
@@ -84,7 +93,6 @@ export function MapDashboard({
           {/* Bottom Row */}
           <div className="flex gap-2 sm:w-fit sm:h-35">
             {/* Tile Menu */}
-            {/* <div className="bg-white sm:min-w-30 rounded" /> */}
             <DashboardTileSwitcher className="bg-white sm:min-w-30 rounded" />
 
             {/* Date Range */}
@@ -92,7 +100,10 @@ export function MapDashboard({
               className="bg-white rounded sm:min-w-90 pointer-events-auto"
               sliderValues={sliderValues}
               setSliderValue={setSliderValue}
+              committedSliderValues={committedSliderValues}
               commitSliderValues={commitSliderValues}
+              setRows={setRows}
+              setQueryRange={setQueryRange}
             />
           </div>
         </div>

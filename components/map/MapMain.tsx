@@ -4,19 +4,13 @@ import { useState, useCallback, useMemo, useContext } from "react";
 import { useMapContextMenu } from "@/hooks";
 import { TileContext, HeatProvider } from "@/contexts";
 import {
-  DrawerPanel,
   LeafletHeatLayer,
   LeafletMap,
   LeafletTileLayer,
   MapContextMenu,
-  MapControls,
   MapMeasurementPanel
-  // MapTopBar
 } from "@/components/map";
-import { MonthYear } from "@/types/map";
 import { MapDashboard } from "./MapDashboard";
-
-const initialSliderValues = [750, 1000];
 
 /**
  * MapMain - Main map component with theme-aware tile provider
@@ -27,22 +21,12 @@ const initialSliderValues = [750, 1000];
  * - Stable function references
  */
 export function MapMain() {
-  // const [selectedCountry, setSelectedCountry] =
-  //   useState<GeoJSON.Feature | null>(null);
   const [isMeasurementOpen, setIsMeasurementOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [sliderValues, setSliderValue] =
-    useState<number[]>(initialSliderValues);
-  const [commitedSliderValues, commitSliderValues] =
-    useState<number[]>(initialSliderValues);
-  const [startDate, setStartDate] = useState<MonthYear | null>(null);
-  const [endDate, setEndDate] = useState<MonthYear | null>(null);
   const [byHood, setByHood] = useState(true);
   const [timeWeighting, setTimeWeighting] = useState("None");
   const [weightKInv, setWeightKInv] = useState(0.5);
   const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
   const [weightFlipped, setWeightFlipped] = useState(false);
-  const [histBins, setHistBins] = useState<number[]>([]);
   const [poissonIndex, setPoissonIndex] = useState(0);
 
   const tileContext = useContext(TileContext);
@@ -90,7 +74,7 @@ export function MapMain() {
   );
 
   return (
-    <div className="relative sm:rounded-2xl h-full w-full overflow-hidden">
+    <div className="relative sm:rounded-md h-full w-full overflow-hidden">
       <HeatProvider>
         {/* Map */}
         <LeafletMap
@@ -110,9 +94,6 @@ export function MapMain() {
 
         {/* Map Controls */}
         <MapDashboard
-          sliderValues={sliderValues}
-          setSliderValue={setSliderValue}
-          commitSliderValues={commitSliderValues}
           byHood={byHood}
           setByHood={setByHood}
           timeWeighting={timeWeighting}
@@ -123,52 +104,10 @@ export function MapMain() {
           setWeightKInvQuad={setWeightKInvQuad}
           weightFlipped={weightFlipped}
           onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
-          histBins={histBins}
-          poissonIndex={poissonIndex}
-          setPoissonIndex={setPoissonIndex}
-        />
-        <MapControls
-          drawerOpen={drawerOpen}
-          onDrawerToggle={() => setDrawerOpen((prev) => !prev)}
-          sliderValues={sliderValues}
-          committedSliderValues={commitedSliderValues}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          byHood={byHood}
-          timeWeighting={timeWeighting as "None" | "Lin" | "Inv" | "InvQuad"}
-          weightKInv={weightKInv}
-          weightKInvQuad={weightKInvQuad}
-          weightFlipped={weightFlipped}
-          onHistBins={setHistBins}
-        />
-
-        {/* Side Drawer */}
-        <DrawerPanel
-          open={drawerOpen}
-          onOpenChange={setDrawerOpen}
-          sliderValues={sliderValues}
-          setSliderValue={setSliderValue}
-          commitSliderValues={commitSliderValues}
-          byHood={byHood}
-          setByHood={setByHood}
-          timeWeighting={timeWeighting}
-          setTimeWeighting={setTimeWeighting}
-          weightKInv={weightKInv}
-          setWeightKInv={setWeightKInv}
-          weightKInvQuad={weightKInvQuad}
-          setWeightKInvQuad={setWeightKInvQuad}
-          weightFlipped={weightFlipped}
-          onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
-          histBins={histBins}
           poissonIndex={poissonIndex}
           setPoissonIndex={setPoissonIndex}
         />
       </HeatProvider>
-
-      {/* Top Bar */}
-      {/* <MapTopBar /> */}
 
       {/* Measurement Panel */}
       <MapMeasurementPanel

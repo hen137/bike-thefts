@@ -1,21 +1,31 @@
 "use client";
 
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeatLayer } from "leaflet";
-import { HeatContext } from "@/contexts";
-import { useLeafletMap } from "@/hooks";
-import { ZOOM_MAPPING } from "@/constants/map-config";
+import { useLeafletHeatLayer, useLeafletMap } from "@/hooks";
+import { DEFAULT_HEATMAP_CONFIG, ZOOM_MAPPING } from "@/constants/map-config";
 
 export function LeafletHeatLayer() {
   const map = useLeafletMap();
   const heatLayerRef = useRef<HeatLayer | null>(null);
+  const [blur, setBlur] = useState<number>(DEFAULT_HEATMAP_CONFIG.blur!);
+  const [radius, setRadius] = useState<number>(DEFAULT_HEATMAP_CONFIG.radius!);
+  const [maxZoom, setMaxZoom] = useState<number>(
+    DEFAULT_HEATMAP_CONFIG.maxZoom!
+  );
+  // const [gradient] = useState(DEFAULT_HEATMAP_CONFIG.gradient);
 
-  const heatContext = useContext(HeatContext);
-
-  if (heatContext === undefined)
-    throw new Error("LeafletHeatLayer must be used within a HeatProvider");
-
-  const { setHeatLayer, setZoomRadius, setZoomBlur } = heatContext;
+  const {
+    heatLayer,
+    setHeatLayer,
+    setZoomRadius,
+    setZoomBlur,
+    setZoomMaxZoom,
+    registerZoomRadiusHandler,
+    registerZoomBlurHandler,
+    registerZoomMaxZoomHandler,
+    setHeatOptions
+  } = useLeafletHeatLayer();
 
   useEffect(() => {
     // Wait for map to be ready
@@ -24,12 +34,13 @@ export function LeafletHeatLayer() {
     let isMounted = true;
 
     const handleZoom = () => {
-      const { radius, blur } = ZOOM_MAPPING[map.getZoom()];
+      const { radius, blur, maxZoom } = ZOOM_MAPPING[map.getZoom()];
       if (heatLayerRef.current) {
-        heatLayerRef.current.setOptions({ radius, blur });
+        heatLayerRef.current.setOptions({ radius, blur, maxZoom });
       }
       setZoomRadius(radius);
       setZoomBlur(blur);
+      setZoomMaxZoom(maxZoom);
     };
 
     const setupHeatLayer = async () => {
@@ -91,6 +102,22 @@ export function LeafletHeatLayer() {
       }
     };
   }, [map]);
+
+  useEffect(() => {
+    registerZoomRadiusHandler(setRadius);
+  }, [registerZoomRadiusHandler]);
+
+  useEffect(() => {
+    registerZoomBlurHandler(setBlur);
+  }, [registerZoomBlurHandler]);
+
+  useEffect(() => {
+    registerZoomMaxZoomHandler(setMaxZoom);
+  }, [registerZoomMaxZoomHandler]);
+
+  useEffect(() => {
+    setHeatOptions({ blur, radius, maxZoom });
+  }, [heatLayer, blur, radius, maxZoom, setHeatOptions]);
 
   return null;
 }

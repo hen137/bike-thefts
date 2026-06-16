@@ -43,14 +43,15 @@ export const DEFAULT_MAP_HEIGHT = "100vh";
  */
 export const SENTINAL_COORDINATES = "5.08888749034163e-145.6843418860808e-14";
 
-export const ZOOM_MAPPING: { [key: number]: { radius: number; blur: number } } =
-  {
-    16: { radius: 65, blur: 80 },
-    15: { radius: 40, blur: 60 },
-    14: { radius: 25, blur: 39 },
-    13: { radius: 15, blur: 22 },
-    12: { radius: 8, blur: 11 },
-    11: { radius: 5, blur: 7 },
-    10: { radius: 3, blur: 3 },
-    9: { radius: 2, blur: 2 }
-  };
+export const ZOOM_MAPPING: {
+  [key: number]: { radius: number; blur: number; maxZoom: number };
+} = {
+  16: { radius: 65, blur: 80, maxZoom: 16 },
+  15: { radius: 40, blur: 60, maxZoom: 15 },
+  14: { radius: 25, blur: 39, maxZoom: 14 },
+  13: { radius: 15, blur: 22, maxZoom: 13 },
+  12: { radius: 8, blur: 11, maxZoom: 12 },
+  11: { radius: 5, blur: 7, maxZoom: 11 },
+  10: { radius: 3, blur: 3, maxZoom: 10 },
+  9: { radius: 2, blur: 2, maxZoom: 9 }
+};

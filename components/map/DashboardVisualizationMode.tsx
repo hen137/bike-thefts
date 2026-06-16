@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   Select,
@@ -15,6 +15,9 @@ import {
 } from "../ui/select";
 import { SegmentedToggle } from "./SegmentedToggle";
 import { WeightGraph } from "./WeightGraph";
+import { HeatRow, MonthYear } from "@/types";
+import { buildHeatDataFromRows, computeHistBins } from "@/lib/utils/heatmap";
+import { useLeafletHeatLayer } from "@/hooks";
 
 type VisualizationMode = "reported" | "predict";
 
@@ -22,6 +25,11 @@ interface DashboardVisualizationModeProps {
   className?: string;
   byHood: boolean;
   setByHood: (val: boolean) => void;
+  rows: HeatRow[];
+  queryRange: {
+    start: MonthYear;
+    end: MonthYear;
+  } | null;
   timeWeighting: string;
   setTimeWeighting: (val: string) => void;
   weightKInv: number;
@@ -30,7 +38,6 @@ interface DashboardVisualizationModeProps {
   setWeightKInvQuad: (k: number) => void;
   weightFlipped: boolean;
   onWeightFlipToggle: () => void;
-  histBins?: number[];
   poissonIndex: number;
   setPoissonIndex: (i: number) => void;
 }
@@ -39,6 +46,8 @@ export function DashboardVisualizationMode({
   className,
   byHood,
   setByHood,
+  rows,
+  queryRange,
   timeWeighting,
   setTimeWeighting,
   weightKInv,
@@ -47,11 +56,40 @@ export function DashboardVisualizationMode({
   setWeightKInvQuad,
   weightFlipped,
   onWeightFlipToggle,
-  histBins,
   poissonIndex,
   setPoissonIndex
 }: DashboardVisualizationModeProps) {
   const [mode, setMode] = useState<VisualizationMode>("reported");
+  const [histBins, setHistBins] = useState<number[]>([]);
+
+  const { setHeatValues } = useLeafletHeatLayer();
+
+  // Derives heat values + histogram from the cached rows — runs on every weighting/
+  // aggregation change (including flip) without re-querying the DB, so toggling is instant.
+  useEffect(() => {
+    if (!queryRange) return;
+
+    const activeK = timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
+    const refDate = weightFlipped ? queryRange.start : queryRange.end;
+    const { values } = buildHeatDataFromRows(
+      rows,
+      byHood,
+      timeWeighting.toLocaleLowerCase() as "none" | "lin" | "inv" | "invquad",
+      refDate,
+      activeK
+    );
+    setHeatValues(values);
+    setHistBins(computeHistBins(rows, refDate));
+  }, [
+    rows,
+    queryRange,
+    byHood,
+    timeWeighting,
+    weightKInv,
+    weightKInvQuad,
+    weightFlipped,
+    setHeatValues
+  ]);
 
   return (
     <div className={`${className} flex flex-col p-2`}>
@@ -73,18 +111,12 @@ export function DashboardVisualizationMode({
                   value="reported"
                   className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
                 >
-                  {/* <SelectItemIndicator>
-                    <Check className="size-3" />
-                  </SelectItemIndicator> */}
                   <SelectItemText>Reported Thefts</SelectItemText>
                 </SelectItem>
                 <SelectItem
                   value="predict"
                   className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
                 >
-                  {/* <SelectItemIndicator>
-                    <Check className="size-3" />
-                  </SelectItemIndicator> */}
                   <SelectItemText>Predict Thefts</SelectItemText>
                 </SelectItem>
               </SelectViewport>
