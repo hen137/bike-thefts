@@ -23,6 +23,9 @@ vi.mock("@/components/map/HeatLegend", () => ({
 vi.mock("@/components/map/MapTools", () => ({
   MapTools: () => <div data-testid="map-tools" />
 }));
+vi.mock("@/components/map/DashboardTileSwitcher", () => ({
+  DashboardTileSwitcher: () => <div data-testid="dashboard-tile-switcher" />
+}));
 
 import { MapDashboard } from "@/components/map/MapDashboard";
 
@@ -53,6 +56,7 @@ describe("MapDashboard", () => {
       screen.getByTestId("dashboard-visualization-mode")
     ).toBeInTheDocument();
     expect(screen.getByTestId("heat-legend")).toBeInTheDocument();
+    expect(screen.getByTestId("dashboard-tile-switcher")).toBeInTheDocument();
     expect(screen.getByTestId("dashboard-date-range")).toBeInTheDocument();
   });
 

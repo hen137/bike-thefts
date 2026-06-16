@@ -1,4 +1,5 @@
 import { DashboardDateRange } from "./DashboardDateRange";
+import { DashboardTileSwitcher } from "./DashboardTileSwitcher";
 import { DashboardToggle } from "./DashboardToggle";
 import { DashboardVisualizationMode } from "./DashboardVisualizationMode";
 import { HeatLegend } from "./HeatLegend";
@@ -43,9 +44,9 @@ export function MapDashboard({
   setPoissonIndex
 }: MapDashboardProps) {
   return (
-    <div className="absolute sm:w-full sm:mion-h-45 p-2 bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-1000 pointer-events-none">
+    <div className="absolute sm:w-full sm:min-h-45 p-2 bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-1000 pointer-events-none">
       {/* Map Controls */}
-      <div className="gap-2 flex flex-col sm:min-w-8">
+      <div className="gap-2 flex flex-col sm:min-w-8 sm:h-45 sm:self-end">
         {/* Dashboard Toggle */}
         <DashboardToggle className="bg-white grow pointer-events-auto rounded" />
 
@@ -73,17 +74,18 @@ export function MapDashboard({
           setPoissonIndex={setPoissonIndex}
         />
 
-        <div className="flex flex-col gap-2 sm:w-fit pointer-events-auto">
+        <div className="flex flex-col gap-2 sm:w-fit pointer-events-auto sm:h-45 sm:self-end">
           {/* Top Row */}
-          <div className="flex gap-2 sm:min-h-8">
+          <div className="flex gap-2 sm:h-8">
             {/* Heat Legend */}
-            <HeatLegend className="grow pointer-events-auto rounded" />
+            <HeatLegend className="sm:h-full pointer-events-auto rounded" />
           </div>
 
           {/* Bottom Row */}
-          <div className="flex gap-2 sm:w-fit sm:h-full">
+          <div className="flex gap-2 sm:w-fit sm:h-35">
             {/* Tile Menu */}
-            <div className="bg-white sm:min-w-30 rounded" />
+            {/* <div className="bg-white sm:min-w-30 rounded" /> */}
+            <DashboardTileSwitcher className="bg-white sm:min-w-30 rounded" />
 
             {/* Date Range */}
             <DashboardDateRange
