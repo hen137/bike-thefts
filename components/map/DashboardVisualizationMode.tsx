@@ -55,15 +55,14 @@ export function DashboardVisualizationMode({
 
   return (
     <div className={`${className} flex flex-col p-2`}>
-      <div className="flex items-center border-b gap-2 px-2">
-        {/* <h1 className="py-1">Visualization Mode:</h1> */}
+      <div className="flex items-center gap-2">
         <Select
           value={mode}
           onValueChange={(val) => setMode(val as VisualizationMode)}
         >
-          <SelectTrigger className="flex items-center  gap-2 rounded px-2 py-1 text-slate-600 hover:bg-slate-100 transition-colors">
+          <SelectTrigger className="flex items-center border text-sm flex-between gap-2 rounded px-2 py-1 text-slate-600 hover:bg-slate-100 transition-colors">
             <SelectValue />
-            <SelectIcon className="px-1 border-l border-slate-500">
+            <SelectIcon className=" border-slate-500">
               <ChevronDown className="size-3" />
             </SelectIcon>
           </SelectTrigger>
@@ -72,7 +71,7 @@ export function DashboardVisualizationMode({
               <SelectViewport className="p-1">
                 <SelectItem
                   value="reported"
-                  className="flex items-center justify-between gap-2 rounded px-2 py-1  text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
+                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
                 >
                   {/* <SelectItemIndicator>
                     <Check className="size-3" />
@@ -81,7 +80,7 @@ export function DashboardVisualizationMode({
                 </SelectItem>
                 <SelectItem
                   value="predict"
-                  className="flex items-center justify-between gap-2 rounded px-2 py-1  text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
+                  className="flex items-center justify-between gap-2 rounded px-2 py-1 text-sm text-slate-600 dark:text-slate-300 outline-none cursor-default data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700"
                 >
                   {/* <SelectItemIndicator>
                     <Check className="size-3" />
