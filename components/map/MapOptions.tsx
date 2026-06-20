@@ -12,8 +12,13 @@ interface MapOptionsProps {
 }
 
 function monthYearFromISODate(iso: string): MonthYear {
-  const d = new Date(iso);
-  return { month: d.getMonth(), year: d.getFullYear() };
+  // Parse the "YYYY-MM-DD" components directly rather than going through
+  // `new Date(iso)`. A date-only ISO string is parsed as UTC midnight, but
+  // `.getMonth()`/`.getFullYear()` read it back in local time — in any
+  // negative-UTC-offset timezone that can shift the date backward across a
+  // month (or year) boundary.
+  const [year, month] = iso.split("-").map(Number);
+  return { month: month - 1, year };
 }
 
 function ninetyDaysBack(end: MonthYear): MonthYear {

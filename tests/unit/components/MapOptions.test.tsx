@@ -76,6 +76,30 @@ describe("MapOptions", () => {
     });
   });
 
+  it("does not shift a day-1 maxDate backward a month due to UTC/local parsing", async () => {
+    // Regression test: monthYearFromISODate previously parsed "YYYY-MM-DD"
+    // via `new Date(iso)` (UTC midnight) and read it back with
+    // `.getMonth()`/`.getFullYear()` (local time). In any negative-UTC-offset
+    // timezone, a day-1 date like "2026-08-01" shifts backward to local
+    // "Jul 31 2026 20:00"-ish, producing July instead of August. Day-15
+    // fixture dates elsewhere in this file don't expose the bug because no
+    // real-world offset is large enough to cross a month boundary from the
+    // 15th.
+    mockUseDbContext.mockReturnValue({
+      ...READY_CONTEXT,
+      initResult: {
+        ...READY_CONTEXT.initResult,
+        maxDate: "2026-08-01"
+      }
+    });
+    renderWithProvider();
+
+    await waitFor(() => {
+      const inputs = screen.getAllByLabelText("Month and year");
+      expect(inputs[1]).toHaveValue("08/2026");
+    });
+  });
+
   it("calls worker.queryHeatmap once the default range is set", async () => {
     mockUseDbContext.mockReturnValue(READY_CONTEXT);
     renderWithProvider();
