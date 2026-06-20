@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { HeatLayer } from "leaflet";
 import { useLeafletHeatLayer, useLeafletMap } from "@/hooks";
 import { DEFAULT_HEATMAP_CONFIG, ZOOM_MAPPING } from "@/constants/map-config";
+import { useDataSettings } from "@/hooks/useDataSettings";
+import { buildHeatDataFromRows } from "@/lib/utils/heatmap";
 
 export function LeafletHeatLayer() {
   const map = useLeafletMap();
@@ -24,8 +26,19 @@ export function LeafletHeatLayer() {
     registerZoomRadiusHandler,
     registerZoomBlurHandler,
     registerZoomMaxZoomHandler,
-    setHeatOptions
+    setHeatOptions,
+    setHeatValues
   } = useLeafletHeatLayer();
+
+  const {
+    byHood,
+    queryRange,
+    rows,
+    weightFlipped,
+    timeWeighting,
+    weightKInv,
+    weightKInvQuad
+  } = useDataSettings();
 
   useEffect(() => {
     // Wait for map to be ready
@@ -118,6 +131,30 @@ export function LeafletHeatLayer() {
   useEffect(() => {
     setHeatOptions({ blur, radius, maxZoom });
   }, [heatLayer, blur, radius, maxZoom, setHeatOptions]);
+
+  useEffect(() => {
+    if (!queryRange) return;
+
+    const activeK = timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
+    const refDate = weightFlipped ? queryRange.startDate : queryRange.endDate;
+    const { values } = buildHeatDataFromRows(
+      rows,
+      byHood,
+      timeWeighting.toLocaleLowerCase() as "none" | "lin" | "inv" | "invquad",
+      refDate,
+      activeK
+    );
+    setHeatValues(values);
+  }, [
+    rows,
+    queryRange,
+    byHood,
+    timeWeighting,
+    weightKInv,
+    weightKInvQuad,
+    weightFlipped,
+    setHeatValues
+  ]);
 
   return null;
 }
