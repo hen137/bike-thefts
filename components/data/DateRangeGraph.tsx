@@ -12,8 +12,6 @@ export function DateRangeGraph({ className }: DateRangeGraphProps) {
   const { queryRange, rows, weightFlipped, setHistBins } = useDataSettings();
 
   useEffect(() => {
-    if (!queryRange) return;
-
     const refDate = weightFlipped ? queryRange.startDate : queryRange.endDate;
     setHistBins(computeHistBins(rows, refDate));
   }, [rows, queryRange, weightFlipped]);

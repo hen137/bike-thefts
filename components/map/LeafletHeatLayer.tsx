@@ -133,8 +133,6 @@ export function LeafletHeatLayer() {
   }, [heatLayer, blur, radius, maxZoom, setHeatOptions]);
 
   useEffect(() => {
-    if (!queryRange) return;
-
     const activeK = timeWeighting === "InvQuad" ? weightKInvQuad : weightKInv;
     const refDate = weightFlipped ? queryRange.startDate : queryRange.endDate;
     const { values } = buildHeatDataFromRows(

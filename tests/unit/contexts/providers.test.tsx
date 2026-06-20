@@ -18,6 +18,8 @@ import { MapProvider, MapContext } from "@/contexts/MapContext";
 import { HeatProvider, HeatContext } from "@/contexts/HeatContext";
 import { TileProvider, TileContext } from "@/contexts/TileContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { DataProvider } from "@/contexts/DataContext";
+import { useDataSettings } from "@/hooks/useDataSettings";
 
 describe("MapProvider", () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -111,6 +113,25 @@ describe("TileProvider", () => {
     expect(result.current!.tileProvider.id).toBe("osm");
     expect(result.current!.currentProviderId).toBe("osm");
     expect(typeof result.current!.setProviderId).toBe("function");
+  });
+});
+
+describe("DataProvider", () => {
+  it("initializes queryRange with a non-null 90-day-relative-to-today default", () => {
+    const { result } = renderHook(() => useDataSettings(), {
+      wrapper: DataProvider
+    });
+    expect(result.current.queryRange).not.toBeNull();
+    expect(result.current.queryRange.startDate).toHaveProperty("month");
+    expect(result.current.queryRange.startDate).toHaveProperty("year");
+    expect(result.current.queryRange.endDate).toHaveProperty("month");
+    expect(result.current.queryRange.endDate).toHaveProperty("year");
+
+    const today = new Date();
+    expect(result.current.queryRange.endDate).toEqual({
+      month: today.getMonth(),
+      year: today.getFullYear()
+    });
   });
 });
 
