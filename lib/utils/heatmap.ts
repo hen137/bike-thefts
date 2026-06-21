@@ -1,5 +1,4 @@
 import type { HeatLatLngTuple } from "leaflet";
-import { mean } from "simple-statistics";
 import type { HeatRow, HoodRow } from "@/types/db";
 import { MonthYear } from "@/types/map";
 
@@ -97,21 +96,16 @@ export function buildHeatDataFromRows(
 
     for (const value of Object.values(hoods)) {
       const maxCount = Math.max(...value.map((r) => r.count));
-      const maxDelta = Math.max(
-        ...value.map((r) => monthsDelta(refDate, new Date(r.occ_date)))
+      const deltas = value.map((r) =>
+        monthsDelta(refDate, new Date(r.occ_date))
       );
+      const maxDelta = Math.max(...deltas);
 
-      value.map((r) => {
-        const rowDate = new Date(r.occ_date);
+      value.forEach((r, i) => {
         const timeWeight =
           timeWeighting === "none"
             ? 1
-            : getTimeWeight(
-                timeWeighting,
-                monthsDelta(refDate, rowDate),
-                maxDelta,
-                k
-              );
+            : getTimeWeight(timeWeighting, deltas[i], maxDelta, k);
         const int = (r.count / maxCount) * timeWeight;
         avgIntensities.push(int);
         values.push([r.lat, r.lng, int]);
@@ -119,21 +113,14 @@ export function buildHeatDataFromRows(
     }
   } else {
     const maxCount = Math.max(...rows.map((r) => r.count));
-    const maxDelta = Math.max(
-      ...rows.map((r) => monthsDelta(refDate, new Date(r.occ_date)))
-    );
+    const deltas = rows.map((r) => monthsDelta(refDate, new Date(r.occ_date)));
+    const maxDelta = Math.max(...deltas);
 
-    rows.forEach((row) => {
-      const rowDate = new Date(row.occ_date);
+    rows.forEach((row, i) => {
       const timeWeight =
         timeWeighting === "none"
           ? 1
-          : getTimeWeight(
-              timeWeighting,
-              monthsDelta(refDate, rowDate),
-              maxDelta,
-              k
-            );
+          : getTimeWeight(timeWeighting, deltas[i], maxDelta, k);
 
       const int = (row.count / maxCount) * timeWeight;
       avgIntensities.push(int);
@@ -141,5 +128,8 @@ export function buildHeatDataFromRows(
     });
   }
 
-  return { values, avgIntensity: mean(avgIntensities) };
+  const avgIntensity =
+    avgIntensities.reduce((sum, v) => sum + v, 0) / avgIntensities.length;
+
+  return { values, avgIntensity };
 }
