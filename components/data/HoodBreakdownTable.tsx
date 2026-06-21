@@ -29,15 +29,15 @@ const columns: ColumnDef<HoodBreakdownRow>[] = [
   { accessorKey: "hood_158", header: "Neighbourhood" },
   { accessorKey: "total", header: "Total" },
   {
+    accessorKey: "avgPerMonth",
+    header: "Avg / Month",
+    cell: ({ getValue }) => (getValue() as number).toFixed(1)
+  },
+  {
     id: "topOffences",
     header: "Top Offences",
     cell: ({ row }) =>
       row.original.topOffences.map((o) => `${o.label} (${o.count})`).join(", ")
-  },
-  {
-    accessorKey: "avgPerMonth",
-    header: "Avg / Month",
-    cell: ({ getValue }) => (getValue() as number).toFixed(1)
   }
 ];
 
