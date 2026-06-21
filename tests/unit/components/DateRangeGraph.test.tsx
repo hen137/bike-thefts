@@ -6,8 +6,26 @@ import { DataContext } from "@/contexts/DataContext";
 import type { DataContextValue } from "@/types/data";
 import type { HeatRow } from "@/types/db";
 
+const sampleBins = [
+  {
+    binStart: "2023-01-01T00:00:00.000Z",
+    binEnd: "2023-02-01T00:00:00.000Z",
+    count: 1
+  },
+  {
+    binStart: "2023-02-01T00:00:00.000Z",
+    binEnd: "2023-03-01T00:00:00.000Z",
+    count: 2
+  },
+  {
+    binStart: "2023-03-01T00:00:00.000Z",
+    binEnd: "2023-06-01T00:00:00.000Z",
+    count: 3
+  }
+];
+
 vi.mock("@/lib/utils/heatmap", () => ({
-  computeHistBins: vi.fn(() => [1, 2, 3])
+  computeHistBins: vi.fn(() => sampleBins)
 }));
 
 vi.mock("recharts", () => ({
@@ -18,13 +36,13 @@ vi.mock("recharts", () => ({
     data,
     children
   }: {
-    data: { value: number }[];
+    data: { count: number }[];
     children?: ReactNode;
   }) => (
     <div>
       {data.map((d, i) => (
         <div key={i} data-testid="date-range-bar">
-          {d.value}
+          {d.count}
         </div>
       ))}
       {children}
@@ -32,8 +50,6 @@ vi.mock("recharts", () => ({
   ),
   Bar: () => null,
   XAxis: () => null,
-  YAxis: () => null,
-  CartesianGrid: () => null,
   Tooltip: () => null
 }));
 
@@ -67,8 +83,8 @@ function makeContextValue(
 }
 
 describe("DateRangeGraph", () => {
-  it("passes endDate as refDate to computeHistBins when not flipped", () => {
-    const value = makeContextValue({ weightFlipped: false });
+  it("computes bins across the full query date range", () => {
+    const value = makeContextValue();
     render(
       <DataContext.Provider value={value}>
         <DateRangeGraph />
@@ -76,25 +92,13 @@ describe("DateRangeGraph", () => {
     );
     expect(computeHistBins).toHaveBeenCalledWith(
       value.rows,
+      value.queryRange!.startDate,
       value.queryRange!.endDate
     );
   });
 
-  it("passes startDate as refDate to computeHistBins when flipped", () => {
-    const value = makeContextValue({ weightFlipped: true });
-    render(
-      <DataContext.Provider value={value}>
-        <DateRangeGraph />
-      </DataContext.Provider>
-    );
-    expect(computeHistBins).toHaveBeenCalledWith(
-      value.rows,
-      value.queryRange!.startDate
-    );
-  });
-
   it("renders a bar for each histogram bin", () => {
-    const value = makeContextValue({ histBins: [0.2, 0.5, 1] });
+    const value = makeContextValue({ histBins: sampleBins });
     render(
       <DataContext.Provider value={value}>
         <DateRangeGraph />

@@ -3,6 +3,7 @@
 import { HeatRow, MonthYear } from "@/types";
 import { DataProviderProps } from "@/types/contexts";
 import { DataContextValue } from "@/types/data";
+import { HistBin } from "@/lib/utils/heatmap";
 import { createContext, useMemo, useState } from "react";
 
 export const DataContext = createContext<DataContextValue | undefined>(
@@ -49,7 +50,7 @@ export function DataProvider({ children }: DataProviderProps) {
 
   // histBins:
   // setHistBins: DateRangeGraph (update on weight flip)
-  const [histBins, setHistBins] = useState<number[]>([]);
+  const [histBins, setHistBins] = useState<HistBin[]>([]);
 
   //
   const [timeWeighting, setTimeWeighting] = useState("None");

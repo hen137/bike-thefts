@@ -6,6 +6,7 @@ import {
 } from "@/lib/utils/heatmap";
 import type { HeatRow } from "@/types/db";
 import type { MonthYear } from "@/types/map";
+import { isoStartOfMonth, isoEndOfMonth } from "@/lib/utils/date-range";
 
 // refDate used across tests that don't specifically test time-weighting behaviour.
 // Using "none" keeps intensity = count/maxCount, same as the original logic.
@@ -192,64 +193,62 @@ describe("buildHeatDataFromRows — byHood=true (stratified)", () => {
 });
 
 describe("computeHistBins", () => {
-  const REF14: MonthYear = { year: 2026, month: 0 };
+  const START: MonthYear = { year: 2025, month: 0 };
+  const END: MonthYear = { year: 2025, month: 11 };
 
   it("returns nBins-length array", () => {
     const rows: HeatRow[] = [
       { hood_158: 1, lat: 1, lng: 1, count: 5, occ_date: "2025-01-01" }
     ];
-    expect(computeHistBins(rows, REF14)).toHaveLength(14);
+    expect(computeHistBins(rows, START, END)).toHaveLength(14);
   });
 
-  it("returns all-zero array for empty rows", () => {
-    const bins = computeHistBins([], REF14);
+  it("returns all-zero-count bins for empty rows", () => {
+    const bins = computeHistBins([], START, END);
     expect(bins).toHaveLength(14);
-    expect(bins.every((b) => b === 0)).toBe(true);
+    expect(bins.every((b) => b.count === 0)).toBe(true);
   });
 
-  it("normalizes so max bin is 1", () => {
+  it("reports raw (non-normalized) counts per bin", () => {
     const rows: HeatRow[] = [
-      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-07-01" },
-      { hood_158: 2, lat: 2, lng: 2, count: 2, occ_date: "2024-01-01" }
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-01-15" },
+      { hood_158: 2, lat: 2, lng: 2, count: 2, occ_date: "2025-12-15" }
     ];
-    const bins = computeHistBins(rows, REF14);
-    expect(Math.max(...bins)).toBe(1);
-    expect(bins.every((b) => b >= 0 && b <= 1)).toBe(true);
+    const bins = computeHistBins(rows, START, END);
+    const total = bins.reduce((sum, b) => sum + b.count, 0);
+    expect(total).toBe(12);
+    expect(bins.some((b) => b.count === 10)).toBe(true);
+    expect(bins.some((b) => b.count === 2)).toBe(true);
   });
 
-  it("recent rows land in lower-index bins than old rows", () => {
-    // ref: Jan 2026; recent = Dec 2025 (delta ~1mo); old = Jan 2014 (delta ~144mo)
+  it("earlier rows land in lower-index bins than later rows", () => {
     const rows: HeatRow[] = [
-      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-12-15" },
-      { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2014-01-15" }
-    ];
-    const bins = computeHistBins(rows, REF14);
-    const recentBin = bins.findIndex((b) => b > 0);
-    const oldBin =
-      bins.length - 1 - [...bins].reverse().findIndex((b) => b > 0);
-    expect(oldBin).toBeGreaterThan(recentBin);
-  });
-
-  it("with an early refDate, oldest rows land in lower-index bins than recent rows", () => {
-    // ref: Jan 2014; oldest = Jan 2014 (delta ~0mo); recent = Dec 2025 (delta ~143mo)
-    const earlyRef: MonthYear = { year: 2014, month: 0 };
-    const rows: HeatRow[] = [
-      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2014-01-15" },
+      { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-01-15" },
       { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2025-12-15" }
     ];
-    const bins = computeHistBins(rows, earlyRef);
-    const oldBin = bins.findIndex((b) => b > 0);
-    const recentBin =
-      bins.length - 1 - [...bins].reverse().findIndex((b) => b > 0);
-    expect(recentBin).toBeGreaterThan(oldBin);
+    const bins = computeHistBins(rows, START, END);
+    const earlyBin = bins.findIndex((b) => b.count > 0);
+    const lateBin =
+      bins.length - 1 - [...bins].reverse().findIndex((b) => b.count > 0);
+    expect(lateBin).toBeGreaterThan(earlyBin);
+  });
+
+  it("bin boundaries span the full start-to-end date range", () => {
+    const bins = computeHistBins([], START, END);
+    expect(bins[0].binStart).toBe(
+      new Date(isoStartOfMonth(START)).toISOString()
+    );
+    expect(bins[bins.length - 1].binEnd).toBe(
+      new Date(isoEndOfMonth(END)).toISOString()
+    );
   });
 
   it("respects custom nBins", () => {
     const rows: HeatRow[] = [
       { hood_158: 1, lat: 1, lng: 1, count: 1, occ_date: "2025-01-01" }
     ];
-    expect(computeHistBins(rows, REF14, 20)).toHaveLength(20);
-    expect(computeHistBins(rows, REF14, 5)).toHaveLength(5);
+    expect(computeHistBins(rows, START, END, 20)).toHaveLength(20);
+    expect(computeHistBins(rows, START, END, 5)).toHaveLength(5);
   });
 });
 

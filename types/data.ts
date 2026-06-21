@@ -1,5 +1,6 @@
 import { HeatRow } from "./db";
 import { MonthYear } from "./map";
+import { HistBin } from "@/lib/utils/heatmap";
 
 export type VisualizationMode = "reported" | "predict";
 
@@ -22,8 +23,8 @@ export interface DataContextValue {
   setRows: (rows: HeatRow[]) => void;
   weightFlipped: boolean;
   setWeightFlipped: (weightFlipped: boolean) => void;
-  histBins: number[];
-  setHistBins: (histBins: number[]) => void;
+  histBins: HistBin[];
+  setHistBins: (histBins: HistBin[]) => void;
   timeWeighting: string;
   setTimeWeighting: (timeWeighting: string) => void;
   weightKInv: number;

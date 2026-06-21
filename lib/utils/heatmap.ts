@@ -1,6 +1,13 @@
 import type { HeatLatLngTuple } from "leaflet";
 import type { HeatRow, HoodRow } from "@/types/db";
 import { MonthYear } from "@/types/map";
+import { isoStartOfMonth, isoEndOfMonth } from "@/lib/utils/date-range";
+
+export interface HistBin {
+  binStart: string;
+  binEnd: string;
+  count: number;
+}
 
 type TimeWeightingType = "none" | "lin" | "inv" | "invquad";
 export interface HeatDataResult {
@@ -31,34 +38,31 @@ function monthsDelta(refDate: MonthYear, rowDate: Date): number {
 
 export function computeHistBins(
   rows: HeatRow[],
-  refDate: MonthYear,
+  startDate: MonthYear,
+  endDate: MonthYear,
   nBins: number = 14
-): number[] {
-  if (rows.length === 0) return new Array(nBins).fill(0);
+): HistBin[] {
+  const rangeStartMs = new Date(isoStartOfMonth(startDate)).getTime();
+  const rangeEndMs = new Date(isoEndOfMonth(endDate)).getTime();
+  const totalMs = Math.max(1, rangeEndMs - rangeStartMs);
+  const binWidthMs = totalMs / nBins;
 
-  let maxDelta = 0;
-  const deltas: number[] = [];
+  const bins: HistBin[] = Array.from({ length: nBins }, (_, i) => ({
+    binStart: new Date(rangeStartMs + i * binWidthMs).toISOString(),
+    binEnd: new Date(rangeStartMs + (i + 1) * binWidthMs).toISOString(),
+    count: 0
+  }));
+
   for (const r of rows) {
-    const rowDate = new Date(r.occ_date);
-    const delta = monthsDelta(refDate, rowDate);
-    deltas.push(delta);
-    if (delta > maxDelta) maxDelta = delta;
+    const rowMs = new Date(r.occ_date).getTime();
+    const idx = Math.min(
+      nBins - 1,
+      Math.max(0, Math.floor((rowMs - rangeStartMs) / binWidthMs))
+    );
+    bins[idx].count += r.count;
   }
 
-  const bins = new Array(nBins).fill(0);
-  if (maxDelta === 0) {
-    bins[0] = 1;
-    return bins;
-  }
-
-  rows.forEach((r, i) => {
-    const t = deltas[i] / maxDelta;
-    const idx = Math.min(nBins - 1, Math.floor(t * nBins));
-    bins[idx] += r.count;
-  });
-
-  const maxBin = Math.max(...bins);
-  return maxBin === 0 ? bins : bins.map((b) => b / maxBin);
+  return bins;
 }
 
 export function buildHeatDataFromRows(
