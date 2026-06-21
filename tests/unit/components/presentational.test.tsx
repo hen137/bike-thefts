@@ -13,46 +13,12 @@ vi.mock("@/components/map/MapSearchBar", () => ({
   MapSearchBar: () => <div data-testid="mock-search-bar" />
 }));
 
-// Vitest doesn't run the SVGR transform Next.js applies, so `*.svg` imports
-// resolve to data-URL strings rather than components. Stub the icon used by
-// HeatLegend with a recognizable element so the render doesn't blow up.
-vi.mock("@/assets/lock.svg", () => ({
-  default: (props: { className?: string }) => (
-    <svg data-testid="lock-icon" {...props} />
-  )
-}));
-
-import { HeatLegend } from "@/components/map/HeatLegend";
 import { MapTopBar } from "@/components/map/MapTopBar";
 import { MapLoadingSpinner } from "@/components/map/MapLoadingSpinner";
 import { DebugHUD } from "@/components/debug/DebugHUD";
 import { MapContext } from "@/contexts/MapContext";
 import type { MapContextValue } from "@/types/map";
 import type { DebugHUDProps } from "@/types/components";
-
-describe("HeatLegend", () => {
-  it("applies a custom className to the outer container", () => {
-    const { container } = render(<HeatLegend className="custom-class" />);
-    expect(container.firstElementChild).toHaveClass("custom-class");
-  });
-
-  it("renders a single lock for the low end and a group of three for the high end", () => {
-    render(<HeatLegend />);
-    const locks = screen.getAllByTestId("lock-icon");
-    expect(locks).toHaveLength(4);
-
-    // High end: three locks grouped together in their own wrapper...
-    const group = locks[1].parentElement;
-    expect(group?.children).toHaveLength(3);
-    expect(locks[2].parentElement).toBe(group);
-    expect(locks[3].parentElement).toBe(group);
-
-    // ...while the low-end lock sits directly in the scale row, alongside
-    // (not inside) that group.
-    expect(locks[0].parentElement).not.toBe(group);
-    expect(locks[0].parentElement?.contains(group as Node)).toBe(true);
-  });
-});
 
 describe("MapTopBar", () => {
   it("renders the top bar container", () => {

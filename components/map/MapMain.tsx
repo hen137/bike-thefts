@@ -10,7 +10,8 @@ import {
   MapContextMenu,
   MapMeasurementPanel
 } from "@/components/map";
-import { MapDashboard } from "./MapDashboard";
+import { MapControls } from "./MapControls";
+import { MapOptions } from "./MapOptions";
 
 /**
  * MapMain - Main map component with theme-aware tile provider
@@ -22,12 +23,6 @@ import { MapDashboard } from "./MapDashboard";
  */
 export function MapMain() {
   const [isMeasurementOpen, setIsMeasurementOpen] = useState(false);
-  const [byHood, setByHood] = useState(true);
-  const [timeWeighting, setTimeWeighting] = useState("None");
-  const [weightKInv, setWeightKInv] = useState(0.5);
-  const [weightKInvQuad, setWeightKInvQuad] = useState(0.25);
-  const [weightFlipped, setWeightFlipped] = useState(false);
-  const [poissonIndex, setPoissonIndex] = useState(0);
 
   const tileContext = useContext(TileContext);
 
@@ -74,7 +69,7 @@ export function MapMain() {
   );
 
   return (
-    <div className="relative sm:rounded-md h-full w-full overflow-hidden">
+    <div className="relative sm:rounded-md h-full w-full overflow-hidden sm:w-full sm:h-185">
       <HeatProvider>
         {/* Map */}
         <LeafletMap
@@ -92,21 +87,11 @@ export function MapMain() {
           {/* <LeafletGeoJSON data={selectedCountry} style={GEOJSON_STYLE} /> */}
         </LeafletMap>
 
+        {/* Map Options */}
+        <MapOptions />
+
         {/* Map Controls */}
-        <MapDashboard
-          byHood={byHood}
-          setByHood={setByHood}
-          timeWeighting={timeWeighting}
-          setTimeWeighting={setTimeWeighting}
-          weightKInv={weightKInv}
-          setWeightKInv={setWeightKInv}
-          weightKInvQuad={weightKInvQuad}
-          setWeightKInvQuad={setWeightKInvQuad}
-          weightFlipped={weightFlipped}
-          onWeightFlipToggle={() => setWeightFlipped((prev) => !prev)}
-          poissonIndex={poissonIndex}
-          setPoissonIndex={setPoissonIndex}
-        />
+        <MapControls />
       </HeatProvider>
 
       {/* Measurement Panel */}
