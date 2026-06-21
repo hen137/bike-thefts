@@ -100,8 +100,6 @@ export function LeafletMap({
           attributionControl: DEFAULT_MAP_CONFIG.attributionControl
         });
 
-        L.control.attribution({ position: "topright" }).addTo(map);
-
         // Mark as initialized before storing reference
         isInitializedRef.current = true;
         mapRef.current = map;
