@@ -14,4 +14,3 @@ export { MapTileSwitcher } from "./MapTileSwitcher";
 export { MapThemeSwitcher } from "./MapThemeSwitcher";
 export { MapMeasurementPanel } from "./MapMeasurementPanel";
 export { MapContextMenu } from "./MapContextMenu";
-export { HeatmapSlider } from "./HeatmapSlider";
