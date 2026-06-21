@@ -1,7 +1,12 @@
 import type { HeatLatLngTuple } from "leaflet";
 import type { HeatRow, HoodRow } from "@/types/db";
 import { MonthYear } from "@/types/map";
-import { isoStartOfMonth, isoEndOfMonth } from "@/lib/utils/date-range";
+import {
+  isoStartOfMonth,
+  isoEndOfMonth,
+  monthsInRange,
+  dateFromOffset
+} from "@/lib/utils/date-range";
 
 export interface HistBin {
   binStart: string;
@@ -40,25 +45,63 @@ export function computeHistBins(
   rows: HeatRow[],
   startDate: MonthYear,
   endDate: MonthYear,
-  nBins: number = 14
+  maxBins: number = 12
 ): HistBin[] {
-  const rangeStartMs = new Date(isoStartOfMonth(startDate)).getTime();
-  const rangeEndMs = new Date(isoEndOfMonth(endDate)).getTime();
-  const totalMs = Math.max(1, rangeEndMs - rangeStartMs);
-  const binWidthMs = totalMs / nBins;
+  const totalMonths = monthsInRange(startDate, endDate);
 
-  const bins: HistBin[] = Array.from({ length: nBins }, (_, i) => ({
-    binStart: new Date(rangeStartMs + i * binWidthMs).toISOString(),
-    binEnd: new Date(rangeStartMs + (i + 1) * binWidthMs).toISOString(),
-    count: 0
-  }));
+  let binWidthMonths: number;
+  let nBins: number;
+  if (totalMonths <= maxBins) {
+    binWidthMonths = 1;
+    nBins = totalMonths;
+  } else {
+    binWidthMonths = Math.ceil(totalMonths / maxBins);
+    nBins = Math.floor(totalMonths / binWidthMonths);
+  }
 
+  const leftover = totalMonths - nBins * binWidthMonths;
+  const frontExtra = Math.floor(leftover / 2);
+  const backExtra = leftover - frontExtra;
+
+  const widths = Array.from({ length: nBins }, (_, i) => {
+    let w = binWidthMonths;
+    if (i === 0) w += frontExtra;
+    if (i === nBins - 1) w += backExtra;
+    return w;
+  });
+
+  const offsetStarts: number[] = [];
+  const offsetEnds: number[] = [];
+  let cursor = 0;
+  for (const w of widths) {
+    offsetStarts.push(cursor);
+    cursor += w;
+    offsetEnds.push(cursor);
+  }
+
+  const bins: HistBin[] = widths.map((_, i) => {
+    const binStartMY = dateFromOffset(startDate, -offsetStarts[i]);
+    const binEndMY = dateFromOffset(startDate, -(offsetEnds[i] - 1));
+    return {
+      binStart: new Date(isoStartOfMonth(binStartMY)).toISOString(),
+      binEnd: new Date(isoEndOfMonth(binEndMY)).toISOString(),
+      count: 0
+    };
+  });
+
+  const startOffset = startDate.year * 12 + startDate.month;
   for (const r of rows) {
-    const rowMs = new Date(r.occ_date).getTime();
-    const idx = Math.min(
-      nBins - 1,
-      Math.max(0, Math.floor((rowMs - rangeStartMs) / binWidthMs))
-    );
+    const rowDate = new Date(r.occ_date);
+    const rowOffset =
+      rowDate.getFullYear() * 12 + rowDate.getMonth() - startOffset;
+    let idx = nBins - 1;
+    for (let i = 0; i < nBins; i++) {
+      if (rowOffset >= offsetStarts[i] && rowOffset < offsetEnds[i]) {
+        idx = i;
+        break;
+      }
+    }
+    idx = Math.min(nBins - 1, Math.max(0, idx));
     bins[idx].count += r.count;
   }
 

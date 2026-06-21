@@ -2,7 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   buildHeatDataFromRows,
   computeHistBins,
-  getTimeWeight
+  getTimeWeight,
+  HistBin
 } from "@/lib/utils/heatmap";
 import type { HeatRow } from "@/types/db";
 import type { MonthYear } from "@/types/map";
@@ -193,28 +194,38 @@ describe("buildHeatDataFromRows — byHood=true (stratified)", () => {
 });
 
 describe("computeHistBins", () => {
-  const START: MonthYear = { year: 2025, month: 0 };
-  const END: MonthYear = { year: 2025, month: 11 };
-
-  it("returns nBins-length array", () => {
+  it("uses one bin per month when totalMonths <= maxBins (default 12)", () => {
+    const start: MonthYear = { year: 2025, month: 0 };
+    const end: MonthYear = { year: 2025, month: 11 };
     const rows: HeatRow[] = [
       { hood_158: 1, lat: 1, lng: 1, count: 5, occ_date: "2025-01-01" }
     ];
-    expect(computeHistBins(rows, START, END)).toHaveLength(14);
+    const bins = computeHistBins(rows, start, end);
+    expect(bins).toHaveLength(12);
+    expect(bins[0].binStart).toBe(
+      new Date(isoStartOfMonth(start)).toISOString()
+    );
+    expect(bins[bins.length - 1].binEnd).toBe(
+      new Date(isoEndOfMonth(end)).toISOString()
+    );
   });
 
   it("returns all-zero-count bins for empty rows", () => {
-    const bins = computeHistBins([], START, END);
-    expect(bins).toHaveLength(14);
+    const start: MonthYear = { year: 2025, month: 0 };
+    const end: MonthYear = { year: 2025, month: 11 };
+    const bins = computeHistBins([], start, end);
+    expect(bins).toHaveLength(12);
     expect(bins.every((b) => b.count === 0)).toBe(true);
   });
 
   it("reports raw (non-normalized) counts per bin", () => {
+    const start: MonthYear = { year: 2025, month: 0 };
+    const end: MonthYear = { year: 2025, month: 11 };
     const rows: HeatRow[] = [
       { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-01-15" },
       { hood_158: 2, lat: 2, lng: 2, count: 2, occ_date: "2025-12-15" }
     ];
-    const bins = computeHistBins(rows, START, END);
+    const bins = computeHistBins(rows, start, end);
     const total = bins.reduce((sum, b) => sum + b.count, 0);
     expect(total).toBe(12);
     expect(bins.some((b) => b.count === 10)).toBe(true);
@@ -222,33 +233,102 @@ describe("computeHistBins", () => {
   });
 
   it("earlier rows land in lower-index bins than later rows", () => {
+    const start: MonthYear = { year: 2025, month: 0 };
+    const end: MonthYear = { year: 2025, month: 11 };
     const rows: HeatRow[] = [
       { hood_158: 1, lat: 1, lng: 1, count: 10, occ_date: "2025-01-15" },
       { hood_158: 2, lat: 2, lng: 2, count: 10, occ_date: "2025-12-15" }
     ];
-    const bins = computeHistBins(rows, START, END);
+    const bins = computeHistBins(rows, start, end);
     const earlyBin = bins.findIndex((b) => b.count > 0);
     const lateBin =
       bins.length - 1 - [...bins].reverse().findIndex((b) => b.count > 0);
     expect(lateBin).toBeGreaterThan(earlyBin);
   });
 
-  it("bin boundaries span the full start-to-end date range", () => {
-    const bins = computeHistBins([], START, END);
-    expect(bins[0].binStart).toBe(
-      new Date(isoStartOfMonth(START)).toISOString()
-    );
-    expect(bins[bins.length - 1].binEnd).toBe(
-      new Date(isoEndOfMonth(END)).toISOString()
-    );
+  it("a row dated exactly on endDate lands in the last bin", () => {
+    const start: MonthYear = { year: 2025, month: 0 };
+    const end: MonthYear = { year: 2025, month: 11 };
+    const rows: HeatRow[] = [
+      { hood_158: 1, lat: 1, lng: 1, count: 3, occ_date: "2025-12-31" }
+    ];
+    const bins = computeHistBins(rows, start, end);
+    expect(bins[bins.length - 1].count).toBe(3);
   });
 
-  it("respects custom nBins", () => {
-    const rows: HeatRow[] = [
-      { hood_158: 1, lat: 1, lng: 1, count: 1, occ_date: "2025-01-01" }
-    ];
-    expect(computeHistBins(rows, START, END, 20)).toHaveLength(20);
-    expect(computeHistBins(rows, START, END, 5)).toHaveLength(5);
+  it("caps bin count at maxBins and widens bins evenly for long ranges (37 months)", () => {
+    // Jan 2022 - Jan 2025 inclusive = 37 months
+    const start: MonthYear = { year: 2022, month: 0 };
+    const end: MonthYear = { year: 2025, month: 0 };
+    const bins = computeHistBins([], start, end);
+    // binWidth = ceil(37/12) = 4, nBins = floor(37/4) = 9, leftover = 1
+    // frontExtra = 0, backExtra = 1 -> first bin 4mo, last bin 5mo
+    expect(bins).toHaveLength(9);
+
+    const widthOf = (bin: HistBin) => {
+      const s = new Date(bin.binStart);
+      const e = new Date(bin.binEnd);
+      return (
+        (e.getUTCFullYear() - s.getUTCFullYear()) * 12 +
+        (e.getUTCMonth() - s.getUTCMonth()) +
+        1
+      );
+    };
+
+    expect(widthOf(bins[0])).toBe(4);
+    expect(widthOf(bins[8])).toBe(5);
+    expect(bins[0].binStart).toBe(
+      new Date(isoStartOfMonth(start)).toISOString()
+    );
+    expect(bins[8].binEnd).toBe(new Date(isoEndOfMonth(end)).toISOString());
+  });
+
+  it("splits a larger leftover between the first and last bins (200 months)", () => {
+    // Jan 2008 - Aug 2024 inclusive = 200 months
+    const start: MonthYear = { year: 2008, month: 0 };
+    const end: MonthYear = { year: 2024, month: 7 };
+    const bins = computeHistBins([], start, end);
+    // binWidth = ceil(200/12) = 17, nBins = floor(200/17) = 11, leftover = 13
+    // frontExtra = 6, backExtra = 7 -> first bin 23mo, last bin 24mo, middle bins 17mo each
+    expect(bins).toHaveLength(11);
+
+    const widthOf = (bin: HistBin) => {
+      const s = new Date(bin.binStart);
+      const e = new Date(bin.binEnd);
+      return (
+        (e.getUTCFullYear() - s.getUTCFullYear()) * 12 +
+        (e.getUTCMonth() - s.getUTCMonth()) +
+        1
+      );
+    };
+
+    expect(widthOf(bins[0])).toBe(23);
+    expect(widthOf(bins[10])).toBe(24);
+    for (let i = 1; i < 10; i++) {
+      expect(widthOf(bins[i])).toBe(17);
+    }
+  });
+
+  it("bins are contiguous with no gap or overlap", () => {
+    const start: MonthYear = { year: 2008, month: 0 };
+    const end: MonthYear = { year: 2024, month: 7 };
+    const bins = computeHistBins([], start, end);
+    for (let i = 0; i < bins.length - 1; i++) {
+      const thisEnd = new Date(bins[i].binEnd);
+      const nextStart = new Date(bins[i + 1].binStart);
+      const gapDays =
+        (nextStart.getTime() - thisEnd.getTime()) / (1000 * 60 * 60 * 24);
+      expect(gapDays).toBeCloseTo(1, 5);
+    }
+  });
+
+  it("respects a custom maxBins override on a long range", () => {
+    // Jan 2005 - Dec 2024 inclusive = 240 months
+    const start: MonthYear = { year: 2005, month: 0 };
+    const end: MonthYear = { year: 2024, month: 11 };
+    const bins = computeHistBins([], start, end, 4);
+    // binWidth = ceil(240/4) = 60, nBins = floor(240/60) = 4, leftover = 0
+    expect(bins).toHaveLength(4);
   });
 });
 
