@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { useDataSettings, useDbContext } from "@/hooks";
 import { isoStartOfMonth, isoEndOfMonth } from "@/lib/utils/date-range";
-import { Select } from "@/components/ui/select";
+import { Selection } from "@/components/ui/Selection";
 import type { CategoryColumn, CategoryRankingRow } from "@/types/db";
 
 interface RankingsChartProps {
@@ -42,7 +42,7 @@ export function RankingsChart({ className }: RankingsChartProps) {
 
   return (
     <div className={className ?? ""}>
-      <Select
+      <Selection
         mode={category}
         setMode={setCategory}
         options={CATEGORY_OPTIONS}

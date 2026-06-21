@@ -1,12 +1,4 @@
 export { Slider, SliderTrack, SliderRange, SliderThumb } from "./slider";
-export {
-  TooltipProvider,
-  TooltipRoot,
-  TooltipTrigger,
-  TooltipPortal,
-  TooltipContent,
-  TooltipArrow
-} from "./tooltip";
 export { Toaster } from "./sonner";
 export {
   DropdownMenu,
