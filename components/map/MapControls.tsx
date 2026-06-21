@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Plus, Minus, Minimize2, Maximize2 } from "lucide-react";
 import { useMapControls } from "@/hooks";

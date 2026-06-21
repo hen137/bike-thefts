@@ -1,3 +1,5 @@
+"use client";
+
 import { Slider, SliderRange, SliderThumb, SliderTrack } from "@/components/ui";
 import { DebugSliderProps } from "@/types/components";
 
