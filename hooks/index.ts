@@ -8,3 +8,4 @@ export { useMeasurement } from "./useMeasurement";
 export { useMapTileProvider } from "./useMapTileProvider";
 export { useLeafletHeatLayer } from "./useLeafletHeatLayer";
 export { useDbContext } from "./useDbContext";
+export { useDataSettings } from "./useDataSettings";

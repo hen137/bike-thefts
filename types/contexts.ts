@@ -4,6 +4,10 @@ export interface MapProviderProps {
   children: ReactNode;
 }
 
+export interface DataProviderProps {
+  children: ReactNode;
+}
+
 export interface ThemeProviderProps {
   children: ReactNode;
 }
