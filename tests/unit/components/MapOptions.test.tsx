@@ -2,9 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 
-vi.mock("@/hooks", () => ({
-  useDbContext: vi.fn()
-}));
+vi.mock("@/hooks", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/hooks")>();
+  return {
+    ...actual,
+    useDbContext: vi.fn()
+  };
+});
 
 vi.mock("@base-ui/react", () => ({
   Popover: {
@@ -62,18 +66,20 @@ describe("MapOptions", () => {
   it("shows placeholder dashes while DB is not ready", () => {
     mockUseDbContext.mockReturnValue({ ...READY_CONTEXT, isReady: false });
     renderWithProvider();
-    expect(screen.getAllByText("—")).toHaveLength(2);
+    expect(screen.getAllByText("-")).toHaveLength(2);
   });
 
-  it("corrects the default queryRange to 90 days back from DB maxDate once ready", async () => {
+  it("corrects the default queryRange to 6 months back from DB maxDate once ready", async () => {
     mockUseDbContext.mockReturnValue(READY_CONTEXT);
     renderWithProvider();
 
-    // maxDate = 2026-08-15 → end picker should show 08/2026
+    // maxDate = 2026-08-15 → end picker should show 08/2026, start 02/2026
     await waitFor(() => {
       const inputs = screen.getAllByLabelText("Month and year");
       expect(inputs[1]).toHaveValue("08/2026");
     });
+    const inputs = screen.getAllByLabelText("Month and year");
+    expect(inputs[0]).toHaveValue("02/2026");
   });
 
   it("does not shift a day-1 maxDate backward a month due to UTC/local parsing", async () => {
