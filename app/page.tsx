@@ -1,20 +1,41 @@
 import { MapProvider } from "@/contexts/MapContext";
-import { MapMain, MapErrorBoundary, MapLoadingSpinner } from "@/components/map";
+import { MapMain, MapErrorBoundary } from "@/components/map";
 import { TileProvider } from "@/contexts/TileContext";
 import { NavBar } from "@/components/ui/NavBar";
-import { ViewTransition } from "react";
+import { DataProvider } from "@/contexts/DataContext";
+import { DateRangeGraph } from "@/components/data/DateRangeGraph";
 
 export default function Home() {
   return (
-    <div className="h-screen w-full flex flex-col gap-4 sm:h-95/100 sm:w-95/100 sm:absolute sm:bottom-5 sm:left-1/2 sm:-translate-x-1/2">
+    <div className="w-full flex flex-col absolute px-16 gap-6 sm:left-1/2 sm:-translate-x-1/2">
       <MapErrorBoundary>
         <MapProvider>
           <TileProvider>
-            <ViewTransition name="page">
-              <NavBar />
+            <NavBar />
+            <DataProvider>
+              {/* Map */}
               <MapMain />
-              <MapLoadingSpinner />
-            </ViewTransition>
+              {/* <MapLoadingSpinner /> */}
+
+              {/* Date Range Histogram & Rankings */}
+              <div className="flex gap-4 bg-slate-200 justify-between h-90">
+                <DateRangeGraph className="bg-slate-100 basis-1/2 text-center" />
+                <div className="bg-slate-100 basis-1/2 text-center">
+                  rankings
+                </div>
+              </div>
+
+              {/* Time Charts */}
+              <div className="bg-slate-200 flex gap-4"></div>
+
+              {/* Neighbourhood Breakdown Table */}
+              <div className="bg-slate-200 text-center h-120">
+                hood breakdown table
+              </div>
+
+              {/* footer */}
+              <div className="bg-slate-200 text-center">footer</div>
+            </DataProvider>
           </TileProvider>
         </MapProvider>
       </MapErrorBoundary>
