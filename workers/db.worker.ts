@@ -9,7 +9,10 @@ import {
   readMeta,
   isStale,
   shouldRefetch,
-  queryHeatmap
+  queryHeatmap,
+  queryCategoryRanking,
+  queryDayOfWeek,
+  queryHoodOffenceBreakdown
 } from "./db-core";
 import { createWaSqliteDb } from "./wa-sqlite-adapter";
 import type {
@@ -213,6 +216,21 @@ const worker: DbWorker = {
   async queryHeatmap(startDate, endDate) {
     if (!db) throw new Error("DB not initialized");
     return queryHeatmap(db, startDate, endDate);
+  },
+
+  async queryCategoryRanking(startDate, endDate, column) {
+    if (!db) throw new Error("DB not initialized");
+    return queryCategoryRanking(db, startDate, endDate, column);
+  },
+
+  async queryDayOfWeek(startDate, endDate) {
+    if (!db) throw new Error("DB not initialized");
+    return queryDayOfWeek(db, startDate, endDate);
+  },
+
+  async queryHoodOffenceBreakdown(startDate, endDate) {
+    if (!db) throw new Error("DB not initialized");
+    return queryHoodOffenceBreakdown(db, startDate, endDate);
   },
 
   async refresh(onProgress) {

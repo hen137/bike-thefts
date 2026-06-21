@@ -4,6 +4,12 @@ import { useEffect, useRef } from "react";
 import { SegmentedToggle } from "./SegmentedToggle";
 import { DateRangePicker, DateRangePlaceholder } from "../ui/DateRangePicker";
 import { useDbContext, useDataSettings } from "@/hooks";
+import {
+  monthYearFromISODate,
+  isoStartOfMonth,
+  isoEndOfMonth,
+  dateFromOffset
+} from "@/lib/utils/date-range";
 import type { MonthYear } from "@/types";
 
 interface MapOptionsProps {
@@ -12,32 +18,6 @@ interface MapOptionsProps {
 
 // default time delta in months for initial date range
 const monthsDelta = 6;
-
-function monthYearFromISODate(iso: string): MonthYear {
-  // Parse the "YYYY-MM-DD" components directly rather than going through
-  // `new Date(iso)`. A date-only ISO string is parsed as UTC midnight, but
-  // `.getMonth()`/`.getFullYear()` read it back in local time — in any
-  // negative-UTC-offset timezone that can shift the date backward across a
-  // month (or year) boundary.
-  const [year, month] = iso.split("-").map(Number);
-  return { month: month - 1, year };
-}
-
-function dateFromOffset(refDate: MonthYear, offsetMonths: number): MonthYear {
-  const totalMonths = refDate.year * 12 + refDate.month - offsetMonths;
-  return {
-    month: ((totalMonths % 12) + 12) % 12,
-    year: Math.floor(totalMonths / 12)
-  };
-}
-
-function isoStartOfMonth(my: MonthYear): string {
-  return `${my.year}-${String(my.month + 1).padStart(2, "0")}-01`;
-}
-
-function isoEndOfMonth(my: MonthYear): string {
-  return new Date(my.year, my.month + 1, 0).toISOString().split("T")[0];
-}
 
 export function MapOptions({ className }: MapOptionsProps) {
   const { isReady, worker, initResult } = useDbContext();

@@ -1,4 +1,12 @@
-import type { SQLiteDB, BikeTheftRecord, HeatRow } from "@/types/db";
+import type {
+  SQLiteDB,
+  BikeTheftRecord,
+  HeatRow,
+  CategoryColumn,
+  CategoryRankingRow,
+  DayOfWeekRow,
+  HoodOffenceRow
+} from "@/types/db";
 
 /**
  * Returns true if the last_fetched timestamp is older than ttlDays,
@@ -176,6 +184,68 @@ export async function queryHeatmap(
        WHERE occ_date >= ? AND occ_date <= ?
          AND lat IS NOT NULL AND lng IS NOT NULL
        GROUP BY hood_158, lat, lng`
+    )
+    .all(startDate, endDate);
+}
+
+// Fixed allowlist of SQL column names. `column` is interpolated into the
+// query string below (SQL placeholders can't parameterize column names), so
+// this mapping is what keeps that interpolation safe — it can only ever
+// resolve to one of these literal strings, never an arbitrary caller value.
+const CATEGORY_COLUMNS: Record<CategoryColumn, string> = {
+  bike_colour: "bike_colour",
+  primary_offence: "primary_offence",
+  premises_type: "premises_type",
+  bike_make: "bike_make"
+};
+
+export async function queryCategoryRanking(
+  db: SQLiteDB,
+  startDate: string,
+  endDate: string,
+  column: CategoryColumn
+): Promise<CategoryRankingRow[]> {
+  const col = CATEGORY_COLUMNS[column];
+  return await db
+    .prepare<CategoryRankingRow>(
+      `SELECT ${col} as label, COUNT(*) as count
+       FROM bike_thefts
+       WHERE occ_date >= ? AND occ_date <= ?
+         AND ${col} IS NOT NULL AND ${col} != ''
+       GROUP BY ${col}
+       ORDER BY count DESC
+       LIMIT 10`
+    )
+    .all(startDate, endDate);
+}
+
+export async function queryDayOfWeek(
+  db: SQLiteDB,
+  startDate: string,
+  endDate: string
+): Promise<DayOfWeekRow[]> {
+  return await db
+    .prepare<DayOfWeekRow>(
+      `SELECT occ_dow, COUNT(*) as count
+       FROM bike_thefts
+       WHERE occ_date >= ? AND occ_date <= ?
+       GROUP BY occ_dow`
+    )
+    .all(startDate, endDate);
+}
+
+export async function queryHoodOffenceBreakdown(
+  db: SQLiteDB,
+  startDate: string,
+  endDate: string
+): Promise<HoodOffenceRow[]> {
+  return await db
+    .prepare<HoodOffenceRow>(
+      `SELECT hood_158, primary_offence, COUNT(*) as count
+       FROM bike_thefts
+       WHERE occ_date >= ? AND occ_date <= ?
+         AND hood_158 IS NOT NULL
+       GROUP BY hood_158, primary_offence`
     )
     .all(startDate, endDate);
 }

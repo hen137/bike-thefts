@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { DateRangeGraph } from "@/components/data/DateRangeGraph";
 import { DataContext } from "@/contexts/DataContext";
 import type { DataContextValue } from "@/types/data";
@@ -7,6 +8,33 @@ import type { HeatRow } from "@/types/db";
 
 vi.mock("@/lib/utils/heatmap", () => ({
   computeHistBins: vi.fn(() => [1, 2, 3])
+}));
+
+vi.mock("recharts", () => ({
+  ResponsiveContainer: ({ children }: { children?: ReactNode }) => (
+    <div data-testid="date-range-bar-chart">{children}</div>
+  ),
+  BarChart: ({
+    data,
+    children
+  }: {
+    data: { value: number }[];
+    children?: ReactNode;
+  }) => (
+    <div>
+      {data.map((d, i) => (
+        <div key={i} data-testid="date-range-bar">
+          {d.value}
+        </div>
+      ))}
+      {children}
+    </div>
+  ),
+  Bar: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  CartesianGrid: () => null,
+  Tooltip: () => null
 }));
 
 import { computeHistBins } from "@/lib/utils/heatmap";
@@ -63,5 +91,16 @@ describe("DateRangeGraph", () => {
       value.rows,
       value.queryRange!.startDate
     );
+  });
+
+  it("renders a bar for each histogram bin", () => {
+    const value = makeContextValue({ histBins: [0.2, 0.5, 1] });
+    render(
+      <DataContext.Provider value={value}>
+        <DateRangeGraph />
+      </DataContext.Provider>
+    );
+    expect(screen.getByTestId("date-range-bar-chart")).toBeInTheDocument();
+    expect(screen.getAllByTestId("date-range-bar")).toHaveLength(3);
   });
 });

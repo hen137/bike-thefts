@@ -32,6 +32,23 @@ export type HoodRow = {
   occ_date: string;
 };
 
+// Columns selectable for the rankings chart category breakdown
+export type CategoryColumn =
+  | "bike_colour"
+  | "primary_offence"
+  | "premises_type"
+  | "bike_make";
+
+export type CategoryRankingRow = { label: string; count: number };
+
+export type DayOfWeekRow = { occ_dow: string; count: number };
+
+export type HoodOffenceRow = {
+  hood_158: string;
+  primary_offence: string;
+  count: number;
+};
+
 // Progress events emitted from worker → main thread via Comlink callback
 export type DbProgress =
   | { type: "fetching"; fetched: number; total: number }
@@ -52,6 +69,16 @@ export type DbInitResult = {
 export interface DbWorker {
   init(onProgress: (event: DbProgress) => void): Promise<DbInitResult>;
   queryHeatmap(startDate: string, endDate: string): Promise<HeatRow[]>;
+  queryCategoryRanking(
+    startDate: string,
+    endDate: string,
+    column: CategoryColumn
+  ): Promise<CategoryRankingRow[]>;
+  queryDayOfWeek(startDate: string, endDate: string): Promise<DayOfWeekRow[]>;
+  queryHoodOffenceBreakdown(
+    startDate: string,
+    endDate: string
+  ): Promise<HoodOffenceRow[]>;
   refresh(onProgress: (event: DbProgress) => void): Promise<DbInitResult>;
 }
 

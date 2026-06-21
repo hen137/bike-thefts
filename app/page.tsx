@@ -4,6 +4,9 @@ import { TileProvider } from "@/contexts/TileContext";
 import { NavBar } from "@/components/ui/NavBar";
 import { DataProvider } from "@/contexts/DataContext";
 import { DateRangeGraph } from "@/components/data/DateRangeGraph";
+import { RankingsChart } from "@/components/data/RankingsChart";
+import { DayOfWeekChart } from "@/components/data/DayOfWeekChart";
+import { HoodBreakdownTable } from "@/components/data/HoodBreakdownTable";
 
 export default function Home() {
   return (
@@ -20,17 +23,17 @@ export default function Home() {
               {/* Date Range Histogram & Rankings */}
               <div className="flex gap-4 bg-slate-200 justify-between h-90">
                 <DateRangeGraph className="bg-slate-100 basis-1/2 text-center" />
-                <div className="bg-slate-100 basis-1/2 text-center">
-                  rankings
-                </div>
+                <RankingsChart className="bg-slate-100 basis-1/2 text-center" />
               </div>
 
               {/* Time Charts */}
-              <div className="bg-slate-200 flex gap-4"></div>
+              <div className="bg-slate-200 flex gap-4 h-90">
+                <DayOfWeekChart className="bg-slate-100 basis-full text-center" />
+              </div>
 
               {/* Neighbourhood Breakdown Table */}
-              <div className="bg-slate-200 text-center h-120">
-                hood breakdown table
+              <div className="bg-slate-200 text-center h-120 overflow-auto">
+                <HoodBreakdownTable />
               </div>
 
               {/* footer */}
