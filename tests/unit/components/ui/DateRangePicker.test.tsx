@@ -15,7 +15,10 @@ vi.mock("@base-ui/react", () => ({
   }
 }));
 
-import { DateRangePicker } from "@/components/ui/DateRangePicker";
+import {
+  DateRangePicker,
+  DateRangePlaceholder
+} from "@/components/ui/DateRangePicker";
 
 const MIN = { month: 3, year: 2020 }; // Apr 2020
 const MAX = { month: 7, year: 2026 }; // Aug 2026
@@ -141,6 +144,14 @@ describe("DateRangePicker", () => {
         month: 5,
         year: 2020
       });
+    });
+  });
+
+  describe("DateRangePlaceholder", () => {
+    it("renders dash placeholders with no interactive controls", () => {
+      render(<DateRangePlaceholder />);
+      expect(screen.getAllByText("-")).toHaveLength(2);
+      expect(screen.queryAllByRole("button")).toHaveLength(0);
     });
   });
 });
