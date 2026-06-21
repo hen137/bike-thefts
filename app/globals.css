@@ -1,6 +1,6 @@
 @import url("tailwindcss");
 @import url("leaflet/dist/leaflet.css");
-@import url("tw-animate-css");
+@import url("../node_modules/tw-animate-css/dist/tw-animate.css");
 
 :root {
   /* Base colors */
