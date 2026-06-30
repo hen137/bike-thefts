@@ -196,7 +196,8 @@ const CATEGORY_COLUMNS: Record<CategoryColumn, string> = {
   bike_colour: "bike_colour",
   primary_offence: "primary_offence",
   premises_type: "premises_type",
-  bike_make: "bike_make"
+  bike_make: "bike_make",
+  bike_type: "bike_type"
 };
 
 export async function queryCategoryRanking(

@@ -120,13 +120,49 @@ describe("RankingsChart", () => {
 
   it("renders a bar for each returned ranking row", async () => {
     queryCategoryRanking.mockResolvedValue([
-      { label: "THEFT UNDER", count: 5 },
-      { label: "THEFT OVER", count: 2 }
+      { label: "B&E", count: 5 },
+      { label: "FRAUD OVER", count: 2 }
     ]);
     renderWithContext();
 
     await waitFor(() => {
       expect(screen.getAllByTestId("rankings-bar")).toHaveLength(2);
+    });
+  });
+
+  it("aggregates semantically overlapping offence codes into one bucket", async () => {
+    queryCategoryRanking.mockResolvedValue([
+      { label: "THEFT UNDER", count: 5 },
+      { label: "THEFT OVER", count: 2 },
+      { label: "THEFT UNDER - BICYCLE", count: 3 }
+    ]);
+    renderWithContext();
+
+    await waitFor(() => {
+      const bars = screen.getAllByTestId("rankings-bar");
+      expect(bars).toHaveLength(1);
+      expect(bars[0]).toHaveTextContent("Theft (Bicycle): 10");
+    });
+  });
+
+  it("caps to the top 10 entries by count, dropping the rest", async () => {
+    renderWithContext();
+    await waitFor(() => expect(queryCategoryRanking).toHaveBeenCalled());
+
+    queryCategoryRanking.mockResolvedValue(
+      Array.from({ length: 15 }, (_, i) => ({
+        label: `MAKE_${i}`,
+        count: 15 - i
+      }))
+    );
+    fireEvent.click(screen.getByRole("combobox"));
+    fireEvent.click(screen.getByText("Bike Make"));
+
+    await waitFor(() => {
+      const bars = screen.getAllByTestId("rankings-bar");
+      expect(bars).toHaveLength(10);
+      expect(bars[9]).toHaveTextContent("MAKE_9: 6");
+      expect(screen.queryByText(/Other/)).not.toBeInTheDocument();
     });
   });
 

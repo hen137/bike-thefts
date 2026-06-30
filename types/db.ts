@@ -37,7 +37,8 @@ export type CategoryColumn =
   | "bike_colour"
   | "primary_offence"
   | "premises_type"
-  | "bike_make";
+  | "bike_make"
+  | "bike_type";
 
 export type CategoryRankingRow = { label: string; count: number };
 
