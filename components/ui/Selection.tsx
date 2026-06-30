@@ -13,7 +13,7 @@ export function Selection<Mode extends string>({
 }: SelectProps<Mode>) {
   return (
     <Select.Root value={mode} onValueChange={(val) => setMode(val as Mode)}>
-      <Select.Trigger className="flex items-center border text-xs flex-between gap-2 rounded px-2 py-1 text-slate-600 hover:bg-slate-100 transition-colors">
+      <Select.Trigger className="flex items-center border max-w-fit text-xs flex-between gap-2 rounded px-2 py-1 text-slate-600 hover:bg-slate-100 transition-colors">
         <Select.Value />
         <Select.Icon className=" border-slate-500">
           <ChevronDown className="size-3" />

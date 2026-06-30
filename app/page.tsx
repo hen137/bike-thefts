@@ -21,14 +21,14 @@ export default function Home() {
               {/* <MapLoadingSpinner /> */}
 
               {/* Date Range Histogram & Rankings */}
-              <div className="flex gap-4 bg-slate-200 justify-between h-90">
-                <DateRangeGraph className="bg-slate-100 basis-1/2 text-center" />
-                <RankingsChart className="bg-slate-100 basis-1/2 text-center" />
+              <div className="flex gap-4 justify-between h-90">
+                <DateRangeGraph className="bg-slate-100 basis-1/2 py-2 px-4 flex flex-col" />
+                <RankingsChart className="bg-slate-100 basis-1/2 text-center flex flex-col py-2 px-4" />
               </div>
 
               {/* Time Charts */}
               <div className="bg-slate-200 flex gap-4 h-90">
-                <DayOfWeekChart className="bg-slate-100 basis-full text-center" />
+                <DayOfWeekChart className="bg-slate-100 basis-full py-2 px-4 flex flex-col" />
               </div>
 
               {/* Neighbourhood Breakdown Table */}

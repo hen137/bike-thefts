@@ -6,8 +6,8 @@ import {
   BarChart,
   ResponsiveContainer,
   Tooltip,
-  XAxis,
-  YAxis
+  XAxis
+  // YAxis
 } from "recharts";
 import { useDataSettings, useDbContext } from "@/hooks";
 import { isoStartOfMonth, isoEndOfMonth } from "@/lib/utils/date-range";
@@ -46,10 +46,11 @@ export function DayOfWeekChart({ className }: DayOfWeekChartProps) {
 
   return (
     <div className={className ?? ""}>
+      <p>Weekly Trend</p>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <XAxis dataKey="occ_dow" />
-          <YAxis />
+          {/* <YAxis /> */}
           <Tooltip />
           <Bar dataKey="count" fill="#475569" />
         </BarChart>

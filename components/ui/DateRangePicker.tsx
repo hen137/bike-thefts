@@ -105,8 +105,8 @@ function MonthPicker({ value, onChange, min, max }: MonthPickerProps) {
         aria-label="Month and year"
       />
       <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Trigger className="flex items-center justify-center border-l border-gray-300 px-1.5 py-1 hover:bg-gray-50">
-          <CalendarDays className="h-3.5 w-3.5 text-gray-500" />
+        <Popover.Trigger className="flex items-center justify-center border-l border-gray-300 p-1 hover:bg-gray-100 size-full aspect-square transition-colors">
+          <CalendarDays className="size-4 aspect-square text-gray-500" />
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Positioner
