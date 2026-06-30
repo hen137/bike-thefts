@@ -10,6 +10,7 @@ import {
   type SortingState
 } from "@tanstack/react-table";
 import { useDataSettings, useDbContext } from "@/hooks";
+import { HOOD_158_NAMES } from "@/constants/neighbourhoods-158";
 import {
   isoStartOfMonth,
   isoEndOfMonth,
@@ -26,7 +27,14 @@ interface HoodBreakdownTableProps {
 }
 
 const columns: ColumnDef<HoodBreakdownRow>[] = [
-  { accessorKey: "hood_158", header: "Neighbourhood" },
+  {
+    accessorKey: "hood_158",
+    header: "Neighbourhood",
+    cell: ({ getValue }) => {
+      const id = getValue() as string;
+      return HOOD_158_NAMES[id] ?? id;
+    }
+  },
   { accessorKey: "total", header: "Total" },
   {
     accessorKey: "avgPerMonth",
@@ -59,7 +67,7 @@ export function HoodBreakdownTable({ className }: HoodBreakdownTableProps) {
   const data = useMemo(
     () =>
       aggregateHoodBreakdown(
-        rawRows,
+        rawRows.filter((r) => r.hood_158 !== "NSA"),
         monthsInRange(queryRange.startDate, queryRange.endDate)
       ),
     [rawRows, queryRange]

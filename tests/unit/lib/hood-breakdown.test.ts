@@ -16,20 +16,24 @@ describe("aggregateHoodBreakdown", () => {
     expect(result[0].total).toBe(8);
   });
 
-  it("returns top 3 offence types sorted by count descending", () => {
+  it("returns top 3 offence categories sorted by count descending", () => {
     const rows: HoodOffenceRow[] = [
-      { hood_158: "Annex (95)", primary_offence: "A", count: 1 },
-      { hood_158: "Annex (95)", primary_offence: "B", count: 5 },
-      { hood_158: "Annex (95)", primary_offence: "C", count: 3 },
-      { hood_158: "Annex (95)", primary_offence: "D", count: 2 }
+      { hood_158: "Annex (95)", primary_offence: "THEFT UNDER", count: 5 },
+      {
+        hood_158: "Annex (95)",
+        primary_offence: "ROBBERY - MUGGING",
+        count: 3
+      },
+      { hood_158: "Annex (95)", primary_offence: "B&E", count: 2 },
+      { hood_158: "Annex (95)", primary_offence: "ASSAULT", count: 1 }
     ];
 
     const result = aggregateHoodBreakdown(rows, 1);
 
     expect(result[0].topOffences).toEqual([
-      { label: "B", count: 5 },
-      { label: "C", count: 3 },
-      { label: "D", count: 2 }
+      { label: "Theft (Bicycle)", count: 5 },
+      { label: "Robbery", count: 3 },
+      { label: "Break & Enter", count: 2 }
     ]);
   });
 

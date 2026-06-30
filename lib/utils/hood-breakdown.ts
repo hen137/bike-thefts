@@ -1,3 +1,4 @@
+import { groupOffence } from "@/constants/offence-groups";
 import type { HoodOffenceRow } from "@/types/db";
 
 export type HoodBreakdownRow = {
@@ -11,15 +12,20 @@ export function aggregateHoodBreakdown(
   rows: HoodOffenceRow[],
   months: number
 ): HoodBreakdownRow[] {
-  const byHood = new Map<string, { label: string; count: number }[]>();
+  const byHood = new Map<string, Map<string, number>>();
 
   for (const row of rows) {
-    const offences = byHood.get(row.hood_158) ?? [];
-    offences.push({ label: row.primary_offence, count: row.count });
-    byHood.set(row.hood_158, offences);
+    const category = groupOffence(row.primary_offence);
+    const categories = byHood.get(row.hood_158) ?? new Map<string, number>();
+    categories.set(category, (categories.get(category) ?? 0) + row.count);
+    byHood.set(row.hood_158, categories);
   }
 
-  return Array.from(byHood.entries()).map(([hood_158, offences]) => {
+  return Array.from(byHood.entries()).map(([hood_158, categories]) => {
+    const offences = Array.from(categories.entries()).map(([label, count]) => ({
+      label,
+      count
+    }));
     const total = offences.reduce((sum, o) => sum + o.count, 0);
     const topOffences = [...offences]
       .sort((a, b) => b.count - a.count)

@@ -101,8 +101,7 @@ describe("HoodBreakdownTable", () => {
     });
     expect(screen.getByText("8")).toBeInTheDocument(); // total
     expect(screen.getByText("4.0")).toBeInTheDocument(); // avgPerMonth (8/2)
-    expect(screen.getByText(/THEFT UNDER/)).toBeInTheDocument();
-    expect(screen.getByText(/THEFT OVER/)).toBeInTheDocument();
+    expect(screen.getByText(/Theft \(Bicycle\)/)).toBeInTheDocument();
   });
 
   it("sorts by total count when the total column header is clicked", async () => {
