@@ -27,12 +27,7 @@ export function MapControls({ className }: MapControlsProps) {
   }, []);
 
   return (
-    <div
-      className={
-        className ??
-        "absolute left-4 bottom-4 pointer-events-auto flex flex-col gap-2 z-1000 w-8"
-      }
-    >
+    <div className={className ?? "pointer-events-auto flex flex-col gap-2 w-8"}>
       {/* Zoom Controls */}
       <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         <button

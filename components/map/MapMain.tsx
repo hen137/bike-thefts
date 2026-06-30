@@ -12,6 +12,7 @@ import {
 } from "@/components/map";
 import { MapControls } from "./MapControls";
 import { MapOptions } from "./MapOptions";
+import { MapHeatLegend } from "./MapHeatLegend";
 
 /**
  * MapMain - Main map component with theme-aware tile provider
@@ -69,7 +70,7 @@ export function MapMain() {
   );
 
   return (
-    <div className="relative sm:rounded-md h-full w-full overflow-hidden sm:w-full sm:h-185">
+    <div className="relative sm:rounded-md h-full w-full overflow-hidden sm:w-full sm:h-225">
       <HeatProvider>
         {/* Map */}
         <LeafletMap
@@ -90,8 +91,13 @@ export function MapMain() {
         {/* Map Options */}
         <MapOptions />
 
-        {/* Map Controls */}
-        <MapControls />
+        <div className="absolute left-4 bottom-4 flex gap-2 z-1000 pointer-events-none">
+          {/* Map Controls */}
+          <MapControls />
+
+          {/* Heatmap Legend */}
+          <MapHeatLegend />
+        </div>
       </HeatProvider>
 
       {/* Measurement Panel */}
